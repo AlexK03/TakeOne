@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
-
 import PopupGallery from "./PopupGallery.jsx";
 
 /**
@@ -11,7 +10,7 @@ import PopupGallery from "./PopupGallery.jsx";
  */
 
 // App.jsx
-const BASE = import.meta.env.BASE_URL; // add once near the top
+const BASE = import.meta.env.BASE_URL; // used for public assets (e.g., /public/img/*)
 
 const zoonaImages = Object.values(
     import.meta.glob('./assets/zoona-03-05-2025/*.{jpg,png}', { eager: true, as: 'url' })
@@ -26,8 +25,6 @@ const roncoloImages = Object.values(
 import zoonaPoster from './assets/logos/posterZoona.png';
 import miroPoster  from './assets/logos/posterMiro.png';
 import ronPoster   from './assets/logos/posterRoncolo.png';
-
-
 
 // ---------------------------
 // Content Model
@@ -78,15 +75,13 @@ const team = [
     {
         name: "Lorenzo Giani",
         role: "Founder & Curator",
-        image:
-            `${BASE}img/Giani.jpg`,
+        image: `${BASE}img/Giani.jpg`,
         bio: "Programming events in Alto Adige. Focus on curation and partnerships."
     },
     {
         name: "Daniele Dapra",
         role: "Production Lead",
-        image:
-            `${BASE}img/Dani.jpg`,
+        image: `${BASE}img/Dani.jpg`,
         bio: "Logistics, vendors, backstage flow."
     }
 ];
@@ -112,11 +107,11 @@ const pastEvents = [
         gallery: zoonaImages
     },
     {
-        title: "TakeOne: Mirò Club",
+        title: "TakeOne: Mirò Club",
         date: "2025-04-18",
         city: "Bolzano",
-        venue: "Mirò Club",
-        poster:miroPoster,
+        venue: "Mirò Club",
+        poster: miroPoster,
         recap: "Gonfio",
         gallery: miroImages
     },
@@ -125,7 +120,7 @@ const pastEvents = [
         date: "2025-03-22",
         city: "Bolzano",
         venue: "Castel Roncolo",
-        poster:ronPoster,
+        poster: ronPoster,
         recap: "Gonfio",
         gallery: roncoloImages
     }
@@ -160,7 +155,7 @@ const stagger = { show: { transition: { staggerChildren: 0.08, delayChildren: 0.
 // Components
 // ---------------------------
 function StickyNav({ sections }) {
-    const [active, setActive] = useState(sections[0]?.id ?? "event");
+    const [active, setActive] = useState(sections[0]?.id ?? "home");
     const obs = useRef(null);
 
     useEffect(() => {
@@ -182,7 +177,7 @@ function StickyNav({ sections }) {
         <div className="nav">
             <div className="container">
                 <div className="nav__bar">
-                    <a href="#event" onClick={go("event")} className="nav__brand"><img
+                    <a href="#home" onClick={go("home")} className="nav__brand"><img
                         src={`${BASE}img/TakeOne.jpg`}
                         alt="TakeOne Logo"
                         style={{ height: "60px", width: "auto" }}
@@ -206,9 +201,11 @@ function Section({ id, title, children, subdued=false }) {
     return (
         <section id={id} className={cx("section", subdued && "section--subdued")}>
             <div className="container">
-                <motion.h2 className="section__title accent" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once:true }}>
-                    {title}
-                </motion.h2>
+                {title && (
+                    <motion.h2 className="section__title accent" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once:true }}>
+                        {title}
+                    </motion.h2>
+                )}
                 <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once:true }}>
                     {children}
                 </motion.div>
@@ -217,40 +214,71 @@ function Section({ id, title, children, subdued=false }) {
     );
 }
 
-function Hero() {
-    const date = useMemo(() => formatDateRange(event.start, event.end), []);
+// 1) HOME — logo + audio button
+function HomeSection() {
+    const audioRef = useRef(null);
+    const [isPlaying, setIsPlaying] = useState(false);
+
+    const toggleAudio = () => {
+        const el = audioRef.current;
+        if (!el) return;
+        if (isPlaying) { el.pause(); } else { el.play(); }
+        setIsPlaying(!isPlaying);
+    };
+
+    // if the audio ends naturally, reset UI
+    const onEnded = () => setIsPlaying(false);
+
     return (
-        <header id="event" className="hero">
-            <img className="hero__bg" src={event.heroImage} alt="Hero" />
+        <header id="home" className="hero" style={{ textAlign: "center" }}>
+            {/* reuse hero background/halo for brand feel, but only show logo + button */}
+            <img className="hero__bg" src={event.heroImage} alt="Background" />
             <div className="hero__halo" />
             <div className="hero__overlay" />
+
             <div className="container hero__content">
-                <motion.h1 className="hero__title accent" initial={{opacity:0,y:18}} animate={{opacity:1,y:0}} transition={{duration:0.7}}>
-                    {event.name}
-                </motion.h1>
-                <motion.p className="hero__meta" initial={{opacity:0}} animate={{opacity:1}} transition={{delay:.25}}>
-                    {date} · {event.city} · {event.venue}
-                </motion.p>
-                <motion.div className="hero__actions" initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} transition={{delay:.35}}>
-                    <a className="btn btn--solid" href={event.ticketsUrl} target="_blank" rel="noreferrer">Get Tickets</a>
-                    <a className="btn btn--outline" href="#lineup">See Lineup</a>
-                </motion.div>
-                <motion.div className="media aspect-video" initial={{opacity:0,scale:.97}} whileInView={{opacity:1,scale:1}} viewport={{once:true}}>
-                    <iframe
-                        src={event.trailerUrl}
-                        title="Event trailer"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                    />
+                <motion.img
+                    src={`${BASE}img/TakeOne.jpg`}
+                    alt="TakeOne Logo"
+                    style={{ maxWidth: 320, width: "60%", marginInline: "auto", borderRadius: 12 }}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                />
+
+                <motion.div className="hero__actions" initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} transition={{delay:.25}}>
+                    <button type="button" className="btn btn--solid" onClick={toggleAudio}>
+                        {isPlaying ? "Pause Audio" : "Play Audio"}
+                    </button>
+                    <audio ref={audioRef} src={`${BASE}audio/intro.mp3`} preload="auto" onEnded={onEnded} />
                 </motion.div>
             </div>
         </header>
     );
 }
 
-function Card({children}) {
-    return <div className="card">{children}</div>;
+// 2) NEXT EVENT — short info block + lineup grid
+function EventIntro() {
+    const date = useMemo(() => formatDateRange(event.start, event.end), []);
+    return (
+        <div className="stack-4">
+            <p><strong>{event.name}</strong></p>
+            <p className="muted">{date} · {event.city} · {event.venue}</p>
+            <p>
+                Lineup:
+                {" "}
+                {lineup.map((a, i) => (
+                    <span key={a.name}>
+            <a className="link" href={a.links?.instagram || "#"} target="_blank" rel="noreferrer">{a.name}</a>
+                        {i < lineup.length - 1 ? ", " : ""}
+          </span>
+                ))}
+            </p>
+        </div>
+    );
 }
+
+function Card({children}) { return <div className="card">{children}</div>; }
 
 function ArtistCard({ a }) {
     return (
@@ -262,7 +290,7 @@ function ArtistCard({ a }) {
                 <div className="eyebrow">{a.tier}</div>
                 <h3 className="card__title">{a.name}</h3>
                 <p className="muted">{a.genre}</p>
-                {a.links.instagram && <a className="link mt-2 inline" href={a.links.instagram} target="_blank">Instagram</a>}
+                {a.links.instagram && <a className="link mt-2 inline" href={a.links.instagram} target="_blank" rel="noreferrer">Instagram</a>}
             </div>
         </motion.div>
     );
@@ -319,7 +347,7 @@ function ResidentsGrid() {
                     <div className="card__body">
                         <h3 className="card__title">{r.name}</h3>
                         <div className="muted">{r.style}</div>
-                        {r.links.mix && <a className="link mt-2 inline" href={r.links.mix} target="_blank">Featured mix</a>}
+                        {r.links.mix && <a className="link mt-2 inline" href={r.links.mix} target="_blank" rel="noreferrer">Featured mix</a>}
                     </div>
                 </motion.div>
             ))}
@@ -358,7 +386,6 @@ function PastEvents() {
                                     View gallery
                                 </button>
                             )}
-
                         </div>
                     </motion.div>
                 ))}
@@ -384,12 +411,7 @@ function FAQ() {
     return (
         <div className="card card--divide">
             {faq.map((f, i) => (
-                <Disclosure
-                    key={i}
-                    q={f.q}
-                    a={f.a}
-                    className="faq-question"
-                />
+                <Disclosure key={i} q={f.q} a={f.a} className="faq-question" />
             ))}
         </div>
     );
@@ -503,52 +525,69 @@ export default function App() {
         return () => { document.documentElement.style.scrollBehavior = "auto"; };
     }, []);
 
+    // NEW order required by the client
     const sections = [
-        { id: "event", label: "Event" },
-        { id: "lineup", label: "Lineup" },
-        { id: "about", label: "About" },
-        { id: "residents", label: "Residents" },
-        { id: "past", label: "Past" },
-        { id: "info", label: "Info" },
-        { id: "faq", label: "FAQ" },
-        { id: "contact", label: "Contact" }
+        { id: "home",   label: "Home" },
+        { id: "event",  label: "Next Event" },
+        { id: "about",  label: "About" },
+        { id: "past",   label: "Archive" },
+        { id: "contact",label: "Contact" }
     ];
 
     return (
         <main className="site">
             <StickyNav sections={sections} />
-            <Hero />
-            <Section id="lineup" title="Lineup" subdued><LineupGrid /></Section>
-            <Section id="about" title="About TakeOne">
-                <div className="grid grid--aside">
-                    <div className="stack-4">
-                        <p>
-                            <strong>TakeOne</strong> is a creative collective from Alto Adige founded by
-                            <strong> Daniele Daprà</strong> and <strong>Lorenzo Giani</strong>, both students of
-                            the Free University of Bozen-Bolzano (unibz). Passionate about music, community,
-                            and unique cultural experiences, they bring together local and international talent.
-                        </p>
-                        <p>
-                            For this event, TakeOne will bring their signature high-energy DJ sets to
-                            <strong> Zoona</strong> in Bolzano — transforming the venue into a vibrant dance floor.
-                            Their focus on distinctive curation, warm sound, and immersive production ensures
-                            each night is memorable.
-                        </p>
-                    </div>
-                    <div className="card">
-                        <img src={`${BASE}img/TakeOne.jpg`} alt="About" />
-                    </div>
-                </div>
-                <div className="mt-8"><TeamGrid /></div>
+
+            {/* 1 — Home: logo + audio button */}
+            <HomeSection />
+
+            {/* 2 — Second section: next event info + lineup */}
+            <Section id="event" title="Next Event" subdued>
+                <EventIntro />
+                <LineupGrid />
             </Section>
-            <Section id="residents" title="Resident DJs" subdued><ResidentsGrid /></Section>
-            <Section id="past" title="Past Events"><PastEvents /></Section>
-            <Section id="info" title="Info & Logistics" subdued><Info /></Section>
-            <Section id="faq" title="FAQ"><FAQ /></Section>
-            <Section id="contact" title="Contact / Press" subdued><Contact /></Section>
+
+            {/* 3 — Third section: small explanation of TakeOne */}
+            <Section id="about" title="About TakeOne">
+                {/* Logo centered on top */}
+                <div className="about__logo-wrap">
+                    <img src={`${BASE}img/TakeOne.jpg`} alt="TakeOne logo" />
+                </div>
+
+                {/* Centered column with justified text */}
+                <div className="about__text">
+                    <p>
+                        <strong>TakeOne</strong> is a creative collective from Alto Adige founded by
+                        <strong> Daniele Daprà</strong> and <strong>Lorenzo Giani</strong>, both students of
+                        the Free University of Bozen-Bolzano (unibz). Passionate about music, community,
+                        and unique cultural experiences, they bring together local and international talent.
+                    </p>
+                    <p>
+                        For this event, TakeOne will bring their signature high-energy DJ sets to
+                        <strong> Zoona</strong> in Bolzano — transforming the venue into a vibrant dance floor.
+                        Their focus on distinctive curation, warm sound, and immersive production ensures
+                        each night is memorable.
+                    </p>
+                </div>
+
+                {/* Team grid preserved */}
+                <div className="mt-8">
+                    <TeamGrid />
+                </div>
+            </Section>
+
+
+            {/* 4 — Fourth section: archive (past events with gallery) */}
+            <Section id="past" title="Archive">
+                <PastEvents />
+            </Section>
+
+            {/* 5 — Fifth section: contact */}
+            <Section id="contact" title="Contact / Press" subdued>
+                <Contact />
+            </Section>
+
             <Footer />
         </main>
     );
 }
-
-

@@ -407,5 +407,24 @@ h1{font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height:1.1}
           0 0 0 4px var(--violet);
 }
 
+.about__logo-wrap {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.about__logo-wrap img {
+  max-width: 220px;
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border-radius: 12px; /* optional, matches your style */
+}
+
+.about__text {
+  max-width: 800px;      /* centers the page content visually */
+  margin: 0 auto;        /* centers the block */
+  text-align: justify;   /* justify text as requested */
+}
+
 
 
