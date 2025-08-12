@@ -14,13 +14,13 @@ import PopupGallery from "./PopupGallery.jsx";
 const BASE = import.meta.env.BASE_URL; // add once near the top
 
 const zoonaImages = Object.values(
-    import.meta.glob('./assets/zoona-03-05-2025/*.{jpg,png}', { eager: true, as: 'url' })
+    import.meta.glob('./assets/zoona-03-05-2025/*.{jpg}', { eager: true, as: 'url' })
 );
 const miroImages = Object.values(
-    import.meta.glob('./assets/miro-18-04-2025/*.{jpg,png}', { eager: true, as: 'url' })
+    import.meta.glob('./assets/miro-18-04-2025/*.{jpg}', { eager: true, as: 'url' })
 );
 const roncoloImages = Object.values(
-    import.meta.glob('./assets/roncolo-22-03-2025/*.{jpg,png}', { eager: true, as: 'url' })
+    import.meta.glob('./assets/roncolo-22-03-2025/*.{jpg}', { eager: true, as: 'url' })
 );
 
 import zoonaPoster from './assets/zoona-03-05-2025/logo.png';
