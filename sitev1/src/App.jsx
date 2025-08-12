@@ -7,6 +7,11 @@ import { motion } from "framer-motion";
  * Edit the content objects (event, lineup, etc.) to customize.
  */
 
+// App.jsx
+const BASE = import.meta.env.BASE_URL; // add once near the top
+
+
+
 // ---------------------------
 // Content Model
 // ---------------------------
@@ -57,14 +62,14 @@ const team = [
         name: "Lorenzo Giani",
         role: "Founder & Curator",
         image:
-            "/img/Giani.jpg",
+            `${BASE}img/Giani.jpg`,
         bio: "Programming events in Alto Adige. Focus on curation and partnerships."
     },
     {
         name: "Daniele Dapra",
         role: "Production Lead",
         image:
-            "/img/Dani.jpg",
+            `${BASE}img/Dani.jpg`,
         bio: "Logistics, vendors, backstage flow."
     }
 ];
@@ -154,7 +159,7 @@ function StickyNav({ sections }) {
             <div className="container">
                 <div className="nav__bar">
                     <a href="#event" onClick={go("event")} className="nav__brand"><img
-                        src="/img/TakeOne.jpg"
+                        src={`${BASE}img/TakeOne.jpg`}
                         alt="TakeOne Logo"
                         style={{ height: "60px", width: "auto" }}
                     /></a>
@@ -425,7 +430,7 @@ function Contact() {
                 {status==="error" && <p className="err">Something went wrong. Try again.</p>}
             </form>
             <div className="muted">
-                <p>Press & bookings: <a className="link" href="mailto:press@example.com">press@example.com</a></p>
+                <p>Press & bookings: <a className="link" href="mailto:take.one@outlook.it">take.one@outlook.it</a></p>
                 <p className="mt-2">Follow us: <a href={"https://www.instagram.com/takeonebozen/"}>Instagram</a></p>
                 <a href="#" className="btn btn--outline mt-4">Download Press Kit</a>
             </div>
@@ -487,7 +492,7 @@ export default function App() {
                         </p>
                     </div>
                     <div className="card">
-                        <img src="/img/TakeOne.jpg" alt="About" />
+                        <img src={`${BASE}img/TakeOne.jpg`} alt="About" />
                     </div>
                 </div>
                 <div className="mt-8"><TeamGrid /></div>
