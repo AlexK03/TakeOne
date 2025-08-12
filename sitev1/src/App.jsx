@@ -1,6 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
+
+import PopupGallery from "./PopupGallery.jsx";
+
 /**
  * Standard HTML + CSS + React (no Tailwind)
  * Clean, colorful event site with smooth scroll-reveals.
@@ -9,6 +12,18 @@ import { motion } from "framer-motion";
 
 // App.jsx
 const BASE = import.meta.env.BASE_URL; // add once near the top
+
+const zoonaImages = Object.values(
+    import.meta.glob('/public/Zoona-03.05.2025/*.JPG', { eager: true, as: 'url' })
+);
+
+const miroImages = Object.values(
+    import.meta.glob('/public/Mirò Club-18.04.2025/*.JPG', { eager: true, as: 'url' })
+);
+
+const roncoloImages = Object.values(
+    import.meta.glob('/public/Castel Roncolo-22.03.2025/*.JPG', { eager: true, as: 'url' })
+);
 
 
 
@@ -86,24 +101,32 @@ const residents = [
 
 const pastEvents = [
     {
-        title: "TakeOne: Spring Opening",
-        date: "2025-04-12",
+        title: "TakeOne: Zoona Magnifiique",
+        date: "2025-05-03",
         city: "Bolzano",
-        venue: "Keller Club",
-        poster:
-            "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=800&q=80",
+        venue: "Zoona",
+        poster: `${BASE}Zoona-03.05.2025/Logo.PNG`,
         recap: "A packed night with local talent and a surprise sunrise set.",
-        galleryUrl: "#"
+        gallery: zoonaImages
     },
     {
-        title: "TakeOne: Winter Warmup",
-        date: "2024-12-02",
-        city: "Brunico",
-        venue: "Depot Hall",
-        poster:
-            "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=800&q=80",
-        recap: "Cozy lights, big sound, full house.",
-        galleryUrl: "#"
+        title: "TakeOne: Mirò Club",
+        date: "2025-04-18",
+        city: "Bolzano",
+        venue: "Mirò Club",
+        poster:`${BASE}Mirò Club-18.04.2025/Logo.PNG
+        `,
+        recap: "Gonfio",
+        gallery: miroImages
+    },
+    {
+        title: "TakeOne: Castel Roncolo",
+        date: "2025-03-22",
+        city: "Bolzano",
+        venue: "Castel Roncolo",
+        poster:`${BASE}Castel Roncolo-22.03.2025/Logo.png`,
+        recap: "Gonfio",
+        gallery: roncoloImages
     }
 ];
 
@@ -304,23 +327,43 @@ function ResidentsGrid() {
 }
 
 function PastEvents() {
+    const [galleryImages, setGalleryImages] = useState([]);
+    const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+
+    const openGallery = (images) => {
+        setGalleryImages(images);
+        setIsGalleryOpen(true);
+    };
+
     return (
-        <motion.div className="grid grid--cards" variants={stagger} initial="hidden" whileInView="show" viewport={{once:true}}>
-            {pastEvents.map(p => (
-                <motion.div key={p.title} className="card" variants={fadeUp}>
-                    <div className="ratio ratio--4x5"><img src={p.poster} alt={p.title} className="zoom" /></div>
-                    <div className="card__body">
-                        <div className="muted">
-                            {new Date(p.date).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
+        <>
+            <motion.div className="grid grid--cards" variants={stagger} initial="hidden" whileInView="show" viewport={{once:true}}>
+                {pastEvents.map(p => (
+                    <motion.div key={p.title} className="card" variants={fadeUp}>
+                        <div className="ratio ratio--4x5"><img src={p.poster} alt={p.title} className="zoom" /></div>
+                        <div className="card__body">
+                            <div className="muted">
+                                {new Date(p.date).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
+                            </div>
+                            <h3 className="card__title">{p.title}</h3>
+                            <div className="muted">{p.city} · {p.venue}</div>
+                            <p className="mt-2">{p.recap}</p>
+                            {p.gallery?.length > 0 && (
+                                <button
+                                    type="button"
+                                    className="gallery-btn mt-2"
+                                    onClick={() => openGallery(p.gallery)}
+                                >
+                                    View gallery
+                                </button>
+                            )}
+
                         </div>
-                        <h3 className="card__title">{p.title}</h3>
-                        <div className="muted">{p.city} · {p.venue}</div>
-                        <p className="mt-2">{p.recap}</p>
-                        {p.galleryUrl && <a className="link mt-2 inline" href={p.galleryUrl}>View gallery</a>}
-                    </div>
-                </motion.div>
-            ))}
-        </motion.div>
+                    </motion.div>
+                ))}
+            </motion.div>
+            <PopupGallery isOpen={isGalleryOpen} onClose={() => setIsGalleryOpen(false)} images={galleryImages} />
+        </>
     );
 }
 
@@ -506,3 +549,5 @@ export default function App() {
         </main>
     );
 }
+
+
