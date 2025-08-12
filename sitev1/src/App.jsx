@@ -14,16 +14,18 @@ import PopupGallery from "./PopupGallery.jsx";
 const BASE = import.meta.env.BASE_URL; // add once near the top
 
 const zoonaImages = Object.values(
-    import.meta.glob('/public/Zoona-03.05.2025/*.JPG', { eager: true, as: 'url' })
+    import.meta.glob('./assets/zoona-03-05-2025/*.{jpg,png}', { eager: true, as: 'url' })
 );
-
 const miroImages = Object.values(
-    import.meta.glob('/public/Mirò Club-18.04.2025/*.JPG', { eager: true, as: 'url' })
+    import.meta.glob('./assets/miro-18-04-2025/*.{jpg,png}', { eager: true, as: 'url' })
+);
+const roncoloImages = Object.values(
+    import.meta.glob('./assets/roncolo-22-03-2025/*.{jpg,png}', { eager: true, as: 'url' })
 );
 
-const roncoloImages = Object.values(
-    import.meta.glob('/public/Castel Roncolo-22.03.2025/*.JPG', { eager: true, as: 'url' })
-);
+import zoonaPoster from './assets/zoona-03-05-2025/logo.png';
+import miroPoster  from './assets/miro-18-04-2025/logo.png';
+import ronPoster   from './assets/roncolo-22-03-2025/logo.png';
 
 
 
@@ -105,7 +107,7 @@ const pastEvents = [
         date: "2025-05-03",
         city: "Bolzano",
         venue: "Zoona",
-        poster: `${BASE}Zoona-03.05.2025/Logo.PNG`,
+        poster: zoonaPoster,
         recap: "A packed night with local talent and a surprise sunrise set.",
         gallery: zoonaImages
     },
@@ -114,8 +116,7 @@ const pastEvents = [
         date: "2025-04-18",
         city: "Bolzano",
         venue: "Mirò Club",
-        poster:`${BASE}Mirò Club-18.04.2025/Logo.PNG
-        `,
+        poster:miroPoster,
         recap: "Gonfio",
         gallery: miroImages
     },
@@ -124,7 +125,7 @@ const pastEvents = [
         date: "2025-03-22",
         city: "Bolzano",
         venue: "Castel Roncolo",
-        poster:`${BASE}Castel Roncolo-22.03.2025/Logo.png`,
+        poster:ronPoster,
         recap: "Gonfio",
         gallery: roncoloImages
     }
