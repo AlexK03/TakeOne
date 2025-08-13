@@ -217,6 +217,46 @@ function Section({ id, title, children, subdued=false }) {
     );
 }
 
+// Simple typewriter that types the last word, deletes it, and loops
+function Typewriter({ prefix = "TakeOne is ", words = [], typeMs = 80, deleteMs = 45, holdMs = 1200 }) {
+    const [i, setI] = React.useState(0);          // which word
+    const [len, setLen] = React.useState(0);      // letters revealed
+    const [phase, setPhase] = React.useState("typing"); // typing | holding | deleting
+
+    const word = words[i % words.length];
+
+    React.useEffect(() => {
+        let t;
+        if (phase === "typing") {
+            if (len < word.length) {
+                t = setTimeout(() => setLen(len + 1), typeMs);
+            } else {
+                setPhase("holding");
+                t = setTimeout(() => setPhase("deleting"), holdMs);
+            }
+        } else if (phase === "deleting") {
+            if (len > 0) {
+                t = setTimeout(() => setLen(len - 1), deleteMs);
+            } else {
+                setI((i + 1) % words.length);
+                setPhase("typing");
+            }
+        } else if (phase === "holding") {
+            t = setTimeout(() => setPhase("deleting"), holdMs);
+        }
+        return () => clearTimeout(t);
+    }, [phase, len, i, word, typeMs, deleteMs, holdMs, words.length]);
+
+    return (
+        <div className="typewriter" aria-live="polite" aria-atomic="true">
+            <span className="typewriter__static">{prefix}</span>
+            <span className="typewriter__word">{word.slice(0, len)}</span>
+            <span className="typewriter__cursor" aria-hidden="true" />
+        </div>
+    );
+}
+
+
 function HomeSection() {
     const BASE = import.meta.env.BASE_URL;
     const audioRef = React.useRef(null);
@@ -260,26 +300,30 @@ function HomeSection() {
                 position: "relative"
             }}
         >
-            {/* MP4 background video */}
-            <video
+            {/* Static background image instead of video
+            <img
+                src={`${BASE}/video/bg1.jpeg`}
+                alt=""
                 className="hero__bg"
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="auto"
-            >
-                <source src={`${BASE}video/bg2.mp4`} type="video/mp4" />
-                Your browser does not support the video tag.
-            </video>
+                style={{ objectFit: "cover" }}
+            />*/}
 
             <div className="hero__halo" />
             <div className="hero__overlay" />
 
             <div className="container hero__content">
-                <h1 className="accent hero__title" style={{ marginBottom: "1.25rem" }}>
-                    TakeOne
-                </h1>
+
+                {/* Quote with deleting keyboard effect */}
+                <div className="typewriter-line">
+                    <span className="accent tw-brand">TakeOne</span>
+                    <Typewriter
+                        prefix=" is "
+                        words={["a concept", "a Tribute", "People"]}
+                        typeMs={80}
+                        deleteMs={45}
+                        holdMs={1100}
+                    />
+                </div>
 
                 {/* Vertical logo stack */}
                 <div className="home-logos">
@@ -302,7 +346,7 @@ function HomeSection() {
                     <audio
                         ref={audioRef}
                         preload="auto"
-                        src={`${BASE}audio/homeTrack.mp3`} // put in public/audio
+                        src={`${BASE}audio/homeTrack.mp3`}
                     />
                     <button
                         type="button"
@@ -316,6 +360,7 @@ function HomeSection() {
         </header>
     );
 }
+
 
 
 
