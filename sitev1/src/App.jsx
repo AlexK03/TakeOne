@@ -28,14 +28,15 @@ import zoonaPoster from './assets/logos/posterZoona.png';
 import miroPoster  from './assets/logos/posterMiro.png';
 import ronPoster   from './assets/logos/posterRoncolo.png';
 import logo from './assets/logos/logo2.png';
+import lonedImage from './assets/miro-18-04-2025/img1.jpg';
 
 // ---------------------------
 // Content Model
 // ---------------------------
 const event = {
     name: "TakeOne — Late Summer Session",
-    start: "2025-09-14T19:00:00+02:00",
-    end: "2025-09-15T03:00:00+02:00",
+    start: "2025-09-19T19:00:00+02:00",
+    end: "2025-09-19T03:00:00+02:00",
     city: "Bolzano, IT",
     venue: "Zoona",
     address: "Via Vincenzo Lancia, 1, 39100 Bolzano BZ",
@@ -49,15 +50,15 @@ const event = {
 
 const lineup = [
     {
-        name: "DJ Aurora",
+        name: "Davide Piras",
         tier: "headliner",
-        genre: "Melodic Techno",
+        genre: "",
         image:
             "https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=900&q=80",
         links: { instagram: "https://instagram.com/" }
     },
     {
-        name: "Lucas Venus",
+        name: "Mattia Lorenzi",
         tier: "support",
         genre: "House",
         image:
@@ -65,7 +66,15 @@ const lineup = [
         links: { instagram: "https://instagram.com/" }
     },
     {
-        name: "Cartado",
+        name: "Loned",
+        tier: "support",
+        genre: "Tech House",
+        image:
+            lonedImage,
+        links: { instagram: "https://www.instagram.com/lonednotloned/" }
+    },
+    {
+        name: "XTO",
         tier: "support",
         genre: "Tech House",
         image:
@@ -760,16 +769,11 @@ export default function App() {
                 </div>
                 <div className="about__text">
                     <p>
-                        <strong>TakeOne</strong> is a creative collective from Alto Adige founded by
-                        <strong> Daniele Daprà</strong> and <strong>Lorenzo Giani</strong>, both students of
-                        the Free University of Bozen-Bolzano (unibz). Passionate about music, community,
-                        and unique cultural experiences, they bring together local and international talent.
-                    </p>
-                    <p>
-                        For this event, TakeOne will bring their signature high-energy DJ sets to
-                        <strong> Zoona</strong> in Bolzano — transforming the venue into a vibrant dance floor.
-                        Their focus on distinctive curation, warm sound, and immersive production ensures
-                        each night is memorable.
+                        <strong>TakeOne</strong>, a symbiosis. MUSIC | ART | PERFORMANCE</p><p> 
+                        A space of possibilities unfolds. Here to stay.
+                        Through the many facets of electronic music, lose yourself between dance, installation, and being.
+                        Imagine the future—and everything is good.
+                        TakeOne—what are we waiting for
                     </p>
                 </div>
                 <div className="mt-8">

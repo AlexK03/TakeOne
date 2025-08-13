@@ -377,4 +377,19 @@ h1{ font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height:1.1; }
 }
 
 
+/* Make DJ names pop a bit more */
+.event-name{
+  font-size: 1.15em;           /* was inherited; now ~15% bigger than the row */
+  font-weight: 800;            /* stronger weight for readability */
+  letter-spacing: .02em;
+  margin-right: .25rem;        /* tiny breathing room before the comma */
+}
+
+/* On small screens, scale the whole event text slightly up */
+@media (max-width: 480px){
+  .event-text-block{
+    font-size: clamp(1.15rem, 2.6vw + .75rem, 2.5rem);
+  }
+}
+
 
