@@ -427,4 +427,170 @@ h1{font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height:1.1}
 }
 
 
+/* ===== Home vertical logos ===== */
+.home-logos{
+  display: grid;
+  gap: 1rem;
+  width: min(360px, 80%);
+  margin: 1rem auto 0;
+}
+
+.logo-tile{
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 0;                 /* image defines height via aspect ratio */
+  aspect-ratio: 16 / 9;       /* tweak to match your logo shape */
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.02);
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.logo-tile:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 14px 40px rgba(0,0,0,.35);
+}
+
+.logo-tile__img{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;          /* if your logos are transparent PNG/SVG, you can use contain */
+  transition: opacity .22s ease;
+}
+
+.logo-tile__label{
+  position: relative;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity .22s ease;
+  background: linear-gradient(100deg, var(--violet), var(--green), var(--cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  padding: .25rem .5rem;
+}
+
+.logo-tile:hover .logo-tile__img{ opacity: 0; }
+.logo-tile:hover .logo-tile__label{ opacity: 1; }
+
+/* Make the stack tighter on large displays */
+@media (min-width: 900px){
+  .home-logos{ width: 320px; }
+}
+
+
+/* ===== Logo Tiles with Visible Background for Black PNG ===== */
+.logo-tile__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+
+  /* Background to make black logos stand out */
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px) saturate(1.4);
+  border-radius: var(--radius);
+  padding: 0.75rem;
+  transition: opacity 0.22s ease;
+}
+
+.logo-tile {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.05);
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.logo-tile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+}
+
+.logo-tile__label {
+  position: relative;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 0.22s ease;
+  background: linear-gradient(100deg, var(--violet), var(--green), var(--cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  padding: 0.25rem 0.5rem;
+}
+
+.logo-tile:hover .logo-tile__img {
+  opacity: 0;
+}
+
+.logo-tile:hover .logo-tile__label {
+  opacity: 1;
+}
+
+/* ===== Next Event text poster ===== */
+.event-text-block{
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: .02em;
+  line-height: 1.2;
+  font-size: clamp(1.1rem, 2.2vw + .6rem, 2.25rem);
+  display: grid;
+  gap: .35rem;
+}
+.event-text-row{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .6rem 1rem;
+}
+.event-series{ background: linear-gradient(100deg, var(--violet), var(--green), var(--cyan));
+  -webkit-background-clip: text; background-clip: text; color: transparent; }
+.event-date{ color: var(--ink); opacity: .9; }
+.event-venue{ color: var(--ink); opacity: .85; }
+.event-lineup-label{ color: var(--mute); font-weight: 800; letter-spacing: .14em; }
+
+.event-name{
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font: inherit;
+}
+.event-name:hover{ color: #fff; }
+
+/* ===== Artist modal (reuses gallery overlay) ===== */
+.artist-modal{
+  position: relative;
+  background: #0f0f15;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: 0 20px 60px rgba(0,0,0,.55), 0 0 0 1px rgba(168,85,247,.10) inset;
+  max-width: min(94vw, 780px);
+  max-height: 90vh;
+  overflow: auto;
+  outline: none;
+}
+
+
 

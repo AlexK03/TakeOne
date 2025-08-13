@@ -2,6 +2,8 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
 import PopupGallery from "./PopupGallery.jsx";
+// place near PopupGallery import
+import Modal from "react-modal";
 
 /**
  * Standard HTML + CSS + React (no Tailwind)
@@ -25,6 +27,7 @@ const roncoloImages = Object.values(
 import zoonaPoster from './assets/logos/posterZoona.png';
 import miroPoster  from './assets/logos/posterMiro.png';
 import ronPoster   from './assets/logos/posterRoncolo.png';
+import logo from './assets/logos/logo2.png';
 
 // ---------------------------
 // Content Model
@@ -214,75 +217,174 @@ function Section({ id, title, children, subdued=false }) {
     );
 }
 
-// 1) HOME — logo + audio button
 function HomeSection() {
-    const audioRef = useRef(null);
-    const [isPlaying, setIsPlaying] = useState(false);
+    const BASE = import.meta.env.BASE_URL;
+    const audioRef = React.useRef(null);
+    const [isPlaying, setIsPlaying] = React.useState(false);
+
+    const items = [
+        { id: "event", label: "Next Event", img: logo },
+        { id: "about", label: "About", img: logo },
+        { id: "past",  label: "Archive", img: logo }
+    ];
+
+    const goTo = (id) => (e) => {
+        e.preventDefault();
+        document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    };
 
     const toggleAudio = () => {
         const el = audioRef.current;
         if (!el) return;
-        if (isPlaying) { el.pause(); } else { el.play(); }
-        setIsPlaying(!isPlaying);
+
+        if (el.paused) {
+            const duration = el.duration;
+            if (!isNaN(duration) && duration > 0) {
+                const start = duration * (0.15 + Math.random() * 0.7);
+                el.currentTime = start;
+            }
+            el.play();
+            setIsPlaying(true);
+        } else {
+            el.pause();
+            setIsPlaying(false);
+        }
     };
 
-    // if the audio ends naturally, reset UI
-    const onEnded = () => setIsPlaying(false);
-
     return (
-        <header id="home" className="hero" style={{ textAlign: "center" }}>
-            {/* reuse hero background/halo for brand feel, but only show logo + button */}
-            <img className="hero__bg" src={event.heroImage} alt="Background" />
+        <header
+            id="home"
+            className="hero"
+            style={{
+                textAlign: "center",
+                position: "relative"
+            }}
+        >
+            {/* MP4 background video */}
+            <video
+                className="hero__bg"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+            >
+                <source src={`${BASE}video/bg2.mp4`} type="video/mp4" />
+                Your browser does not support the video tag.
+            </video>
+
             <div className="hero__halo" />
             <div className="hero__overlay" />
 
             <div className="container hero__content">
-                <motion.img
-                    src={`${BASE}img/TakeOne.jpg`}
-                    alt="TakeOne Logo"
-                    style={{ maxWidth: 320, width: "60%", marginInline: "auto", borderRadius: 12 }}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                />
+                <h1 className="accent hero__title" style={{ marginBottom: "1.25rem" }}>
+                    TakeOne
+                </h1>
 
-                <motion.div className="hero__actions" initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} transition={{delay:.25}}>
-                    <button type="button" className="btn btn--solid" onClick={toggleAudio}>
-                        {isPlaying ? "Pause Audio" : "Play Audio"}
+                {/* Vertical logo stack */}
+                <div className="home-logos">
+                    {items.map((it) => (
+                        <a
+                            key={it.id}
+                            href={`#${it.id}`}
+                            onClick={goTo(it.id)}
+                            className="logo-tile"
+                            aria-label={it.label}
+                        >
+                            <img src={it.img} alt="" className="logo-tile__img" />
+                            <span className="logo-tile__label">{it.label}</span>
+                        </a>
+                    ))}
+                </div>
+
+                {/* Audio control */}
+                <div className="hero__actions" style={{ justifyContent: "center" }}>
+                    <audio
+                        ref={audioRef}
+                        preload="auto"
+                        src={`${BASE}audio/homeTrack.mp3`} // put in public/audio
+                    />
+                    <button
+                        type="button"
+                        className="btn btn--solid"
+                        onClick={toggleAudio}
+                    >
+                        {isPlaying ? "Pause" : "Play"} Audio
                     </button>
-                    <audio ref={audioRef} src={`${BASE}audio/intro.mp3`} preload="auto" onEnded={onEnded} />
-                </motion.div>
+                </div>
             </div>
         </header>
     );
 }
 
+
+
+
+
+
 // 2) NEXT EVENT — short info block + lineup grid
-function EventIntro() {
+function EventIntro({ onPick }) {
     const date = useMemo(() => formatDateRange(event.start, event.end), []);
     return (
-        <div className="stack-4">
-            <p><strong>{event.name}</strong></p>
-            <p className="muted">{date} · {event.city} · {event.venue}</p>
-            <p>
-                Lineup:
-                {" "}
+        <div className="event-text-block">
+            <div className="event-text-row">
+                <span className="event-series">TAKEONEXZOONA</span>
+                <span className="event-date">{date.toUpperCase()}</span>
+            </div>
+
+            <div className="event-text-row">
+                <span className="event-venue">BOLZANO · {event.venue.toUpperCase()}</span>
+            </div>
+
+            <div className="event-text-row">
+                <span className="event-lineup-label">LINEUP:</span>
                 {lineup.map((a, i) => (
-                    <span key={a.name}>
-            <a className="link" href={a.links?.instagram || "#"} target="_blank" rel="noreferrer">{a.name}</a>
-                        {i < lineup.length - 1 ? ", " : ""}
-          </span>
+                    <button key={a.name} className="event-name" onClick={() => onPick(a)}>
+                        {a.name.toUpperCase()}
+                        {i < lineup.length - 1 ? "," : ""}
+                    </button>
                 ))}
-            </p>
+            </div>
         </div>
     );
 }
 
+
 function Card({children}) { return <div className="card">{children}</div>; }
+
+function ArtistModal({ artist, isOpen, onClose }) {
+    if (!artist) return null;
+    return (
+        <Modal
+            isOpen={isOpen}
+            onRequestClose={onClose}
+            className="artist-modal"
+            overlayClassName="gallery-overlay"
+            contentLabel={`${artist.name} details`}
+        >
+            <div className="card" style={{ border: "none", background: "transparent" }}>
+                <div className="ratio ratio--4x3">
+                    <img src={artist.image} alt={artist.name} className="zoom" />
+                </div>
+                <div className="card__body">
+                    <div className="eyebrow">{artist.tier}</div>
+                    <h3 className="card__title">{artist.name}</h3>
+                    <p className="muted">{artist.genre}</p>
+                    {artist.links?.instagram && (
+                        <a className="link mt-2 inline" href={artist.links.instagram} target="_blank" rel="noreferrer">
+                            Instagram
+                        </a>
+                    )}
+                </div>
+            </div>
+            <button className="close-btn" onClick={onClose} aria-label="Close">×</button>
+        </Modal>
+    );
+}
 
 function ArtistCard({ a }) {
     return (
-        <motion.div className="card group" variants={fadeUp}>
+        <motion.sdiv className="card group" variants={fadeUp}>
             <div className="ratio ratio--4x3">
                 <img src={a.image} alt={a.name} className="zoom" />
             </div>
@@ -292,7 +394,7 @@ function ArtistCard({ a }) {
                 <p className="muted">{a.genre}</p>
                 {a.links.instagram && <a className="link mt-2 inline" href={a.links.instagram} target="_blank" rel="noreferrer">Instagram</a>}
             </div>
-        </motion.div>
+        </motion.sdiv>
     );
 }
 
@@ -525,7 +627,7 @@ export default function App() {
         return () => { document.documentElement.style.scrollBehavior = "auto"; };
     }, []);
 
-    // NEW order required by the client
+    // nav sections
     const sections = [
         { id: "home",   label: "Home" },
         { id: "event",  label: "Next Event" },
@@ -534,27 +636,83 @@ export default function App() {
         { id: "contact",label: "Contact" }
     ];
 
+    // artist modal state (simple overlay; no extra imports)
+    const [selectedArtist, setSelectedArtist] = useState(null);
+    const [isArtistOpen, setArtistOpen] = useState(false);
+    const openArtist = (a) => { setSelectedArtist(a); setArtistOpen(true); };
+    const closeArtist = () => setArtistOpen(false);
+
+    const dateLabel = useMemo(() => formatDateRange(event.start, event.end).toUpperCase(), []);
+
     return (
         <main className="site">
             <StickyNav sections={sections} />
 
-            {/* 1 — Home: logo + audio button */}
+            {/* 1 — Home */}
             <HomeSection />
 
-            {/* 2 — Second section: next event info + lineup */}
+            {/* 2 — Next Event: poster-style text with clickable names */}
             <Section id="event" title="Next Event" subdued>
-                <EventIntro />
-                <LineupGrid />
+                <div className="event-text-block">
+                    <div className="event-text-row">
+                        <span className="event-series">TAKEONE</span>
+                        <span className="event-date">{dateLabel}</span>
+                    </div>
+
+                    <div className="event-text-row">
+                        <span className="event-venue">{event.city} · {event.venue}</span>
+                    </div>
+
+                    <div className="event-text-row">
+                        <span className="event-lineup-label">LINEUP:</span>
+                        {lineup.map((a, i) => (
+                            <button
+                                key={a.name}
+                                className="event-name"
+                                type="button"
+                                onClick={() => openArtist(a)}
+                            >
+                                {a.name.toUpperCase()}{i < lineup.length - 1 ? "," : ""}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Artist modal (uses same overlay styles as gallery) */}
+                {isArtistOpen && selectedArtist && (
+                    <div className="gallery-overlay" onClick={closeArtist}>
+                        <div className="artist-modal" onClick={(e) => e.stopPropagation()}>
+                            <div className="card" style={{ border: "none", background: "transparent" }}>
+                                <div className="ratio ratio--4x3">
+                                    <img src={selectedArtist.image} alt={selectedArtist.name} className="zoom" />
+                                </div>
+                                <div className="card__body">
+                                    <div className="eyebrow">{selectedArtist.tier}</div>
+                                    <h3 className="card__title">{selectedArtist.name}</h3>
+                                    <p className="muted">{selectedArtist.genre}</p>
+                                    {selectedArtist.links?.instagram && (
+                                        <a
+                                            className="link mt-2 inline"
+                                            href={selectedArtist.links.instagram}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            Instagram
+                                        </a>
+                                    )}
+                                </div>
+                            </div>
+                            <button className="close-btn" onClick={closeArtist} aria-label="Close">×</button>
+                        </div>
+                    </div>
+                )}
             </Section>
 
-            {/* 3 — Third section: small explanation of TakeOne */}
+            {/* 3 — About */}
             <Section id="about" title="About TakeOne">
-                {/* Logo centered on top */}
                 <div className="about__logo-wrap">
                     <img src={`${BASE}img/TakeOne.jpg`} alt="TakeOne logo" />
                 </div>
-
-                {/* Centered column with justified text */}
                 <div className="about__text">
                     <p>
                         <strong>TakeOne</strong> is a creative collective from Alto Adige founded by
@@ -569,20 +727,17 @@ export default function App() {
                         each night is memorable.
                     </p>
                 </div>
-
-                {/* Team grid preserved */}
                 <div className="mt-8">
                     <TeamGrid />
                 </div>
             </Section>
 
-
-            {/* 4 — Fourth section: archive (past events with gallery) */}
+            {/* 4 — Archive */}
             <Section id="past" title="Archive">
                 <PastEvents />
             </Section>
 
-            {/* 5 — Fifth section: contact */}
+            {/* 5 — Contact */}
             <Section id="contact" title="Contact / Press" subdued>
                 <Contact />
             </Section>
@@ -591,3 +746,4 @@ export default function App() {
         </main>
     );
 }
+
