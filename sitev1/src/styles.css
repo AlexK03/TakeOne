@@ -33,13 +33,13 @@ html, body {
 
 body {
     margin: 0;
-    font-family: "MyFont", Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial;
+    font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial;
     color: var(--ink);
     background: url("/public/video/bg1.jpeg") no-repeat center center fixed;
     background-size: cover;
+    background: #0b0b12; /* fallback color under the fixed layer */
     line-height: 1.6;
 }
-
 
 
 img {
@@ -1138,5 +1138,10 @@ h1 {
     will-change: transform; /* hint for smoother scrolling */
     transform: translateZ(0); /* forces its own compositing layer (iOS fix) */
     pointer-events: none; /* don’t block clicks */
+}
+
+#event,
+#past {
+    font-family: "MyFont", sans-serif;
 }
 
