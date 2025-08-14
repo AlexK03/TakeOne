@@ -546,4 +546,16 @@ h1{ font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height:1.1; }
   background: rgba(255,255,255,.18);
 }
 
+/* Centered nav with logo left, using CSS Grid */
+.nav__bar--centered{
+  display: grid;
+  grid-template-columns: 1fr auto 1fr; /* left = logo, center = links, right = spacer */
+  align-items: center;
+  height: 56px; /* keep your original height */
+}
+
+.nav__bar--centered .nav__brand{ justify-self: start; }
+.nav__bar--centered .nav__links{ justify-self: center; }
+.nav__bar--centered > div:last-child{ justify-self: end; }
+
 

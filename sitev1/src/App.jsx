@@ -237,31 +237,47 @@ function StickyNav({ sections }) {
         return () => obs.current?.disconnect();
     }, [sections]);
 
-    const go = (id) => (e) => { e.preventDefault(); document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); };
+    const go = (id) => (e) => {
+        e.preventDefault();
+        document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    };
 
     return (
         <div className="nav">
             <div className="container">
-                <div className="nav__bar">
-                    <a href="#home" onClick={go("home")} className="nav__brand"><img
-                        src={`${BASE}img/TakeOne.jpg`}
-                        alt="TakeOne Logo"
-                        style={{ height: "60px", width: "auto" }}
-                    /></a>
+                <div className="nav__bar nav__bar--centered">
+                    {/* Left: Brand */}
+                    <a href="#home" onClick={go("home")} className="nav__brand">
+                        <img
+                            src={`${BASE}img/TakeOne.jpg`}
+                            alt="TakeOne Logo"
+                            style={{ height: "50px", width: "auto" }}
+                        />
+                    </a>
+
+                    {/* Center: Links */}
                     <nav className="nav__links">
                         {sections.map(s => (
-                            <a key={s.id} href={"#"+s.id} onClick={go(s.id)}
-                               className={cx("nav__link", active===s.id && "nav__link--active")}>
+                            <a
+                                key={s.id}
+                                href={"#" + s.id}
+                                onClick={go(s.id)}
+                                className={cx("nav__link", active === s.id && "nav__link--active")}
+                            >
                                 {s.label}
                             </a>
                         ))}
                     </nav>
-                    <a className="btn btn--ghost" href={event.ticketsUrl} target="_blank" rel="noreferrer">Get Tickets</a>
+
+                    {/* Right: empty spacer to keep the center truly centered */}
+                    <div aria-hidden="true" />
                 </div>
             </div>
         </div>
     );
+
 }
+
 
 function Section({ id, title, children, subdued=false }) {
     return (
@@ -756,11 +772,11 @@ function Footer() {
         <footer className="footer">
             <div className="container footer__bar">
                 <div>© {new Date().getFullYear()} TakeOne. All rights reserved.</div>
-                <div className="row">
+                {/*<div className="row">
                     <a className="link" href="#">Impressum</a>
                     <a className="link" href="#">Privacy</a>
                     <a className="link" href="#">Cookies</a>
-                </div>
+                </div>*/}
             </div>
         </footer>
     );
