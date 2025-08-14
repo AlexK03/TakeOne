@@ -14,6 +14,13 @@
     --cyan: #f3efc4; /* pale yellow */
 }
 
+@font-face {
+    font-family: "MyFont";
+    src: url("./assets/fonts/DekmantelBB-Blur.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
 
 /* --------- Base --------- */
 * {
@@ -26,13 +33,13 @@ html, body {
 
 body {
     margin: 0;
-    font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial;
+    font-family: "MyFont", Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial;
     color: var(--ink);
     background: url("/public/video/bg1.jpeg") no-repeat center center fixed;
     background-size: cover;
-    background: #0b0b12; /* fallback color under the fixed layer */
     line-height: 1.6;
 }
+
 
 
 img {
