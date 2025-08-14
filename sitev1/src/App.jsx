@@ -807,6 +807,8 @@ export default function App() {
 
     return (
         <main className="site">
+            {/* Fixed background layer for mobile + iOS Safari */}
+            <div className="bg-fixed" aria-hidden="true" />
             <StickyNav sections={sections} />
 
             {/* 1 — Home */}
