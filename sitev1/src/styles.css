@@ -1145,3 +1145,16 @@ h1 {
     font-family: "MyFont", sans-serif;
 }
 
+/* Force all Next Event text to black */
+#event .event-text-block,
+#event .event-text-block * {
+    background: none !important;
+    -webkit-background-clip: initial !important;
+    background-clip: initial !important;
+    color: #000 !important;
+    -webkit-text-stroke: 0 !important;
+    text-shadow: none !important;
+}
+
+
+

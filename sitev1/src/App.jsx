@@ -68,7 +68,7 @@ const event = {
 const lineup = [
     {
         name: "Davide Piras",
-        tier: "headliner",
+        tier: "",
         genre: "",
         image:
             davidePiras,
@@ -76,24 +76,24 @@ const lineup = [
     },
     {
         name: "Mattia Lorenzi",
-        tier: "support",
-        genre: "House",
+        tier: "",
+        genre: "",
         image:
            mattiaLorenzi,
         links: { instagram: "https://www.instagram.com/mattialrnz/" }
     },
     {
         name: "Loned",
-        tier: "support",
-        genre: "Tech House",
+        tier: "",
+        genre: "",
         image:
             lonedImage,
         links: { instagram: "https://www.instagram.com/lonednotloned/" }
     },
     {
         name: "XTO",
-        tier: "support",
-        genre: "Tech House",
+        tier: "",
+        genre: "",
         image:
             "https://images.unsplash.com/photo-1521335629791-ce4aec67dd53?auto=format&fit=crop&w=900&q=80",
         links: { instagram: "https://instagram.com/" }
@@ -841,12 +841,14 @@ export default function App() {
                     </div>
                 </div>
 
+
+
                 {/* Artist modal (uses same overlay styles as gallery) */}
                 {isArtistOpen && selectedArtist && (
                     <div className="gallery-overlay" onClick={closeArtist}>
                         <div className="artist-modal" onClick={(e) => e.stopPropagation()}>
                             <div className="card" style={{ border: "none", background: "transparent" }}>
-                                <div className="ratio ratio--4x3">
+                                <div className="ratio ratio--4x5">
                                     <img src={selectedArtist.image} alt={selectedArtist.name} className="zoom" />
                                 </div>
                                 <div className="card__body">
