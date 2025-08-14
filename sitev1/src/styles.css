@@ -115,7 +115,7 @@ h1{ font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height:1.1; }
 
 /* --------- Grid systems --------- */
 .grid{ display:grid; gap:1.25rem; }
-.grid--cards{ grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); }
+.grid--cards{ grid-template-columns:repeat(auto-fill, minmax(320px,1fr)); }
 .grid--split{ grid-template-columns:1fr; align-items:start; }
 .grid--aside{ grid-template-columns:1fr; align-items:start; gap:2rem; }
 @media (min-width:900px){
@@ -390,6 +390,160 @@ h1{ font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height:1.1; }
   .event-text-block{
     font-size: clamp(1.15rem, 2.6vw + .75rem, 2.5rem);
   }
+}
+
+/* For mobile devices */
+@media (max-width: 768px) {
+  body {
+    background-attachment: scroll; /* Prevents awkward fixed behavior on mobile */
+    background-position: center top;
+    background-size: cover;
+  }
+}
+
+/* Bigger cards in the Next Event lineup only */
+.lineup-grid {
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); /* was 240px */
+  gap: 1.25rem;
+}
+@media (min-width: 900px) {
+  .lineup-grid { grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); }
+}
+
+/* Slightly roomier content + stronger title just for lineup cards */
+.lineup-grid .card__body { padding: 1.25rem; }
+.lineup-grid .card__title { font-size: 1.25rem; }
+.lineup-grid .eyebrow { font-size: .78rem; }
+
+
+/* Dark background variant for gallery button inside modal */
+.artist-modal .gallery-btn {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35),
+  0 0 0 1px rgba(255, 255, 255, 0.12) inset;
+}
+
+.artist-modal .gallery-btn:hover {
+  background: linear-gradient(135deg,
+  rgba(255, 255, 255, 0.18),
+  rgba(180, 180, 180, 0.18)
+  );
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4),
+  0 0 0 1px rgba(255, 255, 255, 0.28) inset;
+}
+
+.artist-modal .gallery-btn:focus-visible {
+  box-shadow: 0 0 0 2px #000,
+  0 0 0 4px var(--violet);
+}
+
+/* Social actions */
+.socials {
+  display: grid;
+  gap: .75rem;
+  margin-top: .5rem;
+}
+.social-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .75rem 1rem;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: .02em;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.85);
+  color: var(--ink);
+  box-shadow: 0 8px 20px rgba(0,0,0,.10);
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
+}
+@media (hover:hover){
+  .social-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 28px rgba(0,0,0,.18);
+    background: rgba(255,255,255,.95);
+  }
+}
+.social-btn:active { transform: translateY(0); }
+
+.social-icon {
+  width: 22px;
+  height: 22px;
+  display: block;
+  flex: 0 0 22px;
+  fill: currentColor;
+}
+
+/* Brand accents */
+.social-btn--ig {
+  border-image: linear-gradient(100deg, var(--violet), var(--green), var(--cyan)) 1;
+}
+.social-btn--wa {
+  border-color: rgba(16,185,129,.35); /* subtle green hint */
+}
+
+/* Dark-surface variant if placed in a dark modal later */
+.artist-modal .social-btn {
+  background: rgba(255,255,255,.12);
+  color: #fff;
+  border-color: rgba(255,255,255,.14);
+  box-shadow: 0 8px 24px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.12) inset;
+}
+.artist-modal .social-btn:hover {
+  background: rgba(255,255,255,.18);
+}
+
+
+/* Contact socials — neutral modern tiles (no gradients) */
+.contact-socials {
+  display: grid;
+  gap: .75rem;
+  margin-top: .5rem;
+}
+
+.contact-social {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  padding: .85rem 1rem;
+  border-radius: 14px;
+  background: rgba(255,255,255,.9);
+  color: var(--ink);
+  text-decoration: none;
+  border: 1px solid rgba(0,0,0,.12);
+  box-shadow: 0 8px 22px rgba(0,0,0,.10);
+  transition: transform .15s ease, box-shadow .15s ease, background .15s ease, border-color .15s ease;
+}
+
+@media (hover:hover){
+  .contact-social:hover {
+    transform: translateY(-1px);
+    background: #fff;
+    border-color: rgba(0,0,0,.18);
+    box-shadow: 0 14px 34px rgba(0,0,0,.16);
+  }
+}
+
+.contact-social__icon {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  display: block;
+  fill: currentColor;
+  opacity: .9;
+}
+
+/* If we ever show socials inside a dark modal (artist-modal), keep them readable */
+.artist-modal .contact-social {
+  background: rgba(255,255,255,.12);
+  color: #fff;
+  border-color: rgba(255,255,255,.18);
+  box-shadow: 0 10px 26px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.10) inset;
+}
+.artist-modal .contact-social:hover {
+  background: rgba(255,255,255,.18);
 }
 
 

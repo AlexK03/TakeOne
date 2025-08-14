@@ -24,11 +24,28 @@ const roncoloImages = Object.values(
     import.meta.glob('./assets/roncolo-22-03-2025/*.{jpg,png}', { eager: true, as: 'url' })
 );
 
+const miro2Images = Object.values(
+    import.meta.glob('./assets/miro-15-11-2024/*.{jpg,png}', { eager: true, as: 'url' })
+);
+
+const goetheImages = Object.values(
+    import.meta.glob('./assets/goetheHaus-15-05-2024/*.{jpg,png}', { eager: true, as: 'url' })
+);
+
+
+
 import zoonaPoster from './assets/logos/posterZoona.png';
 import miroPoster  from './assets/logos/posterMiro.png';
 import ronPoster   from './assets/logos/posterRoncolo.png';
+import lampelePoster   from './assets/logos/posterLampele.png';
+import zoonaPoster2 from './assets/logos/posterZoona2.jpeg';
+import goethePoster from './assets/logos/posterGoethe.jpeg';
+import astraPoster from './assets/logos/posterAstra.jpg';
+
 import logo from './assets/logos/logo2.png';
 import lonedImage from './assets/miro-18-04-2025/img1.jpg';
+import davidePiras from './assets/artists/davidePiras.jpg';
+import mattiaLorenzi from './assets/artists/mattiaLorenzi.jpg';
 
 // ---------------------------
 // Content Model
@@ -54,16 +71,16 @@ const lineup = [
         tier: "headliner",
         genre: "",
         image:
-            "https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=900&q=80",
-        links: { instagram: "https://instagram.com/" }
+            davidePiras,
+        links: { instagram: "https://www.instagram.com/davidepirasmusic/" }
     },
     {
         name: "Mattia Lorenzi",
         tier: "support",
         genre: "House",
         image:
-            "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=900&q=80",
-        links: { instagram: "https://instagram.com/" }
+           mattiaLorenzi,
+        links: { instagram: "https://www.instagram.com/mattialrnz/" }
     },
     {
         name: "Loned",
@@ -110,31 +127,68 @@ const residents = [
 
 const pastEvents = [
     {
-        title: "TakeOne: Zoona Magnifiique",
+        title: "TAKEONEXZOONA",
         date: "2025-05-03",
-        city: "Bolzano",
+        city: "Bozen",
         venue: "Zoona",
         poster: zoonaPoster,
         recap: "A packed night with local talent and a surprise sunrise set.",
         gallery: zoonaImages
     },
     {
-        title: "TakeOne: Mirò Club",
+        title: "TAKEONEXMIROCLUB",
         date: "2025-04-18",
-        city: "Bolzano",
+        city: "Bozen",
         venue: "Mirò Club",
         poster: miroPoster,
         recap: "Gonfio",
         gallery: miroImages
     },
     {
-        title: "TakeOne: Castel Roncolo",
+        title: "TAKEONEXRONCOLO",
         date: "2025-03-22",
-        city: "Bolzano",
+        city: "Bozen",
         venue: "Castel Roncolo",
         poster: ronPoster,
         recap: "Gonfio",
         gallery: roncoloImages
+    },
+
+    {
+        title: "TAKEONEXASTRA",
+        date: "2025-01-17",
+        city: "Brixen",
+        venue: "Astra",
+        poster: astraPoster,
+        recap: "Gonfio",
+        gallery: []
+    },
+    {
+        title: "TAKEONEXLAMPELE",
+        date: "2024-11-15",
+        city: "Bozen",
+        venue: "Mirò Club",
+        poster: lampelePoster,
+        recap: "Gonfio",
+        gallery: miro2Images
+    },
+    {
+        title: "TAKEONEXZOONA",
+        date: "2024-09-06",
+        city: "Bozen",
+        venue: "Zoona",
+        poster: zoonaPoster2,
+        recap: "Gonfio",
+        gallery: []
+    },
+    {
+        title: "TAKEONEXGOETHE",
+        date: "2024-05-15",
+        city: "Bozen",
+        venue: "Goethe Haus",
+        poster: goethePoster,
+        recap: "Gonfio",
+        gallery: goetheImages
     }
 ];
 
@@ -376,106 +430,33 @@ function HomeSection() {
 
 
 
-// 2) NEXT EVENT — short info block + lineup grid
-function EventIntro({ onPick }) {
-    const date = useMemo(() => formatDateRange(event.start, event.end), []);
-    return (
-        <div className="event-text-block">
-            <div className="event-text-row">
-                <span className="event-series">TAKEONEXZOONA</span>
-                <span className="event-date">{date.toUpperCase()}</span>
-            </div>
-
-            <div className="event-text-row">
-                <span className="event-venue">BOLZANO · {event.venue.toUpperCase()}</span>
-            </div>
-
-            <div className="event-text-row">
-                <span className="event-lineup-label">LINEUP:</span>
-                {lineup.map((a, i) => (
-                    <button key={a.name} className="event-name" onClick={() => onPick(a)}>
-                        {a.name.toUpperCase()}
-                        {i < lineup.length - 1 ? "," : ""}
-                    </button>
-                ))}
-            </div>
-        </div>
-    );
-}
 
 
-function Card({children}) { return <div className="card">{children}</div>; }
 
-function ArtistModal({ artist, isOpen, onClose }) {
-    if (!artist) return null;
-    return (
-        <Modal
-            isOpen={isOpen}
-            onRequestClose={onClose}
-            className="artist-modal"
-            overlayClassName="gallery-overlay"
-            contentLabel={`${artist.name} details`}
-        >
-            <div className="card" style={{ border: "none", background: "transparent" }}>
-                <div className="ratio ratio--4x3">
-                    <img src={artist.image} alt={artist.name} className="zoom" />
-                </div>
-                <div className="card__body">
-                    <div className="eyebrow">{artist.tier}</div>
-                    <h3 className="card__title">{artist.name}</h3>
-                    <p className="muted">{artist.genre}</p>
-                    {artist.links?.instagram && (
-                        <a className="link mt-2 inline" href={artist.links.instagram} target="_blank" rel="noreferrer">
-                            Instagram
-                        </a>
-                    )}
-                </div>
-            </div>
-            <button className="close-btn" onClick={onClose} aria-label="Close">×</button>
-        </Modal>
-    );
-}
+
 
 function ArtistCard({ a }) {
     return (
-        <motion.sdiv className="card group" variants={fadeUp}>
-            <div className="ratio ratio--4x3">
+        <motion.div className="card group" variants={fadeUp}>
+            <div className="ratio ratio--4x5">{/* was 4x3; taller image */}
                 <img src={a.image} alt={a.name} className="zoom" />
             </div>
             <div className="card__body">
                 <div className="eyebrow">{a.tier}</div>
                 <h3 className="card__title">{a.name}</h3>
                 <p className="muted">{a.genre}</p>
-                {a.links.instagram && <a className="link mt-2 inline" href={a.links.instagram} target="_blank" rel="noreferrer">Instagram</a>}
+                {a.links.instagram && (
+                    <a className="link mt-2 inline" href={a.links.instagram} target="_blank" rel="noreferrer">
+                        Instagram
+                    </a>
+                )}
             </div>
-        </motion.sdiv>
+        </motion.div>
     );
 }
 
-function LineupGrid() {
-    const headliners = lineup.filter(l => l.tier==="headliner");
-    const others = lineup.filter(l => l.tier!=="headliner");
-    return (
-        <div className="stack-10">
-            {headliners.length>0 && (
-                <div>
-                    <h3 className="h3 mb-4">Headliners</h3>
-                    <motion.div className="grid grid--cards" variants={stagger} initial="hidden" whileInView="show" viewport={{once:true}}>
-                        {headliners.map(a => <ArtistCard key={a.name} a={a} />)}
-                    </motion.div>
-                </div>
-            )}
-            {others.length>0 && (
-                <div>
-                    <h3 className="h3 mb-4">Lineup</h3>
-                    <motion.div className="grid grid--cards" variants={stagger} initial="hidden" whileInView="show" viewport={{once:true}}>
-                        {others.map(a => <ArtistCard key={a.name} a={a} />)}
-                    </motion.div>
-                </div>
-            )}
-        </div>
-    );
-}
+
+
 
 function TeamGrid() {
     return (
@@ -494,62 +475,104 @@ function TeamGrid() {
     );
 }
 
-function ResidentsGrid() {
-    return (
-        <motion.div className="grid grid--cards" variants={stagger} initial="hidden" whileInView="show" viewport={{once:true}}>
-            {residents.map(r => (
-                <motion.div key={r.name} className="card" variants={fadeUp}>
-                    <div className="ratio ratio--4x3"><img src={r.image} alt={r.name} className="zoom" /></div>
-                    <div className="card__body">
-                        <h3 className="card__title">{r.name}</h3>
-                        <div className="muted">{r.style}</div>
-                        {r.links.mix && <a className="link mt-2 inline" href={r.links.mix} target="_blank" rel="noreferrer">Featured mix</a>}
-                    </div>
-                </motion.div>
-            ))}
-        </motion.div>
-    );
-}
+
 
 function PastEvents() {
-    const [galleryImages, setGalleryImages] = useState([]);
+    const [selected, setSelected] = useState(null);       // the event whose card we'll show
+    const [isEventOpen, setEventOpen] = useState(false);  // event-card modal
+    const [galleryImages, setGalleryImages] = useState([]);  // gallery modal
     const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
-    const openGallery = (images) => {
-        setGalleryImages(images);
-        setIsGalleryOpen(true);
-    };
+    const openDetails = (ev) => { setSelected(ev); setEventOpen(true); };
+    const closeDetails = () => setEventOpen(false);
+
+    const openGallery = (images) => { setGalleryImages(images || []); setIsGalleryOpen(true); };
 
     return (
         <>
-            <motion.div className="grid grid--cards" variants={stagger} initial="hidden" whileInView="show" viewport={{once:true}}>
-                {pastEvents.map(p => (
-                    <motion.div key={p.title} className="card" variants={fadeUp}>
-                        <div className="ratio ratio--4x5"><img src={p.poster} alt={p.title} className="zoom" /></div>
-                        <div className="card__body">
-                            <div className="muted">
-                                {new Date(p.date).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
-                            </div>
-                            <h3 className="card__title">{p.title}</h3>
-                            <div className="muted">{p.city} · {p.venue}</div>
-                            <p className="mt-2">{p.recap}</p>
-                            {p.gallery?.length > 0 && (
-                                <button
-                                    type="button"
-                                    className="gallery-btn mt-2"
-                                    onClick={() => openGallery(p.gallery)}
-                                >
-                                    View gallery
-                                </button>
-                            )}
-                        </div>
-                    </motion.div>
-                ))}
+            {/* Compact archive list, styled like the Next Event block */}
+            <motion.div
+                className="event-text-block"
+                variants={stagger}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true }}
+            >
+                {pastEvents.map((p) => {
+                    const dateStr = new Date(p.date).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric"
+                    });
+                    return (
+                        <motion.div key={p.title} className="event-text-row" variants={fadeUp}>
+                            <span className="event-date">{dateStr}</span>
+                            <span className="event-venue">{p.city} · {p.venue}</span>
+                            <button
+                                type="button"
+                                className="event-name"
+                                onClick={() => openDetails(p)}
+                                aria-label={`Open archive card for ${p.title}`}
+                            >
+                                {p.title.toUpperCase()}
+                            </button>
+                        </motion.div>
+                    );
+                })}
             </motion.div>
-            <PopupGallery isOpen={isGalleryOpen} onClose={() => setIsGalleryOpen(false)} images={galleryImages} />
+
+            {/* Event details modal (shows the same CARD that lives in the archive) */}
+            {isEventOpen && selected && (
+                <div className="gallery-overlay" onClick={closeDetails}>
+                    <div
+                        className="artist-modal"
+                        onClick={(e) => e.stopPropagation()}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label={`${selected.title} details`}
+                    >
+                        <div className="card" style={{ border: "none", background: "transparent" }}>
+                            <div className="ratio ratio--4x5">
+                                <img src={selected.poster} alt={selected.title} className="zoom" />
+                            </div>
+                            <div className="card__body">
+                                <div className="muted">
+                                    {new Date(selected.date).toLocaleDateString("en-GB", {
+                                        day: "2-digit", month: "short", year: "numeric"
+                                    })}
+                                </div>
+                                <h3 className="card__title">{selected.title}</h3>
+                                <div className="muted">{selected.city} · {selected.venue}</div>
+                                {selected.recap && <p className="mt-2">{selected.recap}</p>}
+
+                                {/* Restore View gallery button */}
+                                {selected.gallery?.length > 0 && (
+                                    <button
+                                        type="button"
+                                        className="gallery-btn mt-2"
+                                        onClick={() => openGallery(selected.gallery)}
+                                    >
+                                        View gallery
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                        <button className="close-btn" onClick={closeDetails} aria-label="Close">×</button>
+                    </div>
+                </div>
+            )}
+
+
+            {/* Reuse the existing gallery lightbox for photos */}
+            <PopupGallery
+                isOpen={isGalleryOpen}
+                onClose={() => setIsGalleryOpen(false)}
+                images={galleryImages}
+            />
         </>
     );
 }
+
 
 function Disclosure({ q, a }) {
     const [open, setOpen] = useState(false);
@@ -616,49 +639,117 @@ function Info() {
 
 function Contact() {
     const [status, setStatus] = useState("idle");
-    const onSubmit = async (e) => {
+
+    // Update these if needed
+    const EMAIL_TO = "take.one@outlook.it";
+    const INSTA_URL = "https://www.instagram.com/takeonebozen/";
+    // WhatsApp in international format, no +, no spaces. Example: 393331234567
+    const WHATSAPP_NUMBER = "https://chat.whatsapp.com/EWLF6rVxFi06d57XVu6B9s?fbclid=PAZXh0bgNhZW0CMTEAAadNkLzlh9muiCvk-XaaweiOC2lk566POsMmTrFFbd5c7q5vvpGWcaAVXCGgYw_aem_5RWcNYQMO_Cz6G_Hngmvxg";
+
+    const onSubmit = (e) => {
         e.preventDefault();
         setStatus("sending");
+
+        const form = e.currentTarget;
+        const data = Object.fromEntries(new FormData(form).entries());
+        const { name, email, message } = data;
+
+        // Mailto fallback: opens the visitor’s email client with prefilled message
+        const subject = encodeURIComponent(`Website contact from ${name || "Guest"}`);
+        const body = encodeURIComponent(
+            `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
+        );
+        const mailto = `mailto:${EMAIL_TO}?subject=${subject}&body=${body}`;
+
         try {
-            const form = e.currentTarget;
-            const data = Object.fromEntries(new FormData(form).entries());
-            await new Promise(r => setTimeout(r, 800)); // simulate
-            console.log("Contact form submitted", data);
+            window.location.href = mailto;
             setStatus("sent");
             form.reset();
         } catch {
             setStatus("error");
         }
     };
+
     return (
         <div className="grid grid--split">
-            <form onSubmit={onSubmit} className="stack-4">
+            {/* Left: Form */}
+            <form onSubmit={onSubmit} className="stack-4" noValidate>
                 <div>
-                    <label className="label">Name</label>
-                    <input name="name" required className="input" />
+                    <label className="label" htmlFor="c-name">Name</label>
+                    <input id="c-name" name="name" className="input" required />
                 </div>
                 <div>
-                    <label className="label">Email</label>
-                    <input type="email" name="email" required className="input" />
+                    <label className="label" htmlFor="c-email">Email</label>
+                    <input id="c-email" type="email" name="email" className="input" required />
                 </div>
                 <div>
-                    <label className="label">Message</label>
-                    <textarea name="message" rows="5" required className="textarea"></textarea>
+                    <label className="label" htmlFor="c-msg">Message</label>
+                    <textarea id="c-msg" name="message" rows="5" className="textarea" required />
                 </div>
-                <button type="submit" className="btn btn--ghost" disabled={status==="sending"}>
-                    {status==="sending" ? "Sending…" : "Send"}
+
+                <button
+                    type="submit"
+                    className="btn btn--ghost"
+                    disabled={status === "sending"}
+                    aria-busy={status === "sending"}
+                >
+                    {status === "sending" ? "Opening email app…" : "Send"}
                 </button>
-                {status==="sent" && <p className="ok">Thanks, we will get back to you.</p>}
-                {status==="error" && <p className="err">Something went wrong. Try again.</p>}
+
+                {status === "sent" && (
+                    <p className="ok">Thanks! Your email app should have opened. If not, write us at {EMAIL_TO}.</p>
+                )}
+                {status === "error" && (
+                    <p className="err">Couldn’t open your email app. Please email us at {EMAIL_TO}.</p>
+                )}
             </form>
-            <div className="muted">
-                <p>Press & bookings: <a className="link" href="mailto:take.one@outlook.it">take.one@outlook.it</a></p>
-                <p className="mt-2">Follow us: <a href={"https://www.instagram.com/takeonebozen/"}>Instagram</a></p>
-                <a href="#" className="btn btn--outline mt-4">Download Press Kit</a>
+
+            {/* Right: Socials */}
+            <div>
+                <div className="card" style={{ overflow: "hidden" }}>
+                    <div className="card__body">
+                        <h3 className="h3">Reach us directly</h3>
+
+                        <div className="contact-socials">
+                            <a
+                                className="contact-social"
+                                href={INSTA_URL}
+                                target="_blank"
+                                rel="noreferrer"
+                                aria-label="Open Instagram profile @takeonebozen"
+                            >
+                                <svg className="contact-social__icon" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 5a5 5 0 1 0 .001 10.001A5 5 0 0 0 12 7zm0 2.2a2.8 2.8 0 1 1 0 5.6 2.8 2.8 0 0 1 0-5.6ZM18 5.6a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4Z"/>
+                                </svg>
+                                <span>@takeonebozen</span>
+                            </a>
+
+                            <a
+                                className="contact-social"
+                                href={WHATSAPP_NUMBER}
+                                target="_blank"
+                                rel="noreferrer"
+                                aria-label="Start a WhatsApp chat"
+                            >
+                                <svg className="contact-social__icon" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M20.5 3.5A11 11 0 0 0 3.2 18.3L2 22l3.8-1.2A11 11 0 1 0 20.5 3.5Zm-8.5 18a9.4 9.4 0 0 1-4.8-1.3l-.3-.2-2.9.9.9-2.8-.2-.3A9.5 9.5 0 1 1 12 21.5Zm5-7.3c-.3-.2-1.7-.9-2-.9-.2 0-.4-.1-.6.2-.2.3-.7.9-.9 1-.2.2-.3.2-.6.1s-1.2-.5-2.3-1.5c-.8-.8-1.3-1.7-1.5-2-.2-.3 0-.4.1-.6l.5-.6c.2-.2.2-.3.3-.5 0-.2 0-.4 0-.5 0-.2-.6-1.5-.8-2s-.4-.5-.6-.5h-.5c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.1 3c.1.2 2 3.1 4.8 4.3.7.3 1.3.5 1.7.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.3.2-.6.2-1.1.1-1.3 0-.1-.2-.2-.4-.3Z"/>
+                                </svg>
+                                <span>WhatsApp</span>
+                            </a>
+                        </div>
+
+                        <div className="mt-4 muted">
+                            <p>Press & bookings: <a className="link" href={`mailto:${EMAIL_TO}`}>{EMAIL_TO}</a></p>
+                            {/* Press Kit button removed as requested */}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );
 }
+
+
 
 function Footer() {
     return (
@@ -769,16 +860,16 @@ export default function App() {
                 </div>
                 <div className="about__text">
                     <p>
-                        <strong>TakeOne</strong>, a symbiosis. MUSIC | ART | PERFORMANCE</p><p> 
+                        <strong>TakeOne</strong>, a symbiosis. MUSIC | ART | PERFORMANCE</p><p>
                         A space of possibilities unfolds. Here to stay.
                         Through the many facets of electronic music, lose yourself between dance, installation, and being.
                         Imagine the future—and everything is good.
                         TakeOne—what are we waiting for
                     </p>
                 </div>
-                <div className="mt-8">
+                {/*<div className="mt-8">
                     <TeamGrid />
-                </div>
+                </div>*/}
             </Section>
 
             {/* 4 — Archive */}
