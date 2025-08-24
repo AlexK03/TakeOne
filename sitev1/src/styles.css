@@ -547,56 +547,58 @@ h1 {
     margin: 1rem auto 0;
 }
 
+/* --- Logo hover text zoom effect --- */
 .logo-tile {
     position: relative;
     display: grid;
     place-items: center;
-    padding: 0;
     aspect-ratio: 16/9;
     border-radius: var(--radius);
     overflow: hidden;
-    border: 1px solid transparent;
     background: transparent;
     text-decoration: none;
     cursor: pointer;
-    transition: transform .2s ease, box-shadow .2s ease, background 0.22s ease, border-color 0.22s ease;
+    transition: transform .2s ease, box-shadow .2s ease;
 }
 
 .logo-tile:hover {
     transform: translateY(-2px);
-    box-shadow: 0 14px 40px rgba(0, 0, 0, .2);
+    box-shadow: 0 14px 40px rgba(0, 0, 0, .25);
+    border: none;
 }
 
+/* Keep the logo visible */
 .logo-tile__img {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    transition: opacity .22s ease;
+    object-fit: contain; /* so the logo fits */
+    transition: opacity .3s ease;
+    z-index: 1;
 }
 
+/* Zooming text */
 .logo-tile__label {
     position: relative;
+    z-index: 2;
     font-weight: 800;
     letter-spacing: .06em;
     text-transform: uppercase;
+    transform: scale(0);
     opacity: 0;
-    transition: opacity .22s ease;
+    transition: transform .4s ease, opacity .4s ease;
     background: linear-gradient(100deg, var(--violet), var(--green), var(--cyan));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    padding: .25rem .5rem;
-}
-
-.logo-tile:hover .logo-tile__img {
-    opacity: 0;
 }
 
 .logo-tile:hover .logo-tile__label {
+    transform: scale(1);   /* zoom out from center */
     opacity: 1;
 }
+
 
 @media (min-width: 900px) {
     .home-logos {
@@ -1155,6 +1157,41 @@ h1 {
     -webkit-text-stroke: 0 !important;
     text-shadow: none !important;
 }
+
+/* ---- Audio turntable button that preserves angle on pause ---- */
+.turntable { display: grid; place-items: center; }
+.turntable__btn {
+    display: grid; place-items: center;
+    border: 0; padding: 0; border-radius: 999px; cursor: pointer;
+    background: transparent;
+    transition: transform .15s ease;
+}
+.turntable__btn:active { transform: scale(.98); }
+
+.turntable__disk {
+    width: 100%; height: 100%; object-fit: contain;
+    filter: drop-shadow(0 6px 18px rgba(0,0,0,.25));
+    transition: filter .2s ease, transform .2s linear;
+    will-change: transform;
+    /* Base transform uses the stored CSS variable so the disk
+       stays at its current angle when the animation stops */
+    transform: rotate(var(--angle, 0deg));
+}
+
+.turntable__btn:hover .turntable__disk {
+    filter: drop-shadow(0 10px 26px rgba(0,0,0,.35));
+}
+
+/* While playing, animate a full turn every 2.6s starting from --angle */
+.turntable__btn.is-playing .turntable__disk {
+    animation: spin 2.6s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(var(--angle, 0deg)); }
+    to   { transform: rotate(calc(var(--angle, 0deg) + 360deg)); }
+}
+
 
 
 

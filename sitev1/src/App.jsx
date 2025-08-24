@@ -46,6 +46,9 @@ import logo from './assets/logos/logo2.png';
 import lonedImage from './assets/miro-18-04-2025/img1.jpg';
 import davidePiras from './assets/artists/davidePiras.jpg';
 import mattiaLorenzi from './assets/artists/mattiaLorenzi.jpg';
+import AudioTurntable from "./AudioTurntable.jsx";
+import disk from "./assets/audioTrack/disk.png";
+import setMp3 from "./assets/audioTrack/takeone_set.mp3";
 
 // ---------------------------
 // Content Model
@@ -249,7 +252,7 @@ function StickyNav({ sections }) {
                     {/* Left: Brand */}
                     <a href="#home" onClick={go("home")} className="nav__brand">
                         <img
-                            src={`${BASE}img/TakeOne.jpg`}
+                            src={`${BASE}img/logo1.png`}
                             alt="TakeOne Logo"
                             style={{ height: "50px", width: "auto" }}
                         />
@@ -418,14 +421,24 @@ function HomeSection() {
                             <span className="logo-tile__label">{it.label}</span>
                         </a>
                     ))}
+
                 </div>
+
+
 
                 {/* Audio control */}
                 <div className="hero__actions" style={{ justifyContent: "center" }}>
+                    <AudioTurntable
+                        src={setMp3}
+                        diskPng={disk}
+                        size={160}
+                        label="Play DJ set"
+                    />
+                    {/*
                     <audio
                         ref={audioRef}
                         preload="auto"
-                        src={`${BASE}audio/homeTrack.mp3`}
+                        src={`${BASE}audio/takeone_set.mp3`}
                     />
                     <button
                         type="button"
@@ -434,60 +447,10 @@ function HomeSection() {
                     >
                         {isPlaying ? "Pause" : "Play"} Audio
                     </button>
+                    */}
                 </div>
             </div>
         </header>
-    );
-}
-
-
-
-
-
-
-
-
-
-
-
-
-function ArtistCard({ a }) {
-    return (
-        <motion.div className="card group" variants={fadeUp}>
-            <div className="ratio ratio--4x5">{/* was 4x3; taller image */}
-                <img src={a.image} alt={a.name} className="zoom" />
-            </div>
-            <div className="card__body">
-                <div className="eyebrow">{a.tier}</div>
-                <h3 className="card__title">{a.name}</h3>
-                <p className="muted">{a.genre}</p>
-                {a.links.instagram && (
-                    <a className="link mt-2 inline" href={a.links.instagram} target="_blank" rel="noreferrer">
-                        Instagram
-                    </a>
-                )}
-            </div>
-        </motion.div>
-    );
-}
-
-
-
-
-function TeamGrid() {
-    return (
-        <motion.div className="grid grid--cards" variants={stagger} initial="hidden" whileInView="show" viewport={{once:true}}>
-            {team.map(m => (
-                <motion.div key={m.name} className="card" variants={fadeUp}>
-                    <div className="ratio ratio--4x3"><img src={m.image} alt={m.name} className="zoom" /></div>
-                    <div className="card__body">
-                        <h3 className="card__title">{m.name}</h3>
-                        <div className="muted">{m.role}</div>
-                        <p className="mt-2">{m.bio}</p>
-                    </div>
-                </motion.div>
-            ))}
-        </motion.div>
     );
 }
 
