@@ -70,9 +70,27 @@ h1 {
 }
 
 .section__title {
-    font-size: clamp(1.5rem, 1vw + 1.25rem, 2rem);
-    line-height: 1.2;
+    font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+    font-size: clamp(2rem, 2.5vw + 1.5rem, 3.25rem);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    margin-bottom: 1.25rem;
+    text-align: center;
+    color: var(--ink);
+    line-height: 1.15;
+    position: relative;
 }
+
+.section__title::after {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 3px;
+    margin: 0.75rem auto 0;
+    background: linear-gradient(100deg, var(--violet), var(--green), var(--cyan));
+    border-radius: 2px;
+}
+
 
 .h3 {
     font-size: 1.125rem;
@@ -1158,6 +1176,64 @@ h1 {
     text-shadow: none !important;
 }
 
+.event-row-link {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: .8rem;
+    padding: .2rem 0;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    font: inherit;
+    letter-spacing: .02em;
+    color: var(--ink);
+    transition: color .2s ease, text-decoration-color .2s ease;
+}
+
+.event-row-link .event-part {
+    text-transform: uppercase;       /* “poster” look */
+    font-weight: 900;
+    line-height: 1.15;
+}
+
+.event-row-link .event-part--date {
+    opacity: .9;
+}
+
+.event-row-link .event-part--place {
+    opacity: .92;
+}
+
+.event-row-link .event-part--title {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+    text-decoration-color: rgba(0,0,0,.25);
+    transition: text-decoration-color .18s ease;
+}
+
+/* On hover: invert with strong dark background */
+@media (hover: hover) {
+    .event-row-link:hover { /* solid dark navy backdrop */
+        color: #FFB703;              /* white text for readability */
+        padding: .2rem .5rem;     /* tiny inset for bg to show */
+        border-radius: 6px;
+    }
+
+    .event-row-link:hover .event-part--title {
+        color: #FFB703;           /* pale yellow accent, readable on dark */
+    }
+}
+
+.event-row-link:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #000, 0 0 0 4px var(--violet);
+    border-radius: 6px;
+    padding-inline: .25rem; /* tiny inset halo */
+}
+
+
 /* ---- Audio turntable button that preserves angle on pause ---- */
 .turntable { display: grid; place-items: center; }
 .turntable__btn {
@@ -1191,6 +1267,7 @@ h1 {
     from { transform: rotate(var(--angle, 0deg)); }
     to   { transform: rotate(calc(var(--angle, 0deg) + 360deg)); }
 }
+
 
 
 

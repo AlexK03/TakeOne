@@ -484,16 +484,16 @@ function PastEvents() {
                         year: "numeric"
                     });
                     return (
-                        <motion.div key={p.title} className="event-text-row" variants={fadeUp}>
-                            <span className="event-date">{dateStr}</span>
-                            <span className="event-venue">{p.city} · {p.venue}</span>
+                        <motion.div key={`${p.title}-${p.date}`} className="event-text-row" variants={fadeUp}>
                             <button
                                 type="button"
-                                className="event-name"
+                                className="event-row-link"
                                 onClick={() => openDetails(p)}
-                                aria-label={`Open archive card for ${p.title}`}
+                                aria-label={`Open archive card for ${p.title} on ${dateStr} at ${p.venue}, ${p.city}`}
                             >
-                                {p.title.toUpperCase()}
+                                <span className="event-part event-part--date">{dateStr}</span>
+                                <span className="event-part event-part--place">{p.city} {p.venue} ·</span>
+                                <span className="event-part event-part--title">{p.title.toUpperCase()}</span>
                             </button>
                         </motion.div>
                     );
