@@ -79,15 +79,18 @@ h1 {
     color: var(--ink);
     line-height: 1.15;
     position: relative;
+    background: none;  /* remove full gradient */
+    -webkit-text-stroke: 0.5px rgba(255,255,255,0.6); /* slight outline for visibility */
 }
 
 .section__title::after {
     content: "";
     display: block;
     width: 60px;
-    height: 3px;
+    height: 4px;
     margin: 0.75rem auto 0;
-    background: linear-gradient(100deg, var(--violet), var(--green), var(--cyan));
+    background: linear-gradient(90deg, var(--violet), var(--green), var(--cyan));
+    opacity: .9;
     border-radius: 2px;
 }
 
