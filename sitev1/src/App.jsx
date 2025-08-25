@@ -47,8 +47,8 @@ import lonedImage from './assets/miro-18-04-2025/img1.jpg';
 import davidePiras from './assets/artists/davidePiras.jpg';
 import mattiaLorenzi from './assets/artists/mattiaLorenzi.jpg';
 import AudioTurntable from "./AudioTurntable.jsx";
-import disk from "./assets/audioTrack/disk.png";
-import setMp3 from "./assets/audioTrack/takeone_set.mp3";
+import disk from "./assets/audioTrack/disk2.png";
+import setMp3 from "./assets/audioTrack/takeone_set2.mp3";
 
 // ---------------------------
 // Content Model

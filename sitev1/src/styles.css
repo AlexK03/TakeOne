@@ -1157,7 +1157,7 @@ h1 {
     position: fixed;
     inset: 0;
     z-index: -1; /* behind everything */
-    background: url("/public/video/bg1.jpeg") center center / cover no-repeat;
+    background: url("public/video/bg1.jpeg") center center / cover no-repeat;
     will-change: transform; /* hint for smoother scrolling */
     transform: translateZ(0); /* forces its own compositing layer (iOS fix) */
     pointer-events: none; /* don’t block clicks */
