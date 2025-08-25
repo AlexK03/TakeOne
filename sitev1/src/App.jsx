@@ -771,7 +771,11 @@ export default function App() {
     return (
         <main className="site">
             {/* Fixed background layer for mobile + iOS Safari */}
-            <div className="bg-fixed" aria-hidden="true" />
+            <div
+                className="bg-fixed"
+                aria-hidden="true"
+                style={{ backgroundImage: `url(${BASE}video/bg1.jpeg)` }}   // ← add this
+            />
             <StickyNav sections={sections} />
 
             {/* 1 — Home */}
