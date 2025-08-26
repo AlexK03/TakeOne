@@ -457,39 +457,80 @@ function HomeSection() {
 
 
 function PastEvents() {
-    const [selected, setSelected] = useState(null);       // the event whose card we'll show
-    const [isEventOpen, setEventOpen] = useState(false);  // event-card modal
-    const [galleryImages, setGalleryImages] = useState([]);  // gallery modal
+    const [selected, setSelected] = useState(null);            // event object
+    const [activeIndex, setActiveIndex] = useState(null);      // index in pastEvents
+    const [minimized, setMinimized] = useState(false);         // dock collapsed/expanded
+    const [galleryImages, setGalleryImages] = useState([]);    // gallery modal
     const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
-    const openDetails = (ev) => { setSelected(ev); setEventOpen(true); };
-    const closeDetails = () => setEventOpen(false);
+    // IMPORTANT: this assumes `pastEvents` is in scope (as in your current file).
+    // If it's imported/prop-drilled differently, keep it as is.
+    const safeIndex = useMemo(() => {
+        if (activeIndex == null || !Array.isArray(pastEvents) || !pastEvents.length) return null;
+        return Math.min(Math.max(activeIndex, 0), pastEvents.length - 1);
+    }, [activeIndex]);
 
-    const openGallery = (images) => { setGalleryImages(images || []); setIsGalleryOpen(true); };
+    const activeEvent = safeIndex != null ? pastEvents[safeIndex] : null;
+
+    const openDetails = (ev, idx) => {
+        setSelected(ev);
+        setActiveIndex(idx);
+        setMinimized(false);
+    };
+
+    const openGallery = (images) => {
+        setGalleryImages(images || []);
+        setIsGalleryOpen(true);
+    };
+
+    const closeDock = () => {
+        setSelected(null);
+        setActiveIndex(null);
+        setMinimized(false);
+    };
+
+    const prevEvent = () => {
+        if (safeIndex == null || !pastEvents?.length) return;
+        const idx = (safeIndex - 1 + pastEvents.length) % pastEvents.length;
+        setActiveIndex(idx);
+        setSelected(pastEvents[idx]);
+        setMinimized(false);
+    };
+
+    const nextEvent = () => {
+        if (safeIndex == null || !pastEvents?.length) return;
+        const idx = (safeIndex + 1) % pastEvents.length;
+        setActiveIndex(idx);
+        setSelected(pastEvents[idx]);
+        setMinimized(false);
+    };
 
     return (
         <>
-            {/* Compact archive list, styled like the Next Event block */}
+            {/* Compact archive list, styled like your Next Event block */}
             <motion.div
-                className="event-text-block"
+                className="event-text-block past-events-block"
                 variants={stagger}
                 initial="hidden"
                 whileInView="show"
                 viewport={{ once: true }}
             >
-                {pastEvents.map((p) => {
+                {pastEvents.map((p, i) => {
                     const dateStr = new Date(p.date).toLocaleDateString("en-GB", {
                         day: "2-digit",
                         month: "short",
                         year: "numeric"
                     });
+                    const isActive = i === safeIndex && !minimized;
                     return (
                         <motion.div key={`${p.title}-${p.date}`} className="event-text-row" variants={fadeUp}>
                             <button
                                 type="button"
-                                className="event-row-link"
-                                onClick={() => openDetails(p)}
-                                aria-label={`Open archive card for ${p.title} on ${dateStr} at ${p.venue}, ${p.city}`}
+                                className={`event-row-link ${isActive ? "is-active" : ""}`}
+                                onClick={() => openDetails(p, i)}
+                                aria-label={`Open details for ${p.title} on ${dateStr} at ${p.venue}, ${p.city}`}
+                                aria-expanded={isActive}
+                                aria-controls="past-events-dock"
                             >
                                 <span className="event-part event-part--date">{dateStr}</span>
                                 <span className="event-part event-part--place">{p.city} {p.venue} ·</span>
@@ -500,49 +541,111 @@ function PastEvents() {
                 })}
             </motion.div>
 
-            {/* Event details modal (shows the same CARD that lives in the archive) */}
-            {isEventOpen && selected && (
-                <div className="gallery-overlay" onClick={closeDetails}>
-                    <div
-                        className="artist-modal"
-                        onClick={(e) => e.stopPropagation()}
-                        role="dialog"
-                        aria-modal="true"
-                        aria-label={`${selected.title} details`}
-                    >
-                        <div className="card" style={{ border: "none", background: "transparent" }}>
-                            <div className="ratio ratio--4x5">
-                                <img src={selected.poster} alt={selected.title} className="zoom" />
+            {/* Bottom Dock (replaces your modal) */}
+            <div
+                id="past-events-dock"
+                className={[
+                    "past-events-dock",
+                    activeEvent ? "open" : "",
+                    minimized ? "minimized" : "",
+                ].join(" ")}
+                aria-hidden={!activeEvent}
+            >
+                {activeEvent && (
+                    <div className="dock-inner">
+                        <div className="dock-header">
+                            <div className="dock-title">
+                                <strong>{activeEvent.title}</strong>
+                                <span className="dash">—</span>
+                                <span>
+                  {new Date(activeEvent.date).toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric"
+                  })}
+                </span>
+                                <span className="dot">•</span>
+                                <span>{activeEvent.city}</span>
+                                {activeEvent.venue ? (
+                                    <>
+                                        <span className="dot">•</span>
+                                        <span>{activeEvent.venue}</span>
+                                    </>
+                                ) : null}
                             </div>
-                            <div className="card__body">
-                                <div className="muted">
-                                    {new Date(selected.date).toLocaleDateString("en-GB", {
-                                        day: "2-digit", month: "short", year: "numeric"
-                                    })}
-                                </div>
-                                <h3 className="card__title">{selected.title}</h3>
-                                <div className="muted">{selected.city} · {selected.venue}</div>
-                                {selected.recap && <p className="mt-2">{selected.recap}</p>}
 
-                                {/* Restore View gallery button */}
-                                {selected.gallery?.length > 0 && (
-                                    <button
-                                        type="button"
-                                        className="gallery-btn mt-2"
-                                        onClick={() => openGallery(selected.gallery)}
-                                    >
-                                        View gallery
-                                    </button>
-                                )}
+                            <div className="dock-actions">
+                                <button
+                                    className="dock-btn"
+                                    onClick={() => setMinimized(m => !m)}
+                                    aria-label={minimized ? "Expand details" : "Minimize details"}
+                                    title={minimized ? "Expand" : "Minimize"}
+                                >
+                                    {minimized ? "Expand" : "Minimize"}
+                                </button>
+                                <button
+                                    className="dock-btn"
+                                    onClick={prevEvent}
+                                    disabled={pastEvents.length <= 1}
+                                    title="Previous event"
+                                    aria-label="Previous event"
+                                >
+                                    ‹ Prev
+                                </button>
+                                <button
+                                    className="dock-btn"
+                                    onClick={nextEvent}
+                                    disabled={pastEvents.length <= 1}
+                                    title="Next event"
+                                    aria-label="Next event"
+                                >
+                                    Next ›
+                                </button>
+                                <button
+                                    className="dock-btn close"
+                                    onClick={closeDock}
+                                    aria-label="Close details"
+                                    title="Close"
+                                >
+                                    ×
+                                </button>
                             </div>
                         </div>
-                        <button className="close-btn" onClick={closeDetails} aria-label="Close">×</button>
+
+                        {!minimized && (
+                            <div className="dock-content">
+                                <div className="card" style={{ border: "none", background: "transparent" }}>
+                                    <div className="ratio ratio--4x5">
+                                        <img src={activeEvent.poster} alt={activeEvent.title} className="zoom" />
+                                    </div>
+                                    <div className="card__body">
+                                        <div className="muted">
+                                            {new Date(activeEvent.date).toLocaleDateString("en-GB", {
+                                                day: "2-digit", month: "short", year: "numeric"
+                                            })}
+                                        </div>
+                                        <h3 className="card__title">{activeEvent.title}</h3>
+                                        <div className="muted">{activeEvent.city} · {activeEvent.venue}</div>
+                                        {activeEvent.recap && <p className="mt-2">{activeEvent.recap}</p>}
+
+                                        {activeEvent.gallery?.length > 0 && (
+                                            <button
+                                                type="button"
+                                                className="gallery-btn mt-2"
+                                                onClick={() => openGallery(activeEvent.gallery)}
+                                            >
+                                                View gallery
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
-                </div>
-            )}
+                )}
+            </div>
 
-
-            {/* Reuse the existing gallery lightbox for photos */}
+            {/* Keep using your existing gallery lightbox */}
             <PopupGallery
                 isOpen={isGalleryOpen}
                 onClose={() => setIsGalleryOpen(false)}
@@ -551,6 +654,7 @@ function PastEvents() {
         </>
     );
 }
+
 
 
 function Disclosure({ q, a }) {
@@ -771,6 +875,7 @@ export default function App() {
     return (
         <main className="site">
             {/* Fixed background layer for mobile + iOS Safari */}
+
             <div
                 className="bg-fixed"
                 aria-hidden="true"
