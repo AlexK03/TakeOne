@@ -456,15 +456,15 @@ function HomeSection() {
 
 
 function PastEvents() {
-    const [selected, setSelected] = useState(null);            // event object
-    const [activeIndex, setActiveIndex] = useState(null);      // index in pastEvents
-    const [minimized, setMinimized] = useState(false);         // dock collapsed/expanded
-    const [galleryImages, setGalleryImages] = useState([]);    // gallery modal
+    const [selected, setSelected] = useState(null);
+    const [activeIndex, setActiveIndex] = useState(null);
+    const [minimized, setMinimized] = useState(false);
+    const [galleryImages, setGalleryImages] = useState([]);
     const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
-    // NEW: track if the section is on screen
     const sectionRef = useRef(null);
     const [sectionInView, setSectionInView] = useState(true);
+
     useEffect(() => {
         const node = sectionRef.current;
         if (!node) return;
@@ -474,6 +474,13 @@ function PastEvents() {
         io.observe(node);
         return () => io.disconnect();
     }, []);
+
+    // NEW: lock page scroll when the dock is open and expanded
+    useEffect(() => {
+        const openAndExpanded = !!selected && activeIndex != null && !minimized;
+        document.documentElement.style.overflow = openAndExpanded ? "hidden" : "";
+        return () => { document.documentElement.style.overflow = ""; };
+    }, [selected, activeIndex, minimized]);
 
     const safeIndex = useMemo(() => {
         if (activeIndex == null || !Array.isArray(pastEvents) || !pastEvents.length) return null;
@@ -515,12 +522,12 @@ function PastEvents() {
         setMinimized(false);
     };
 
-    // NEW: fix to keep dock pinned while open
+    // UPDATED: when the section is visible, keep the dock fixed at bottom of viewport
     const useFixedDock = !!activeEvent && sectionInView;
 
     return (
         <section ref={sectionRef} className="past-events-section">
-            {/* Compact archive list */}
+            {/* archive list unchanged */}
             <motion.div
                 className="event-text-block past-events-block"
                 variants={stagger}
@@ -559,15 +566,15 @@ function PastEvents() {
                     "past-events-dock",
                     activeEvent ? "open" : "",
                     minimized ? "minimized" : "",
-                    useFixedDock ? "is-fixed" : ""
+                    useFixedDock ? "is-fixed" : ""   // NEW: style below
                 ].join(" ")}
                 aria-hidden={!activeEvent}
             >
                 {activeEvent && (
-                    <div className="dock-inner">
+                    <div className="dock-inner" role="dialog" aria-modal="true" aria-label={`${activeEvent.title} details`}>
                         <div className="dock-header">
-                            <div className="dock-title">
-                                <strong>{activeEvent.title}</strong>
+                            <div className="dock-title" title={activeEvent.title}>
+                                <strong className="truncate">{activeEvent.title}</strong>
                                 <span className="dash">—</span>
                                 <span>{new Date(activeEvent.date).toLocaleDateString("en-GB", {
                                     day: "2-digit", month: "short", year: "numeric"
@@ -583,7 +590,8 @@ function PastEvents() {
                                 </button>
                                 <button className="dock-btn" onClick={prevEvent} disabled={pastEvents.length <= 1}>‹ Prev</button>
                                 <button className="dock-btn" onClick={nextEvent} disabled={pastEvents.length <= 1}>Next ›</button>
-                                <button className="dock-btn close" onClick={closeDock}>×</button>
+                                {/* BIG, ALWAYS-VISIBLE CLOSE */}
+                                <button className="dock-btn close big-x" onClick={closeDock} aria-label="Close">×</button>
                             </div>
                         </div>
 
@@ -619,6 +627,7 @@ function PastEvents() {
         </section>
     );
 }
+
 
 
 function Contact() {
