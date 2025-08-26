@@ -455,7 +455,6 @@ function HomeSection() {
 }
 
 
-
 function PastEvents() {
     const [selected, setSelected] = useState(null);            // event object
     const [activeIndex, setActiveIndex] = useState(null);      // index in pastEvents
@@ -463,8 +462,19 @@ function PastEvents() {
     const [galleryImages, setGalleryImages] = useState([]);    // gallery modal
     const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
-    // IMPORTANT: this assumes `pastEvents` is in scope (as in your current file).
-    // If it's imported/prop-drilled differently, keep it as is.
+    // NEW: track if the section is on screen
+    const sectionRef = useRef(null);
+    const [sectionInView, setSectionInView] = useState(true);
+    useEffect(() => {
+        const node = sectionRef.current;
+        if (!node) return;
+        const io = new IntersectionObserver(([entry]) => {
+            setSectionInView(entry.isIntersecting);
+        }, { threshold: 0 });
+        io.observe(node);
+        return () => io.disconnect();
+    }, []);
+
     const safeIndex = useMemo(() => {
         if (activeIndex == null || !Array.isArray(pastEvents) || !pastEvents.length) return null;
         return Math.min(Math.max(activeIndex, 0), pastEvents.length - 1);
@@ -505,9 +515,12 @@ function PastEvents() {
         setMinimized(false);
     };
 
+    // NEW: fix to keep dock pinned while open
+    const useFixedDock = !!activeEvent && sectionInView;
+
     return (
-        <>
-            {/* Compact archive list, styled like your Next Event block */}
+        <section ref={sectionRef} className="past-events-section">
+            {/* Compact archive list */}
             <motion.div
                 className="event-text-block past-events-block"
                 variants={stagger}
@@ -517,9 +530,7 @@ function PastEvents() {
             >
                 {pastEvents.map((p, i) => {
                     const dateStr = new Date(p.date).toLocaleDateString("en-GB", {
-                        day: "2-digit",
-                        month: "short",
-                        year: "numeric"
+                        day: "2-digit", month: "short", year: "numeric"
                     });
                     const isActive = i === safeIndex && !minimized;
                     return (
@@ -541,13 +552,14 @@ function PastEvents() {
                 })}
             </motion.div>
 
-            {/* Bottom Dock (replaces your modal) */}
+            {/* Dock */}
             <div
                 id="past-events-dock"
                 className={[
                     "past-events-dock",
                     activeEvent ? "open" : "",
                     minimized ? "minimized" : "",
+                    useFixedDock ? "is-fixed" : ""
                 ].join(" ")}
                 aria-hidden={!activeEvent}
             >
@@ -557,66 +569,29 @@ function PastEvents() {
                             <div className="dock-title">
                                 <strong>{activeEvent.title}</strong>
                                 <span className="dash">—</span>
-                                <span>
-                  {new Date(activeEvent.date).toLocaleDateString("en-GB", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric"
-                  })}
-                </span>
+                                <span>{new Date(activeEvent.date).toLocaleDateString("en-GB", {
+                                    day: "2-digit", month: "short", year: "numeric"
+                                })}</span>
                                 <span className="dot">•</span>
                                 <span>{activeEvent.city}</span>
-                                {activeEvent.venue ? (
-                                    <>
-                                        <span className="dot">•</span>
-                                        <span>{activeEvent.venue}</span>
-                                    </>
-                                ) : null}
+                                {activeEvent.venue ? (<><span className="dot">•</span><span>{activeEvent.venue}</span></>) : null}
                             </div>
 
                             <div className="dock-actions">
-                                <button
-                                    className="dock-btn"
-                                    onClick={() => setMinimized(m => !m)}
-                                    aria-label={minimized ? "Expand details" : "Minimize details"}
-                                    title={minimized ? "Expand" : "Minimize"}
-                                >
+                                <button className="dock-btn" onClick={() => setMinimized(m => !m)}>
                                     {minimized ? "Expand" : "Minimize"}
                                 </button>
-                                <button
-                                    className="dock-btn"
-                                    onClick={prevEvent}
-                                    disabled={pastEvents.length <= 1}
-                                    title="Previous event"
-                                    aria-label="Previous event"
-                                >
-                                    ‹ Prev
-                                </button>
-                                <button
-                                    className="dock-btn"
-                                    onClick={nextEvent}
-                                    disabled={pastEvents.length <= 1}
-                                    title="Next event"
-                                    aria-label="Next event"
-                                >
-                                    Next ›
-                                </button>
-                                <button
-                                    className="dock-btn close"
-                                    onClick={closeDock}
-                                    aria-label="Close details"
-                                    title="Close"
-                                >
-                                    ×
-                                </button>
+                                <button className="dock-btn" onClick={prevEvent} disabled={pastEvents.length <= 1}>‹ Prev</button>
+                                <button className="dock-btn" onClick={nextEvent} disabled={pastEvents.length <= 1}>Next ›</button>
+                                <button className="dock-btn close" onClick={closeDock}>×</button>
                             </div>
                         </div>
 
                         {!minimized && (
                             <div className="dock-content">
                                 <div className="card" style={{ border: "none", background: "transparent" }}>
-                                    <div className="ratio ratio--4x5">
-                                        <img src={activeEvent.poster} alt={activeEvent.title} className="zoom" />
+                                    <div className="dock-media">
+                                        <img src={activeEvent.poster} alt={activeEvent.title} />
                                     </div>
                                     <div className="card__body">
                                         <div className="muted">
@@ -627,13 +602,8 @@ function PastEvents() {
                                         <h3 className="card__title">{activeEvent.title}</h3>
                                         <div className="muted">{activeEvent.city} · {activeEvent.venue}</div>
                                         {activeEvent.recap && <p className="mt-2">{activeEvent.recap}</p>}
-
                                         {activeEvent.gallery?.length > 0 && (
-                                            <button
-                                                type="button"
-                                                className="gallery-btn mt-2"
-                                                onClick={() => openGallery(activeEvent.gallery)}
-                                            >
+                                            <button type="button" className="gallery-btn mt-2" onClick={() => openGallery(activeEvent.gallery)}>
                                                 View gallery
                                             </button>
                                         )}
@@ -645,80 +615,11 @@ function PastEvents() {
                 )}
             </div>
 
-            {/* Keep using your existing gallery lightbox */}
-            <PopupGallery
-                isOpen={isGalleryOpen}
-                onClose={() => setIsGalleryOpen(false)}
-                images={galleryImages}
-            />
-        </>
+            <PopupGallery isOpen={isGalleryOpen} onClose={() => setIsGalleryOpen(false)} images={galleryImages} />
+        </section>
     );
 }
 
-
-
-function Disclosure({ q, a }) {
-    const [open, setOpen] = useState(false);
-    return (
-        <div className="disclosure">
-            <button className="disclosure__btn" onClick={()=>setOpen(o=>!o)} aria-expanded={open}>
-                <span>{q}</span><span className="disclosure__icon">{open ? "–" : "+"}</span>
-            </button>
-            {open && <div className="disclosure__panel">{a}</div>}
-        </div>
-    );
-}
-
-function FAQ() {
-    return (
-        <div className="card card--divide">
-            {faq.map((f, i) => (
-                <Disclosure key={i} q={f.q} a={f.a} className="faq-question" />
-            ))}
-        </div>
-    );
-}
-
-function Info() {
-    return (
-        <div className="grid grid--split">
-            <div className="stack-4">
-                <div>
-                    <h3 className="h3">When & Where</h3>
-                    <p>{formatDateRange(event.start, event.end)} · {event.venue}, {event.address}, {event.city}</p>
-                </div>
-                <div>
-                    <h3 className="h3">How to get there</h3>
-                    <ul className="list">
-                        <li>10 min by bus from Bolzano/Bozen train station.</li>
-                        <li>Bus lines 3, 8, 110 stop nearby (Vincenzo Lancia).</li>
-                        <li>Free and paid parking available around the venue.</li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 className="h3">House rules</h3>
-                    <ul className="list">
-                        <li>No outside drinks. Professional cameras require approval.</li>
-                        <li>18+ event. Bring valid ID.</li>
-                        <li>Respect others; no harassment or discrimination tolerated.</li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 className="h3">Accessibility</h3>
-                    <p>The event takes place outdoors in a disclosed factory area.
-                        Ground-floor venue with step-free access. Accessible restroom available.</p>
-                </div>
-                <div>
-                    <h3 className="h3">Partners</h3>
-                    <div className="row muted">Your partner logos here</div>
-                </div>
-            </div>
-            <div className="media aspect-video">
-                <iframe src={event.mapUrl} loading="lazy" title="Map" referrerPolicy="no-referrer-when-downgrade" />
-            </div>
-        </div>
-    );
-}
 
 function Contact() {
     const [status, setStatus] = useState("idle");
