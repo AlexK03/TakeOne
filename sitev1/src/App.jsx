@@ -75,7 +75,8 @@ const lineup = [
         genre: "",
         image:
             davidePiras,
-        links: { instagram: "https://www.instagram.com/davidepirasmusic/" }
+        links: { instagram: "https://www.instagram.com/davidepirasmusic/" },
+        bio:"Well-known DJ in the region, delivering high-energy sets that move between house and techno. As producer under the alter ego DJ Chupacapra, he has become a true local legend of the South Tyrolean underground scene"
     },
     {
         name: "Mattia Lorenzi",
@@ -83,7 +84,8 @@ const lineup = [
         genre: "",
         image:
            mattiaLorenzi,
-        links: { instagram: "https://www.instagram.com/mattialrnz/" }
+        links: { instagram: "https://www.instagram.com/mattialrnz/" },
+        bio:"With versatility at the core of his mixing, Mattia Lorenzi connects genres across the spectrum to craft energetic, immersive experiences. His digger’s spirit shines through in sets marked by distinctive and carefully curated selections"
     },
     {
         name: "Loned",
@@ -91,7 +93,8 @@ const lineup = [
         genre: "",
         image:
             lonedImage,
-        links: { instagram: "https://www.instagram.com/lonednotloned/" }
+        links: { instagram: "https://www.instagram.com/lonednotloned/" },
+        bio:"His sets never disappoint those in search of high-impact energy. Characterized by bouncy beats and refined mixing skills, Loned delivers powerful, dynamic experiences that flow seamlessly between techno and electro"
     },
     {
         name: "XTO",
@@ -99,7 +102,8 @@ const lineup = [
         genre: "",
         image:
             "https://images.unsplash.com/photo-1521335629791-ce4aec67dd53?auto=format&fit=crop&w=900&q=80",
-        links: { instagram: "https://instagram.com/" }
+        links: { instagram: "https://instagram.com/" },
+        bio:"His sets carry a distinct house spirit, blending deep grooves with breakbeat energy. With acid-tinged rhythms and carefully selected vocals, he crafts warm, high-energy journeys where vintage house nostalgia merges seamlessly with modern rhythms"
     }
 ];
 
@@ -837,6 +841,11 @@ export default function App() {
                                     <div className="eyebrow">{selectedArtist.tier}</div>
                                     <h3 className="card__title">{selectedArtist.name}</h3>
                                     <p className="muted">{selectedArtist.genre}</p>
+
+                                    {selectedArtist.bio && (
+                                        <p className="mt-2">{selectedArtist.bio}</p>
+                                    )}
+
                                     {selectedArtist.links?.instagram && (
                                         <a
                                             className="link mt-2 inline"
