@@ -460,31 +460,12 @@ function HomeSection() {
 
 
 function PastEvents() {
-    const [selected, setSelected] = useState(null);
-    const [activeIndex, setActiveIndex] = useState(null);
-    const [minimized, setMinimized] = useState(false);
+    const [selected, setSelected] = useState(null);       // full event object
+    const [activeIndex, setActiveIndex] = useState(null); // index in pastEvents
     const [galleryImages, setGalleryImages] = useState([]);
     const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
     const sectionRef = useRef(null);
-    const [sectionInView, setSectionInView] = useState(true);
-
-    useEffect(() => {
-        const node = sectionRef.current;
-        if (!node) return;
-        const io = new IntersectionObserver(([entry]) => {
-            setSectionInView(entry.isIntersecting);
-        }, { threshold: 0 });
-        io.observe(node);
-        return () => io.disconnect();
-    }, []);
-
-    // NEW: lock page scroll when the dock is open and expanded
-    useEffect(() => {
-        const openAndExpanded = !!selected && activeIndex != null && !minimized;
-        document.documentElement.style.overflow = openAndExpanded ? "hidden" : "";
-        return () => { document.documentElement.style.overflow = ""; };
-    }, [selected, activeIndex, minimized]);
 
     const safeIndex = useMemo(() => {
         if (activeIndex == null || !Array.isArray(pastEvents) || !pastEvents.length) return null;
@@ -496,7 +477,6 @@ function PastEvents() {
     const openDetails = (ev, idx) => {
         setSelected(ev);
         setActiveIndex(idx);
-        setMinimized(false);
     };
 
     const openGallery = (images) => {
@@ -504,10 +484,9 @@ function PastEvents() {
         setIsGalleryOpen(true);
     };
 
-    const closeDock = () => {
+    const closeLine = () => {
         setSelected(null);
         setActiveIndex(null);
-        setMinimized(false);
     };
 
     const prevEvent = () => {
@@ -515,7 +494,6 @@ function PastEvents() {
         const idx = (safeIndex - 1 + pastEvents.length) % pastEvents.length;
         setActiveIndex(idx);
         setSelected(pastEvents[idx]);
-        setMinimized(false);
     };
 
     const nextEvent = () => {
@@ -523,15 +501,14 @@ function PastEvents() {
         const idx = (safeIndex + 1) % pastEvents.length;
         setActiveIndex(idx);
         setSelected(pastEvents[idx]);
-        setMinimized(false);
     };
 
-    // UPDATED: when the section is visible, keep the dock fixed at bottom of viewport
-    const useFixedDock = !!activeEvent && sectionInView;
+    const fmtDate = (d) =>
+        new Date(d).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
 
     return (
         <section ref={sectionRef} className="past-events-section">
-            {/* archive list unchanged */}
+            {/* Archive list */}
             <motion.div
                 className="event-text-block past-events-block"
                 variants={stagger}
@@ -540,10 +517,8 @@ function PastEvents() {
                 viewport={{ once: true }}
             >
                 {pastEvents.map((p, i) => {
-                    const dateStr = new Date(p.date).toLocaleDateString("en-GB", {
-                        day: "2-digit", month: "short", year: "numeric"
-                    });
-                    const isActive = i === safeIndex && !minimized;
+                    const dateStr = fmtDate(p.date);
+                    const isActive = i === safeIndex && selected;
                     return (
                         <motion.div key={`${p.title}-${p.date}`} className="event-text-row" variants={fadeUp}>
                             <button
@@ -551,8 +526,8 @@ function PastEvents() {
                                 className={`event-row-link ${isActive ? "is-active" : ""}`}
                                 onClick={() => openDetails(p, i)}
                                 aria-label={`Open details for ${p.title} on ${dateStr} at ${p.venue}, ${p.city}`}
-                                aria-expanded={isActive}
-                                aria-controls="past-events-dock"
+                                aria-expanded={!!isActive}
+                                aria-controls="past-events-line"
                             >
                                 <span className="event-part event-part--date">{dateStr}</span>
                                 <span className="event-part event-part--place">{p.city} {p.venue} ·</span>
@@ -563,74 +538,90 @@ function PastEvents() {
                 })}
             </motion.div>
 
-            {/* Dock */}
+            {/* Bottom “line” inside section (like DJs) */}
             <div
-                id="past-events-dock"
-                className={[
-                    "past-events-dock",
-                    activeEvent ? "open" : "",
-                    minimized ? "minimized" : "",
-                    useFixedDock ? "is-fixed" : ""   // NEW: style below
-                ].join(" ")}
+                id="past-events-line"
+                className={["past-events-line", activeEvent ? "open" : ""].join(" ")}
                 aria-hidden={!activeEvent}
             >
                 {activeEvent && (
-                    <div className="dock-inner" role="dialog" aria-modal="true" aria-label={`${activeEvent.title} details`}>
-                        <div className="dock-header">
-                            <div className="dock-title" title={activeEvent.title}>
-                                <strong className="truncate">{activeEvent.title}</strong>
-                                <span className="dash">—</span>
-                                <span>{new Date(activeEvent.date).toLocaleDateString("en-GB", {
-                                    day: "2-digit", month: "short", year: "numeric"
-                                })}</span>
-                                <span className="dot">•</span>
-                                <span>{activeEvent.city}</span>
-                                {activeEvent.venue ? (<><span className="dot">•</span><span>{activeEvent.venue}</span></>) : null}
-                            </div>
-
-                            <div className="dock-actions">
-                                <button className="dock-btn" onClick={() => setMinimized(m => !m)}>
-                                    {minimized ? "Expand" : "Minimize"}
-                                </button>
-                                <button className="dock-btn" onClick={prevEvent} disabled={pastEvents.length <= 1}>‹ Prev</button>
-                                <button className="dock-btn" onClick={nextEvent} disabled={pastEvents.length <= 1}>Next ›</button>
-                                {/* BIG, ALWAYS-VISIBLE CLOSE */}
-                                <button className="dock-btn close big-x" onClick={closeDock} aria-label="Close">×</button>
+                    <div className="line-inner" role="dialog" aria-label={`${activeEvent.title} details`}>
+                        {/* Left: poster */}
+                        <div className="line-left">
+                            <div className="line-poster">
+                                <img src={activeEvent.poster} alt={activeEvent.title} />
                             </div>
                         </div>
 
-                        {!minimized && (
-                            <div className="dock-content">
-                                <div className="card" style={{ border: "none", background: "transparent" }}>
-                                    <div className="dock-media">
-                                        <img src={activeEvent.poster} alt={activeEvent.title} />
-                                    </div>
-                                    <div className="card__body">
-                                        <div className="muted">
-                                            {new Date(activeEvent.date).toLocaleDateString("en-GB", {
-                                                day: "2-digit", month: "short", year: "numeric"
-                                            })}
-                                        </div>
-                                        <h3 className="card__title">{activeEvent.title}</h3>
-                                        <div className="muted">{activeEvent.city} · {activeEvent.venue}</div>
-                                        {activeEvent.recap && <p className="mt-2">{activeEvent.recap}</p>}
-                                        {activeEvent.gallery?.length > 0 && (
-                                            <button type="button" className="gallery-btn mt-2" onClick={() => openGallery(activeEvent.gallery)}>
-                                                View gallery
-                                            </button>
-                                        )}
-                                    </div>
-                                </div>
+                        {/* Middle: info (title, place, date) */}
+                        <div className="line-meta">
+                            <div className="line-title truncate">{activeEvent.title}</div>
+                            <div className="line-sub">
+                                <span>{activeEvent.city}</span>
+                                {activeEvent.venue ? <><span className="dot">•</span><span>{activeEvent.venue}</span></> : null}
+                                <span className="dot">•</span>
+                                <span>{fmtDate(activeEvent.date)}</span>
                             </div>
-                        )}
+                        </div>
+
+                        {/* Right: actions */}
+                        <div className="line-right">
+                            {activeEvent.gallery?.length > 0 && (
+                                <button
+                                    type="button"
+                                    className="line-btn"
+                                    onClick={() => openGallery(activeEvent.gallery)}
+                                >
+                                    View gallery
+                                </button>
+                            )}
+
+                            <div className="line-nav">
+                                <button
+                                    type="button"
+                                    className="line-iconbtn"
+                                    onClick={prevEvent}
+                                    aria-label="Previous event"
+                                    disabled={pastEvents.length <= 1}
+                                    title="Previous"
+                                >
+                                    ‹
+                                </button>
+                                <button
+                                    type="button"
+                                    className="line-iconbtn"
+                                    onClick={nextEvent}
+                                    aria-label="Next event"
+                                    disabled={pastEvents.length <= 1}
+                                    title="Next"
+                                >
+                                    ›
+                                </button>
+                            </div>
+
+                            <button
+                                type="button"
+                                className="line-close"
+                                aria-label="Close"
+                                onClick={closeLine}
+                                title="Close"
+                            >
+                                ×
+                            </button>
+                        </div>
                     </div>
                 )}
             </div>
 
-            <PopupGallery isOpen={isGalleryOpen} onClose={() => setIsGalleryOpen(false)} images={galleryImages} />
+            <PopupGallery
+                isOpen={isGalleryOpen}
+                onClose={() => setIsGalleryOpen(false)}
+                images={galleryImages}
+            />
         </section>
     );
 }
+
 
 
 
@@ -769,7 +760,6 @@ export default function App() {
         return () => { document.documentElement.style.scrollBehavior = "auto"; };
     }, []);
 
-    // nav sections
     const sections = [
         { id: "home",   label: "Home" },
         { id: "event",  label: "Next Event" },
@@ -778,29 +768,55 @@ export default function App() {
         { id: "contact",label: "Contact" }
     ];
 
-    // artist modal state (simple overlay; no extra imports)
-    const [selectedArtist, setSelectedArtist] = useState(null);
-    const [isArtistOpen, setArtistOpen] = useState(false);
-    const openArtist = (a) => { setSelectedArtist(a); setArtistOpen(true); };
-    const closeArtist = () => setArtistOpen(false);
+    // NEW: use index so Prev/Next is trivial
+    const [activeIndex, setActiveIndex] = useState(null);
+    const activeDJ = (Number.isInteger(activeIndex) && lineup[activeIndex]) ? lineup[activeIndex] : null;
+
+    const dockRef = useRef(null);
+    useEffect(() => {
+        if (activeDJ && dockRef.current) {
+            dockRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+    }, [activeDJ]);
+
+    // Optional keyboard support (Esc to close, ←/→ to navigate)
+    useEffect(() => {
+        const onKey = (e) => {
+            if (activeDJ == null) return;
+            if (e.key === "Escape") setActiveIndex(null);
+            if (e.key === "ArrowRight") setActiveIndex((i) => (i + 1) % lineup.length);
+            if (e.key === "ArrowLeft") setActiveIndex((i) => (i - 1 + lineup.length) % lineup.length);
+        };
+        window.addEventListener("keydown", onKey);
+        return () => window.removeEventListener("keydown", onKey);
+    }, [activeDJ]);
 
     const dateLabel = useMemo(() => formatDateRange(event.start, event.end).toUpperCase(), []);
 
+    const igHref = (val) => {
+        if (!val) return null;
+        const handle = val.replace(/^https?:\/\/(www\.)?instagram\.com\//i, "").replace(/^@/, "");
+        return `https://instagram.com/${handle}`;
+    };
+    const igLabel = (val) => {
+        if (!val) return null;
+        const handle = val.replace(/^https?:\/\/(www\.)?instagram\.com\//i, "").replace(/^@/, "");
+        return `@${handle}`;
+    };
+
     return (
         <main className="site">
-            {/* Fixed background layer for mobile + iOS Safari */}
-
             <div
                 className="bg-fixed"
                 aria-hidden="true"
-                style={{ backgroundImage: `url(${BASE}video/bg1.jpeg)` }}   // ← add this
+                style={{ backgroundImage: `url(${BASE}video/bg1.jpeg)` }}
             />
             <StickyNav sections={sections} />
 
             {/* 1 — Home */}
             <HomeSection />
 
-            {/* 2 — Next Event: poster-style text with clickable names */}
+            {/* 2 — Next Event */}
             <Section id="event" title="Next Event" subdued>
                 <div className="event-text-block">
                     <div className="event-text-row">
@@ -817,9 +833,9 @@ export default function App() {
                         {lineup.map((a, i) => (
                             <button
                                 key={a.name}
-                                className="event-name"
+                                className={`event-name ${activeDJ?.name === a.name ? "is-active" : ""}`}
                                 type="button"
-                                onClick={() => openArtist(a)}
+                                onClick={() => setActiveIndex(i)}
                             >
                                 {a.name.toUpperCase()}{i < lineup.length - 1 ? "," : ""}
                             </button>
@@ -827,41 +843,64 @@ export default function App() {
                     </div>
                 </div>
 
+                {/* Info dock with Prev / Next / Close */}
+                <div ref={dockRef} className={`dj-info-dock ${activeDJ ? "open" : ""}`} aria-live="polite">
+                    {activeDJ ? (
+                        <div className="dj-info-inner">
+                            <div className="dj-info-row">
+                                <h3 className="dj-info-name">{activeDJ.name}</h3>
 
+                                {activeDJ.links?.instagram && (
+                                    <a
+                                        className="dj-info-ig"
+                                        href={igHref(activeDJ.links.instagram)}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        {igLabel(activeDJ.links.instagram)}
+                                    </a>
+                                )}
 
-                {/* Artist modal (uses same overlay styles as gallery) */}
-                {isArtistOpen && selectedArtist && (
-                    <div className="gallery-overlay" onClick={closeArtist}>
-                        <div className="artist-modal" onClick={(e) => e.stopPropagation()}>
-                            <div className="card" style={{ border: "none", background: "transparent" }}>
-                                <div className="ratio ratio--4x5">
-                                    <img src={selectedArtist.image} alt={selectedArtist.name} className="zoom" />
-                                </div>
-                                <div className="card__body">
-                                    <div className="eyebrow">{selectedArtist.tier}</div>
-                                    <h3 className="card__title">{selectedArtist.name}</h3>
-                                    <p className="muted">{selectedArtist.genre}</p>
-
-                                    {selectedArtist.bio && (
-                                        <p className="mt-2">{selectedArtist.bio}</p>
-                                    )}
-
-                                    {selectedArtist.links?.instagram && (
-                                        <a
-                                            className="link mt-2 inline"
-                                            href={selectedArtist.links.instagram}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                        >
-                                            Instagram
-                                        </a>
-                                    )}
+                                {/* Controls */}
+                                <div className="dock-controls" role="group" aria-label="Lineup navigation">
+                                    <button
+                                        className="icon-btn"
+                                        onClick={() => setActiveIndex(i => (i - 1 + lineup.length) % lineup.length)}
+                                        aria-label="Previous artist"
+                                        type="button"
+                                    >
+                                        ‹ Prev
+                                    </button>
+                                    <button
+                                        className="icon-btn"
+                                        onClick={() => setActiveIndex(i => (i + 1) % lineup.length)}
+                                        aria-label="Next artist"
+                                        type="button"
+                                    >
+                                        Next ›
+                                    </button>
+                                    <button
+                                        className="icon-btn close"
+                                        onClick={() => setActiveIndex(null)}
+                                        aria-label="Close"
+                                        type="button"
+                                        title="Close"
+                                    >
+                                        ×
+                                    </button>
                                 </div>
                             </div>
-                            <button className="close-btn" onClick={closeArtist} aria-label="Close">×</button>
+
+                            {(activeDJ.bio || activeDJ.description) && (
+                                <p className="dj-info-desc">
+                                    {activeDJ.bio || activeDJ.description}
+                                </p>
+                            )}
                         </div>
-                    </div>
-                )}
+                    ) : (
+                        <div className="dj-info-placeholder">Select an artist to see info.</div>
+                    )}
+                </div>
             </Section>
 
             {/* 3 — About */}
@@ -870,17 +909,14 @@ export default function App() {
                     <img src={`${BASE}img/TakeOne.jpg`} alt="TakeOne logo" />
                 </div>
                 <div className="about__text">
+                    <p><strong>TakeOne</strong>, a symbiosis. MUSIC | ART | PERFORMANCE</p>
                     <p>
-                        <strong>TakeOne</strong>, a symbiosis. MUSIC | ART | PERFORMANCE</p><p>
                         A space of possibilities unfolds. Here to stay.
                         Through the many facets of electronic music, lose yourself between dance, installation, and being.
                         Imagine the future—and everything is good.
                         TakeOne—what are we waiting for
                     </p>
                 </div>
-                {/*<div className="mt-8">
-                    <TeamGrid />
-                </div>*/}
             </Section>
 
             {/* 4 — Archive */}
@@ -897,4 +933,3 @@ export default function App() {
         </main>
     );
 }
-
