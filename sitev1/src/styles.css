@@ -1,17 +1,17 @@
 /* --------- Theme tokens --------- */
 :root {
     /* Light theme tuned for a bright photo bg */
-    --bg: rgba(255, 255, 255, .78); /* glass for panels/cards */
-    --ink: #171717;                 /* body text */
-    --line: rgba(0, 0, 0, .14);     /* borders */
-    --mute: #5a5a5a;                /* muted text */
+    --bg: rgba(255, 255, 255, .78);
+    --ink: #bcbf00;  /* bright chartreuse */
+    --line: rgba(255, 255, 255, .14);
+    --mute: #9a9c33; /* softer variation for muted text */            /* muted text */
     --radius: 16px;
     --container: 1120px;
 
     /* Accents updated to match background */
-    --violet: #4a81c2; /* primary blue */
-    --green:  #89b4e4; /* light blue highlight */
-    --cyan:   #f3efc4; /* pale yellow */
+    --violet: #c6452a; /* rust red */
+    --green:  #99a8b1; /* steel gray */
+    --cyan:   #bcbf00; /* chartreuse as a kicker highlight */
 }
 
 @font-face {
@@ -29,7 +29,7 @@ body {
     margin: 0;
     font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial;
     color: var(--ink);
-    background: #0b0b12; /* fallback color under the fixed layer */
+    background: #2b3540; /* fallback color under the fixed layer */
     background-size: cover;
     line-height: 1.6;
 }
@@ -89,9 +89,9 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
 /* --------- Sticky nav --------- */
 .nav {
     position: sticky; top: 0; z-index: 50;
-    background: rgba(255, 255, 255, .72);
+    border-bottom: 1px solid #444; /* subtle separator */
     backdrop-filter: saturate(1.1) blur(8px);
-    border-bottom: 1px solid var(--line);
+    border-bottom: 1px solid #444; /* subtle separator */
 }
 .nav__bar { display:flex; align-items:center; justify-content:space-between; height:56px; }
 .nav__brand { text-decoration:none; font-weight:800; letter-spacing:.02em; }
@@ -216,10 +216,32 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
 .about__logo-wrap img{
     max-width:220px; width:100%; height:auto; display:block; margin:0 auto; border-radius:12px;
 }
-.about__text{
-    max-width:800px; margin:0 auto; text-align:justify; background:var(--bg); border:1px solid var(--line);
-    border-radius:12px; padding:1rem 1.25rem; box-shadow:0 20px 60px rgba(0, 0, 0, .08);
+
+.about__text {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: justify;
+
+    /* Very transparent gradient */
+    background: linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0.35) 0%,   /* soft translucent top */
+            rgba(255, 255, 255, 0.20) 50%,  /* lighter middle */
+            rgba(255, 255, 255, 0.10) 100%  /* almost invisible bottom */
+    );
+
+    color: #111;  /* dark text for contrast */
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+    line-height: 1.65;
+
+    /* Soft frosted-glass effect */
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 }
+
 
 /* --------- Home vertical logos --------- */
 .home-logos{ display:grid; gap:1rem; width:min(360px, 80%); margin:1rem auto 0; }
@@ -249,28 +271,47 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
     display:grid; gap:.35rem;
 }
 .event-text-row{ display:flex; flex-wrap:wrap; align-items:baseline; gap:.6rem 1rem; }
-.event-series{
-    background: linear-gradient(100deg, var(--violet), var(--green), var(--cyan));
-    -webkit-background-clip:text; background-clip:text; color:transparent;
+/* Ensure meta info stays readable (black text) */
+#event .event-date,
+#event .event-venue,
+#event .event-lineup-label,
+#event .event-series {
+    color: #bcbf00 !important;
+    opacity: 0.92; /* slight softening like before */
+    background: none !important;
+    -webkit-background-clip: initial !important;
+    background-clip: initial !important;
+    -webkit-text-stroke: 0 !important;
+    text-shadow: none !important;
 }
 .event-date{ color:var(--ink); opacity:.9; }
 .event-venue{ color:var(--ink); opacity:.85; }
 .event-lineup-label{ color:var(--mute); font-weight:800; letter-spacing:.14em; }
 
 /* DJ names (clickable) */
-.event-name{
-    background:none; border:0; padding:0; margin:0 .25rem 0 0; cursor:pointer;
-    color:var(--ink); font:inherit; font-size:1.15em; font-weight:800; letter-spacing:.02em;
-    text-decoration: underline; text-underline-offset: 3px;
-    border-bottom:1px solid transparent; transition: border-color .2s ease, color .2s ease;
+.event-name {
+    background: none;
+    border: 0;
+    padding: 0;
+    margin: 0 .25rem 0 0;
+    cursor: pointer;
+    color: #BCBF00FF; /* Yellow default */
+    font: inherit;
+    font-size: 1.15em;
+    font-weight: 800;
+    letter-spacing: .02em;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    border-bottom: 1px solid transparent;
+    transition: color .2s ease, border-color .2s ease;
 }
-.event-name:hover{ color:#0f172a; }
+.event-name:hover{ color:#B7410E; }
 .event-name.is-active{ border-bottom:1px solid currentColor; }
 
 /* Force all Next Event text to black for contrast on bg */
 #event .event-text-block, #event .event-text-block *{
     background:none !important; -webkit-background-clip:initial !important; background-clip:initial !important;
-    color:#000 !important; -webkit-text-stroke:0 !important; text-shadow:none !important;
+     -webkit-text-stroke:0 !important; text-shadow:none !important;
 }
 
 /* --------- Past events list rows --------- */
@@ -287,8 +328,8 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
     text-decoration-color: rgba(0,0,0,.25); transition: text-decoration-color .18s ease;
 }
 @media (hover:hover){
-    .event-row-link:hover{ color:#FFB703; padding:.2rem .5rem; border-radius:6px; }
-    .event-row-link:hover .event-part--title{ color:#FFB703; }
+    .event-row-link:hover{ color:#c6452a; padding:.2rem .5rem; border-radius:6px; }
+    .event-row-link:hover .event-part--title{ color:#c6452a; }
 }
 .event-row-link:focus-visible{
     outline:none; box-shadow:0 0 0 2px #000, 0 0 0 4px var(--violet);

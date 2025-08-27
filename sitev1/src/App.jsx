@@ -806,11 +806,13 @@ export default function App() {
 
     return (
         <main className="site">
+            {/*
             <div
                 className="bg-fixed"
                 aria-hidden="true"
                 style={{ backgroundImage: `url(${BASE}video/bg1.jpeg)` }}
             />
+            */}
             <StickyNav sections={sections} />
 
             {/* 1 — Home */}
