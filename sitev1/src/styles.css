@@ -2,16 +2,18 @@
 :root {
     /* Light theme tuned for a bright photo bg */
     --bg: rgba(255, 255, 255, .78);
-    --ink: #bcbf00;  /* bright chartreuse */
+    /* Update these */
+    /* Main readable text */
+    --ink: #1a1a1a;   /* deep charcoal for maximum contrast */
+    --mute: #4d4d4d;  /* medium gray for secondary text */
     --line: rgba(255, 255, 255, .14);
-    --mute: #9a9c33; /* softer variation for muted text */            /* muted text */
     --radius: 16px;
     --container: 1120px;
 
-    /* Accents updated to match background */
-    --violet: #c6452a; /* rust red */
-    --green:  #99a8b1; /* steel gray */
-    --cyan:   #bcbf00; /* chartreuse as a kicker highlight */
+    /* New accents */
+    --violet: #d97706;  /* amber */
+    --green:  #0891b2;  /* cyan */
+    --cyan:   #d97706;  /* magenta */
 }
 
 @font-face {
@@ -276,7 +278,7 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
 #event .event-venue,
 #event .event-lineup-label,
 #event .event-series {
-    color: #bcbf00 !important;
+    color: #d97706 !important;
     opacity: 0.92; /* slight softening like before */
     background: none !important;
     -webkit-background-clip: initial !important;
@@ -295,7 +297,7 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
     padding: 0;
     margin: 0 .25rem 0 0;
     cursor: pointer;
-    color: #BCBF00FF; /* Yellow default */
+    color: #d97706; /* Yellow default */
     font: inherit;
     font-size: 1.15em;
     font-weight: 800;
@@ -305,7 +307,7 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
     border-bottom: 1px solid transparent;
     transition: color .2s ease, border-color .2s ease;
 }
-.event-name:hover{ color:#B7410E; }
+.event-name:hover{ color:#0891b2; }
 .event-name.is-active{ border-bottom:1px solid currentColor; }
 
 /* Force all Next Event text to black for contrast on bg */
@@ -316,8 +318,17 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
 
 /* --------- Past events list rows --------- */
 .event-row-link{
-    display:inline-flex; flex-wrap:wrap; align-items:baseline; gap:.8rem; padding:.2rem 0;
-    background:transparent; border:0; cursor:pointer; font:inherit; letter-spacing:.02em; color:var(--ink);
+    display:inline-flex;
+    flex-wrap:wrap;
+    align-items:baseline;
+    gap:.8rem;
+    padding:.2rem 0;
+    background:transparent;
+    border:0; cursor:pointer;
+    font:inherit;
+    letter-spacing:.02em;
+    color: #d97706;
+
     transition: color .2s ease, text-decoration-color .2s ease, opacity .2s ease;
 }
 .event-row-link .event-part{ text-transform:uppercase; font-weight:900; line-height:1.15; }
@@ -328,8 +339,8 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
     text-decoration-color: rgba(0,0,0,.25); transition: text-decoration-color .18s ease;
 }
 @media (hover:hover){
-    .event-row-link:hover{ color:#c6452a; padding:.2rem .5rem; border-radius:6px; }
-    .event-row-link:hover .event-part--title{ color:#c6452a; }
+    .event-row-link:hover{ color:#0891b2; padding:.2rem .5rem; border-radius:6px; }
+    .event-row-link:hover .event-part--title{ color:#0891b2; }
 }
 .event-row-link:focus-visible{
     outline:none; box-shadow:0 0 0 2px #000, 0 0 0 4px var(--violet);
@@ -492,19 +503,22 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
 /* =========================================================
    SHARED DOCK (Lineup & Past Events) + Controls
    ========================================================= */
-.dj-info-dock{
-    margin-top:1.25rem; border-top:1px solid var(--ink);
-    overflow: clip; max-height: 0; opacity: 0;
-    transition: max-height .35s ease, opacity .25s ease, transform .25s ease;
-    transform: translateZ(0); background: transparent;
+.dj-info-dock {
+    background: rgba(255,255,255,0.7); /* frosted panel for readability */
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border-top: 1px solid rgba(0,0,0,0.1);
+    border-radius: 12px;
+    padding: 1rem;
 }
+
 .dj-info-dock.open{ max-height:340px; opacity:1; }
 .dj-info-inner{ padding:1rem 0; }
 .dj-info-row{ display:flex; flex-wrap:wrap; align-items:baseline; gap:.75rem 1.25rem; margin-bottom:.5rem; }
-.dj-info-name{ margin:0; font-weight:700; letter-spacing:.02em; }
-.dj-info-ig{ text-decoration:none; border-bottom:1px solid currentColor; }
-.dj-info-ig:hover{ border-bottom-color: transparent; }
-.dj-info-desc{ margin:.5rem 0 0 0; line-height:1.5; opacity:.95; }
+.dj-info-name{ margin:0; font-weight:700; letter-spacing:.02em; color: #d97706; /* amber */}
+.dj-info-ig{ text-decoration:none; border-bottom:1px solid currentColor;  color: #0891b2;}
+.dj-info-ig:hover{ border-bottom-color: transparent; color: #be185d; /* magenta on hover */}
+.dj-info-desc{ margin:.5rem 0 0 0; line-height:1.5; opacity:.95; color: #1f2937; /* neutral dark gray */}
 .dj-info-placeholder{ padding:.75rem 0; opacity:.6; font-style: italic; }
 
 /* Dock controls (Prev / Next / Close) */
@@ -530,9 +544,19 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
     right: 0;
     bottom: 0;           /* fixed in its place at the section’s bottom */
     width: 100%;
-    background: transparent;     /* transparent like DJ line */
-    border-top: 1px solid var(--line);
-    z-index: 2;
+    background: linear-gradient(
+            to top,
+            rgba(255,255,255,.82),   /* solid near the controls */
+            rgba(255,255,255,.68) 40%,
+            rgba(255,255,255,.40) 100%
+    );
+    backdrop-filter: blur(6px) saturate(1.05);
+    -webkit-backdrop-filter: blur(6px) saturate(1.05);
+
+    border-top: 1px solid rgba(0,0,0,.18);   /* clearer separator */
+    box-shadow: 0 -6px 24px rgba(0,0,0,.10); /* lift from bg */
+    z-index: 4;
+
     display: none;                /* hidden until open */
     /* remove blur if you had it */
     backdrop-filter: none;
@@ -664,4 +688,60 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
 .gallery-btn:focus,
 .dj-info-ig:focus{
     outline:2px solid currentColor; outline-offset:2px;
+}
+
+
+/* Clickable wrapper for poster in the line */
+.line-poster-btn {
+    appearance: none;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    line-height: 0;
+    border-radius: var(--radius);
+}
+.line-poster-btn:focus-visible {
+    outline: 2px solid var(--violet);
+    outline-offset: 2px;
+}
+
+/* Fixed-size poster modal (uniform size across all posters) */
+.poster-modal {
+    position: relative;
+    background: #0f0f15;
+    color: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 20px 60px rgba(0,0,0,.55), 0 0 0 1px rgba(168,85,247,.10) inset;
+
+    /* Fixed frame for uniformity */
+    width: 700px;
+    height: 1000px;
+
+    /* Center content */
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    outline: none;
+}
+
+/* Make sure the poster fits neatly inside the fixed frame */
+.poster-modal__img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* Responsive fallback: scale the fixed window down on small screens */
+@media (max-width: 760px) {
+    .poster-modal {
+        width: 86vw;
+        height: 120vw; /* keep a tall poster feel on mobile */
+    }
 }

@@ -465,6 +465,11 @@ function PastEvents() {
     const [galleryImages, setGalleryImages] = useState([]);
     const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
+    // Poster modal (uniform size)
+    const [isPosterOpen, setIsPosterOpen] = useState(false);
+    const [posterSrc, setPosterSrc] = useState(null);
+    const openPoster = (src) => { setPosterSrc(src); setIsPosterOpen(true); };
+
     const sectionRef = useRef(null);
 
     const safeIndex = useMemo(() => {
@@ -546,11 +551,19 @@ function PastEvents() {
             >
                 {activeEvent && (
                     <div className="line-inner" role="dialog" aria-label={`${activeEvent.title} details`}>
-                        {/* Left: poster */}
+                        {/* Left: poster (click to open fixed-size modal) */}
                         <div className="line-left">
-                            <div className="line-poster">
-                                <img src={activeEvent.poster} alt={activeEvent.title} />
-                            </div>
+                            <button
+                                type="button"
+                                className="line-poster-btn"
+                                onClick={() => openPoster(activeEvent.poster)}
+                                aria-label="Open poster"
+                                title="Open poster"
+                            >
+                                <div className="line-poster">
+                                    <img src={activeEvent.poster} alt={activeEvent.title} />
+                                </div>
+                            </button>
                         </div>
 
                         {/* Middle: info (title, place, date) */}
@@ -613,6 +626,26 @@ function PastEvents() {
                 )}
             </div>
 
+            {/* Poster modal (fixed-size window) */}
+            <Modal
+                isOpen={isPosterOpen}
+                onRequestClose={() => setIsPosterOpen(false)}
+                className="poster-modal"
+                overlayClassName="gallery-overlay"
+                contentLabel="Event poster"
+            >
+                {posterSrc && <img className="poster-modal__img" src={posterSrc} alt="Event poster" />}
+                <button
+                    className="close-btn"
+                    onClick={() => setIsPosterOpen(false)}
+                    aria-label="Close"
+                    title="Close"
+                >
+                    ×
+                </button>
+            </Modal>
+
+            {/* Gallery modal */}
             <PopupGallery
                 isOpen={isGalleryOpen}
                 onClose={() => setIsGalleryOpen(false)}
@@ -621,7 +654,6 @@ function PastEvents() {
         </section>
     );
 }
-
 
 
 
@@ -806,13 +838,13 @@ export default function App() {
 
     return (
         <main className="site">
-            {/*
+
             <div
                 className="bg-fixed"
                 aria-hidden="true"
-                style={{ backgroundImage: `url(${BASE}video/bg1.jpeg)` }}
+                style={{ backgroundImage: `url(${BASE}video/bg6.png)` }}
             />
-            */}
+
             <StickyNav sections={sections} />
 
             {/* 1 — Home */}
