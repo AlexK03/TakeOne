@@ -188,6 +188,8 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
     font:inherit; background:rgba(255,255,255,.85); color:var(--ink);
 }
 
+
+
 /* --------- Lists --------- */
 .list{ padding-left:1.1rem; margin:0; }
 .list li{ margin:.25rem 0; }
@@ -246,23 +248,65 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
 
 
 /* --------- Home vertical logos --------- */
-.home-logos{ display:grid; gap:1rem; width:min(360px, 80%); margin:1rem auto 0; }
-@media (min-width:900px){ .home-logos{ width:320px; } }
+.home-logos {
+    display: grid;
+    gap: 1.5rem; /* a bit more spacing for bigger logos */
+    width: min(420px, 90%); /* ↑ was 360px */
+    margin: 1.5rem auto 0;
+}
+@media (min-width:900px) {
+    .home-logos { width: 400px; } /* ↑ was 320px */
+}
 
-.logo-tile{
-    position:relative; display:grid; place-items:center; aspect-ratio:16/9;
-    border-radius:var(--radius); overflow:hidden; background:transparent;
-    text-decoration:none; cursor:pointer; transition: transform .2s ease, box-shadow .2s ease;
+.logo-tile {
+    position: relative;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 16/9;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: transparent;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform .2s ease, box-shadow .2s ease;
 }
+
 .logo-tile:hover{ transform: translateY(-2px); box-shadow: 0 14px 40px rgba(0,0,0,.25); border:none; }
-.logo-tile__img{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; transition:opacity .3s ease; z-index:1; }
-.logo-tile__label{
-    position:relative; z-index:2; font-weight:800; letter-spacing:.06em; text-transform:uppercase;
-    transform:scale(0); opacity:0; transition: transform .4s ease, opacity .4s ease;
-    background: linear-gradient(100deg, var(--violet), var(--green), var(--cyan));
-    -webkit-background-clip:text; background-clip:text; color:transparent;
+
+.logo-tile__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: opacity .3s ease;
+    z-index: 1;
 }
-.logo-tile:hover .logo-tile__label{ transform:scale(1); opacity:1; }
+
+.logo-tile__label {
+    position: relative;
+    z-index: 2;
+    font-family: "MyFont", sans-serif; /* use your custom font */
+    font-weight: 900;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    font-size: clamp(1.5rem, 2vw + 1rem, 2.5rem); /* ↑ bigger text */
+    transform: scale(0);
+    opacity: 0;
+    transition: transform .4s ease, opacity .4s ease;
+    color: transparent;
+    background: none; /* remove gradient */
+    -webkit-background-clip: initial;
+    background-clip: initial;
+}
+
+/* On hover → appear in neon green */
+.logo-tile:hover .logo-tile__label {
+    transform: scale(1);
+    opacity: 1;
+    color: #7FFF00; /* neon green */
+    text-shadow: 0 0 10px rgba(127, 255, 0, 0.6); /* optional glowing effect */
+}
 
 /* --------- Event poster text --------- */
 #event, #past { font-family: "MyFont", sans-serif; }
@@ -278,7 +322,7 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
 #event .event-venue,
 #event .event-lineup-label,
 #event .event-series {
-    color: #d97706 !important;
+    color: #FC8600FF !important;
     opacity: 0.92; /* slight softening like before */
     background: none !important;
     -webkit-background-clip: initial !important;
@@ -297,7 +341,7 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
     padding: 0;
     margin: 0 .25rem 0 0;
     cursor: pointer;
-    color: #d97706; /* Yellow default */
+    color: #FC8600FF; /* Yellow default */
     font: inherit;
     font-size: 1.15em;
     font-weight: 800;
@@ -308,7 +352,8 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
     transition: color .2s ease, border-color .2s ease;
 }
 .event-name:hover{ color:#0891b2; }
-.event-name.is-active{ border-bottom:1px solid currentColor; }
+.event-name.is-active{border-bottom: 2px solid #0891b2; /* cyan underline */
+    color: #d97706; /* keep text amber */ }
 
 /* Force all Next Event text to black for contrast on bg */
 #event .event-text-block, #event .event-text-block *{
@@ -426,11 +471,15 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
     margin:.25rem 0 1rem;
 }
 .typewriter__static{ color:var(--ink); opacity:.9; }
-.typewriter__word{
-    background: linear-gradient(100deg, var(--violet), var(--green), var(--cyan));
-    -webkit-background-clip:text; background-clip:text; color:transparent;
+.typewriter__word {
+    background: none !important;    /* remove gradient */
+    -webkit-background-clip: initial !important;
+    background-clip: initial !important;
+    color: #7FFF00 !important;      /* bright green */
+    -webkit-text-stroke: 0 !important;
+    text-shadow: none !important;
 }
-.typewriter__cursor{ width:.08em; align-self:stretch; border-left:2px solid currentColor; opacity:.9; animation: tw-blink 1.05s steps(1,end) infinite; margin-left:.08em; }
+.typewriter__cursor{ width:.08em; align-self:stretch; border-left:2px solid currentColor; opacity:.9; animation: tw-blink 1.05s steps(1,end) infinite; margin-left:.08em;  border-left-color: #7FFF00 !important;}
 @keyframes tw-blink{ 50%{ opacity:0; } }
 @media (min-width:900px){ .typewriter{ margin-bottom:1.25rem; } }
 .tw-brand{ filter:none; }
@@ -440,6 +489,20 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
     -webkit-text-stroke: .6px rgba(0,0,0,.4);
     text-shadow: 0 0 8px rgba(255,255,255,.45), 0 1px 2px rgba(0,0,0,.35);
 }
+
+.typewriter-line .accent,
+.typewriter-line .typewriter__static,
+.typewriter-line .typewriter__word {
+    background: none !important;
+    -webkit-background-clip: initial !important;
+    background-clip: initial !important;
+    color: #7FFF00 !important;
+    -webkit-text-stroke: 0 !important;
+    text-shadow: none !important;
+}
+
+
+
 @media (prefers-contrast:more){
     .accent, .event-series, .logo-tile__label, .typewriter__word{
         -webkit-text-stroke: 1px rgba(0,0,0,.55);
@@ -515,10 +578,31 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
 .dj-info-dock.open{ max-height:340px; opacity:1; }
 .dj-info-inner{ padding:1rem 0; }
 .dj-info-row{ display:flex; flex-wrap:wrap; align-items:baseline; gap:.75rem 1.25rem; margin-bottom:.5rem; }
-.dj-info-name{ margin:0; font-weight:700; letter-spacing:.02em; color: #d97706; /* amber */}
+
+/* DJ name inside dock */
+.dj-info-name {
+    margin: 0;
+    font-family: "MyFont", sans-serif;
+    font-size: clamp(1.4rem, 1.4vw + 0.6rem, 1.8rem); /* smaller, balanced */
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .02em;
+    color: #FC8600FF; /* amber */
+}
+
 .dj-info-ig{ text-decoration:none; border-bottom:1px solid currentColor;  color: #0891b2;}
 .dj-info-ig:hover{ border-bottom-color: transparent; color: #be185d; /* magenta on hover */}
-.dj-info-desc{ margin:.5rem 0 0 0; line-height:1.5; opacity:.95; color: #1f2937; /* neutral dark gray */}
+
+/* DJ description text */
+/* DJ description text */
+.dj-info-desc {
+    margin: .5rem 0 0 0;
+    line-height: 1.55;
+    font-size: 1.3rem;   /* ↑ slightly larger than before */
+    opacity: .95;
+    color: #1f2937; /* neutral dark gray */
+}
+
 .dj-info-placeholder{ padding:.75rem 0; opacity:.6; font-style: italic; }
 
 /* Dock controls (Prev / Next / Close) */

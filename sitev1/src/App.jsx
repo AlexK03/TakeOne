@@ -255,12 +255,13 @@ function StickyNav({ sections }) {
                 <div className="nav__bar nav__bar--centered">
                     {/* Left: Brand */}
                     <a href="#home" onClick={go("home")} className="nav__brand">
-                        <img
-                            src={`${BASE}img/logo1.png`}
-                            alt="TakeOne Logo"
-                            style={{ height: "50px", width: "auto" }}
-                        />
+                        <picture>
+                            <source srcSet={`${BASE}img/logo1.webm`} type="video/webm" />
+                            <img src={`${BASE}img/logo.apng`} alt="TakeOne Logo" style={{ height: "50px", width: "auto" }} />
+                        </picture>
                     </a>
+
+
 
                     {/* Center: Links */}
                     <nav className="nav__links">
@@ -693,36 +694,39 @@ function Contact() {
     return (
         <div className="grid grid--split">
             {/* Left: Form */}
-            <form onSubmit={onSubmit} className="stack-4" noValidate>
-                <div>
-                    <label className="label" htmlFor="c-name">Name</label>
-                    <input id="c-name" name="name" className="input" required />
-                </div>
-                <div>
-                    <label className="label" htmlFor="c-email">Email</label>
-                    <input id="c-email" type="email" name="email" className="input" required />
-                </div>
-                <div>
-                    <label className="label" htmlFor="c-msg">Message</label>
-                    <textarea id="c-msg" name="message" rows="5" className="textarea" required />
-                </div>
+            <form onSubmit={onSubmit} className="card" noValidate>
+                <div className="card__body stack-4">
+                    <div>
+                        <label className="label" htmlFor="c-name">Name</label>
+                        <input id="c-name" name="name" className="input" required />
+                    </div>
+                    <div>
+                        <label className="label" htmlFor="c-email">Email</label>
+                        <input id="c-email" type="email" name="email" className="input" required />
+                    </div>
+                    <div>
+                        <label className="label" htmlFor="c-msg">Message</label>
+                        <textarea id="c-msg" name="message" rows="5" className="textarea" required />
+                    </div>
 
-                <button
-                    type="submit"
-                    className="btn btn--ghost"
-                    disabled={status === "sending"}
-                    aria-busy={status === "sending"}
-                >
-                    {status === "sending" ? "Opening email app…" : "Send"}
-                </button>
+                    <button
+                        type="submit"
+                        className="btn btn--ghost"
+                        disabled={status === "sending"}
+                        aria-busy={status === "sending"}
+                    >
+                        {status === "sending" ? "Opening email app…" : "Send"}
+                    </button>
 
-                {status === "sent" && (
-                    <p className="ok">Thanks! Your email app should have opened. If not, write us at {EMAIL_TO}.</p>
-                )}
-                {status === "error" && (
-                    <p className="err">Couldn’t open your email app. Please email us at {EMAIL_TO}.</p>
-                )}
+                    {status === "sent" && (
+                        <p className="ok">Thanks! Your email app should have opened. If not, write us at {EMAIL_TO}.</p>
+                    )}
+                    {status === "error" && (
+                        <p className="err">Couldn’t open your email app. Please email us at {EMAIL_TO}.</p>
+                    )}
+                </div>
             </form>
+
 
             {/* Right: Socials */}
             <div>
