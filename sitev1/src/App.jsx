@@ -55,11 +55,11 @@ import setMp3 from "./assets/audioTrack/takeone_set2.mp3";
 // ---------------------------
 const event = {
     name: "TakeOne — Late Summer Session",
-    start: "2025-09-19T19:00:00+02:00",
-    end: "2025-09-19T03:00:00+02:00",
+    start: "2025-09-12T19:00:00+02:00",
+    end: "2025-09-12T03:00:00+02:00",
     city: "Bolzano, IT",
-    venue: "Zoona",
-    address: "Via Vincenzo Lancia, 1, 39100 Bolzano BZ",
+    venue: "Miro Club - R-Room",
+    address: " Piazza Domenicani, 3b, 39100 Bolzano BZ",
     heroImage:
         "https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=1600&q=80",
     trailerUrl: "https://www.youtube.com/embed/ScMzIvxBSi4",
@@ -70,7 +70,7 @@ const event = {
 
 const lineup = [
     {
-        name: "Davide Piras",
+        name: "Alan LaRocc",
         tier: "",
         genre: "",
         image:
@@ -79,7 +79,7 @@ const lineup = [
         bio:"Well-known DJ in the region, delivering high-energy sets that move between house and techno. As producer under the alter ego DJ Chupacapra, he has become a true local legend of the South Tyrolean underground scene"
     },
     {
-        name: "Mattia Lorenzi",
+        name: "Young",
         tier: "",
         genre: "",
         image:
@@ -107,30 +107,92 @@ const lineup = [
     }
 ];
 
-const team = [
+const lineup2 = [
     {
-        name: "Lorenzo Giani",
-        role: "Founder & Curator",
-        image: `${BASE}img/Giani.jpg`,
-        bio: "Programming events in Alto Adige. Focus on curation and partnerships."
+        name: "Davide Piras",
+        tier: "",
+        genre: "",
+        image:
+        davidePiras,
+        links: { instagram: "https://www.instagram.com/davidepirasmusic/" },
+        bio:"Well-known DJ in the region, delivering high-energy sets that move between house and techno. As producer under the alter ego DJ Chupacapra, he has become a true local legend of the South Tyrolean underground scene"
     },
     {
-        name: "Daniele Dapra",
-        role: "Production Lead",
-        image: `${BASE}img/Dani.jpg`,
-        bio: "Logistics, vendors, backstage flow."
+        name: "Mattia Lorenzi",
+        tier: "",
+        genre: "",
+        image:
+        mattiaLorenzi,
+        links: { instagram: "https://www.instagram.com/mattialrnz/" },
+        bio:"With versatility at the core of his mixing, Mattia Lorenzi connects genres across the spectrum to craft energetic, immersive experiences. His digger’s spirit shines through in sets marked by distinctive and carefully curated selections"
+    },
+    {
+        name: "Loned",
+        tier: "",
+        genre: "",
+        image:
+        lonedImage,
+        links: { instagram: "https://www.instagram.com/lonednotloned/" },
+        bio:"His sets never disappoint those in search of high-impact energy. Characterized by bouncy beats and refined mixing skills, Loned delivers powerful, dynamic experiences that flow seamlessly between techno and electro"
+    },
+    {
+        name: "XTO",
+        tier: "",
+        genre: "",
+        image:
+            "https://images.unsplash.com/photo-1521335629791-ce4aec67dd53?auto=format&fit=crop&w=900&q=80",
+        links: { instagram: "https://instagram.com/" },
+        bio:"His sets carry a distinct house spirit, blending deep grooves with breakbeat energy. With acid-tinged rhythms and carefully selected vocals, he crafts warm, high-energy journeys where vintage house nostalgia merges seamlessly with modern rhythms"
     }
 ];
 
-const residents = [
+// Optional: a second lineup (replace with your real artists)
+const lineupAutumn = lineup2; // TODO: replace with the actual second lineup
+
+// Put your upcoming events here. First one reuses your existing `event`.
+const upcomingEvents = [
+    { ...event, lineup }, // your current Late Summer Session + its lineup
     {
-        name: "TakeOne Crew",
-        style: "House / Indie Dance",
-        image:
-            "https://images.unsplash.com/photo-1531988042231-d39a9cc12a9a?auto=format&fit=crop&w=800&q=80",
-        links: { mix: "https://soundcloud.com/" }
-    }
+        name: "TakeOne — Late Summer Session",
+        start: "2025-09-19T19:00:00+02:00",
+        end: "2025-09-19T03:00:00+02:00",
+        city: "Bolzano, IT",
+        venue: "Zoona",
+        address: "Via Vincenzo Lancia, 1, 39100 Bolzano BZ",
+        heroImage:
+            "https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=1600&q=80",
+        trailerUrl: "https://www.youtube.com/embed/ScMzIvxBSi4",
+        mapUrl:
+            "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3001.153762303145!2d11.334562576423357!3d46.4846976647741!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47829d002823f305%3A0xff0eca8c3ab8535c!2sZoona!5e1!3m2!1sit!2sit!4v1754982232360!5m2!1sit!2sit",
+        ticketsUrl: "#tickets",
+        lineup: lineupAutumn, // replace with your real second lineup
+    },
 ];
+
+// Helpers
+const fmt = new Intl.DateTimeFormat("it-IT", {
+    weekday: "short",
+    day: "2-digit",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+});
+
+function dateLabelFor(ev) {
+    const s = new Date(ev.start);
+    const e = new Date(ev.end);
+    const sameDay = s.toDateString() === e.toDateString();
+    if (sameDay) {
+        // es: "ven 19 set, 19:00–03:00"
+        const d = fmt.format(s);
+        const endHm = new Intl.DateTimeFormat("it-IT", { hour: "2-digit", minute: "2-digit" }).format(e);
+        return `${d.replace(",", "")}, ${new Intl.DateTimeFormat("it-IT", { hour: "2-digit", minute: "2-digit" }).format(s)}–${endHm}`;
+    }
+    // Cross-day
+    return `${fmt.format(s).replace(",", "")} → ${fmt.format(e).replace(",", "")}`;
+}
+
+
 
 const pastEvents = [
     {
@@ -854,92 +916,177 @@ export default function App() {
             {/* 1 — Home */}
             <HomeSection />
 
-            {/* 2 — Next Event */}
-            <Section id="event" title="Next Event" subdued>
-                <div className="event-text-block">
-                    <div className="event-text-row">
-                        <span className="event-series">TAKEONE</span>
-                        <span className="event-date">{dateLabel}</span>
-                    </div>
+            {/* 2 — Next Events (gallery) */}
+            <Section id="event" title="Next Events" subdued>
+                {/** State for the gallery + lineup */}
+                {(() => {
+                    const [eventIdx, setEventIdx] = React.useState(0);
+                    const [activeIndex, setActiveIndex] = React.useState(null); // dj index for the current event
+                    const dockRef = React.useRef(null);
 
-                    <div className="event-text-row">
-                        <span className="event-venue">{event.city} · {event.venue}</span>
-                    </div>
+                    // Reset selected DJ when switching event
+                    React.useEffect(() => { setActiveIndex(null); }, [eventIdx]);
 
-                    <div className="event-text-row">
-                        <span className="event-lineup-label">LINEUP:</span>
-                        {lineup.map((a, i) => (
-                            <button
-                                key={a.name}
-                                className={`event-name ${activeDJ?.name === a.name ? "is-active" : ""}`}
-                                type="button"
-                                onClick={() => setActiveIndex(i)}
+                    const current = upcomingEvents[eventIdx];
+                    const currentLineup = (current?.lineup && current.lineup.length) ? current.lineup : lineup;
+                    const activeDJ = (activeIndex != null) ? currentLineup[activeIndex] : null;
+
+                    const prevEvent = React.useCallback(() => {
+                        setEventIdx(i => (i - 1 + upcomingEvents.length) % upcomingEvents.length);
+                    }, []);
+                    const nextEvent = React.useCallback(() => {
+                        setEventIdx(i => (i + 1) % upcomingEvents.length);
+                    }, []);
+
+                    // Simple swipe support
+                    const startX = React.useRef(null);
+                    const onPointerDown = (e) => { startX.current = e.clientX ?? e.touches?.[0]?.clientX ?? 0; };
+                    const onPointerUp = (e) => {
+                        const endX = e.clientX ?? e.changedTouches?.[0]?.clientX ?? 0;
+                        const dx = endX - (startX.current ?? 0);
+                        if (Math.abs(dx) > 40) dx < 0 ? nextEvent() : prevEvent();
+                        startX.current = null;
+                    };
+
+                    return (
+                        <div className="next-event-gallery" role="region" aria-roledescription="carousel" aria-label="Upcoming events">
+                            {/* Slides */}
+                            <div
+                                className="event-slides"
+                                style={{ ['--idx']: eventIdx, ['--count']: upcomingEvents.length }}
+                                onMouseDown={onPointerDown}
+                                onMouseUp={onPointerUp}
+                                onTouchStart={onPointerDown}
+                                onTouchEnd={onPointerUp}
                             >
-                                {a.name.toUpperCase()}{i < lineup.length - 1 ? "," : ""}
-                            </button>
-                        ))}
-                    </div>
-                </div>
+                                {upcomingEvents.map((ev, i) => (
+                                    <article
+                                        key={`${ev.name}-${ev.start}`}
+                                        className={`event-slide ${i === eventIdx ? "is-active" : ""}`}
+                                        aria-roledescription="slide"
+                                        aria-label={`${i + 1} of ${upcomingEvents.length}`}
+                                    >
+                                        {/* Background image */}
+                                        <img className="event-hero" src={ev.heroImage} alt="" loading="lazy" />
+                                        <div className="event-hero__overlay" />
 
-                {/* Info dock with Prev / Next / Close */}
-                <div ref={dockRef} className={`dj-info-dock ${activeDJ ? "open" : ""}`} aria-live="polite">
-                    {activeDJ ? (
-                        <div className="dj-info-inner">
-                            <div className="dj-info-row">
-                                <h3 className="dj-info-name">{activeDJ.name}</h3>
+                                        {/* Text card */}
+                                        <div className="event-card card">
+                                            <div className="card__body">
+                                                <div className="event-text-block">
+                                                    <div className="event-text-row">
+                                                        <span className="event-series">TAKEONE</span>
+                                                        <span className="event-date">{dateLabelFor(ev)}</span>
+                                                    </div>
 
-                                {activeDJ.links?.instagram && (
-                                    <a
-                                        className="dj-info-ig"
-                                        href={igHref(activeDJ.links.instagram)}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                    >
-                                        {igLabel(activeDJ.links.instagram)}
-                                    </a>
-                                )}
+                                                    <div className="event-text-row">
+                                                        <span className="event-venue">{ev.city} · {ev.venue}</span>
+                                                    </div>
 
-                                {/* Controls */}
-                                <div className="dock-controls" role="group" aria-label="Lineup navigation">
-                                    <button
-                                        className="icon-btn"
-                                        onClick={() => setActiveIndex(i => (i - 1 + lineup.length) % lineup.length)}
-                                        aria-label="Previous artist"
-                                        type="button"
-                                    >
-                                        ‹ Prev
-                                    </button>
-                                    <button
-                                        className="icon-btn"
-                                        onClick={() => setActiveIndex(i => (i + 1) % lineup.length)}
-                                        aria-label="Next artist"
-                                        type="button"
-                                    >
-                                        Next ›
-                                    </button>
-                                    <button
-                                        className="icon-btn close"
-                                        onClick={() => setActiveIndex(null)}
-                                        aria-label="Close"
-                                        type="button"
-                                        title="Close"
-                                    >
-                                        ×
-                                    </button>
-                                </div>
+                                                    <div className="event-text-row">
+                                                        <span className="event-lineup-label">LINEUP:</span>
+                                                        {currentLineup.map((a, idx) => (
+                                                            <button
+                                                                key={`${a.name}-${idx}`}
+                                                                className={`event-name ${activeDJ?.name === a.name ? "is-active" : ""}`}
+                                                                type="button"
+                                                                onClick={() => setActiveIndex(idx)}
+                                                            >
+                                                                {a.name.toUpperCase()}{idx < currentLineup.length - 1 ? "," : ""}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </article>
+                                ))}
                             </div>
 
-                            {(activeDJ.bio || activeDJ.description) && (
-                                <p className="dj-info-desc">
-                                    {activeDJ.bio || activeDJ.description}
-                                </p>
-                            )}
+                            {/* Nav arrows */}
+                            <div className="event-gallery-nav" role="group" aria-label="Event navigation">
+                                <button className="icon-btn" onClick={prevEvent} aria-label="Previous event">‹ Prev</button>
+                                <button className="icon-btn" onClick={nextEvent} aria-label="Next event">Next ›</button>
+                            </div>
+
+                            {/* Dots */}
+                            <div className="event-dots" role="tablist" aria-label="Select event">
+                                {upcomingEvents.map((_, i) => (
+                                    <button
+                                        key={`dot-${i}`}
+                                        role="tab"
+                                        aria-selected={i === eventIdx}
+                                        aria-controls={`event-slide-${i}`}
+                                        className={`dot ${i === eventIdx ? "is-active" : ""}`}
+                                        onClick={() => setEventIdx(i)}
+                                        title={`Go to event ${i + 1}`}
+                                        type="button"
+                                    />
+                                ))}
+                            </div>
+
+                            {/* Info dock (reuses your existing behavior) */}
+                            <div ref={dockRef} className={`dj-info-dock ${activeDJ ? "open" : ""}`} aria-live="polite">
+                                {activeDJ ? (
+                                    <div className="dj-info-inner">
+                                        <div className="dj-info-row">
+                                            <h3 className="dj-info-name">{activeDJ.name}</h3>
+
+                                            {activeDJ.links?.instagram && (
+                                                <a
+                                                    className="dj-info-ig"
+                                                    href={igHref(activeDJ.links.instagram)}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                >
+                                                    {igLabel(activeDJ.links.instagram)}
+                                                </a>
+                                            )}
+
+                                            <div className="dock-controls" role="group" aria-label="Lineup navigation">
+                                                <button
+                                                    className="icon-btn"
+                                                    onClick={() => setActiveIndex(i => (i - 1 + currentLineup.length) % currentLineup.length)}
+                                                    aria-label="Previous artist"
+                                                    type="button"
+                                                >
+                                                    ‹ Prev
+                                                </button>
+                                                <button
+                                                    className="icon-btn"
+                                                    onClick={() => setActiveIndex(i => (i + 1) % currentLineup.length)}
+                                                    aria-label="Next artist"
+                                                    type="button"
+                                                >
+                                                    Next ›
+                                                </button>
+                                                <button
+                                                    className="icon-btn close"
+                                                    onClick={() => setActiveIndex(null)}
+                                                    aria-label="Close"
+                                                    type="button"
+                                                    title="Close"
+                                                >
+                                                    ×
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        {(activeDJ.bio || activeDJ.description) && (
+                                            <p className="dj-info-desc">
+                                                {activeDJ.bio || activeDJ.description}
+                                            </p>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="dj-info-placeholder">Select an artist to see info.</div>
+                                )}
+                            </div>
                         </div>
-                    ) : (
-                        <div className="dj-info-placeholder">Select an artist to see info.</div>
-                    )}
-                </div>
+                    );
+                })()}
             </Section>
+
 
             {/* 3 — About */}
             <Section id="about" title="About TakeOne">
