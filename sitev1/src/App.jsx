@@ -518,18 +518,17 @@ function HomeSection() {
 function PastEvents() {
     const [selected, setSelected] = useState(null);       // full event object
     const [activeIndex, setActiveIndex] = useState(null); // index in pastEvents
+
     const [galleryImages, setGalleryImages] = useState([]);
     const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
-    // Poster modal (uniform size)
     const [isPosterOpen, setIsPosterOpen] = useState(false);
     const [posterSrc, setPosterSrc] = useState(null);
-    const openPoster = (src) => {
-        setPosterSrc(src);
-        setIsPosterOpen(true);
-    };
+    const openPoster = (src) => { setPosterSrc(src); setIsPosterOpen(true); };
 
     const sectionRef = useRef(null);
+    const drawerRef  = useRef(null);
+    const [drawerH, setDrawerH] = useState(0);            // measured drawer height
 
     const safeIndex = useMemo(() => {
         if (activeIndex == null || !Array.isArray(pastEvents) || !pastEvents.length) return null;
@@ -537,48 +536,73 @@ function PastEvents() {
     }, [activeIndex]);
 
     const activeEvent = safeIndex != null ? pastEvents[safeIndex] : null;
+    const images = Array.isArray(activeEvent?.gallery) ? activeEvent.gallery : [];
+
+    const fmtDate = (d) =>
+        new Date(d).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
 
     const openDetails = (ev, idx) => {
         setSelected(ev);
         setActiveIndex(idx);
+        setGalleryImages(ev.gallery || []);
     };
 
-    const openGallery = (images) => {
-        setGalleryImages(images || []);
-        setIsGalleryOpen(true);
-    };
-
-    const closeLine = () => {
-        setSelected(null);
-        setActiveIndex(null);
-    };
-
+    const closeLine = () => { setSelected(null); setActiveIndex(null); };
     const prevEvent = () => {
         if (safeIndex == null || !pastEvents?.length) return;
         const idx = (safeIndex - 1 + pastEvents.length) % pastEvents.length;
-        setActiveIndex(idx);
-        setSelected(pastEvents[idx]);
+        setActiveIndex(idx); setSelected(pastEvents[idx]);
     };
-
     const nextEvent = () => {
         if (safeIndex == null || !pastEvents?.length) return;
         const idx = (safeIndex + 1) % pastEvents.length;
-        setActiveIndex(idx);
-        setSelected(pastEvents[idx]);
+        setActiveIndex(idx); setSelected(pastEvents[idx]);
     };
 
-    const fmtDate = (d) =>
-        new Date(d).toLocaleDateString("en-GB", {day: "2-digit", month: "short", year: "numeric"});
+    // mini-gallery
+    const [mainIndex, setMainIndex] = useState(0);
+    useEffect(() => setMainIndex(0), [activeEvent]);
+    const prevImg = () => images.length && setMainIndex(i => (i - 1 + images.length) % images.length);
+    const nextImg = () => images.length && setMainIndex(i => (i + 1) % images.length);
+
+    // keyboard
+    useEffect(() => {
+        if (!activeEvent) return;
+        const onKey = (e) => {
+            if (e.key === "ArrowLeft") prevImg();
+            if (e.key === "ArrowRight") nextImg();
+            if (e.key === "Escape") closeLine();
+        };
+        window.addEventListener("keydown", onKey);
+        return () => window.removeEventListener("keydown", onKey);
+    }, [activeEvent, images.length]);
+
+    // Measure drawer and reserve space in the section while open (like Incoming Events)
+    useEffect(() => {
+        const node = drawerRef.current;
+        if (!node || !activeEvent) {
+            setDrawerH(0);
+            return;
+        }
+        const ro = new ResizeObserver(() => setDrawerH(node.offsetHeight || 0));
+        ro.observe(node);
+        setDrawerH(node.offsetHeight || 0);
+        return () => ro.disconnect();
+    }, [activeEvent]);
 
     return (
-        <section ref={sectionRef} className="past-events-section">
-            {/* Archive list */}
+        <section
+            ref={sectionRef}
+            className={`past-events-section ${activeEvent ? "has-drawer-open" : ""}`}
+            style={{ "--past-drawer-h": `${drawerH}px` }}
+        >
+            {/* Archive list (unchanged) */}
             <motion.div
                 className="event-text-block past-events-block"
                 variants={stagger}
                 initial="hidden"
                 whileInView="show"
-                viewport={{once: true}}
+                viewport={{ once: true }}
             >
                 {pastEvents.map((p, i) => {
                     const dateStr = fmtDate(p.date);
@@ -589,9 +613,8 @@ function PastEvents() {
                                 type="button"
                                 className={`event-row-link ${isActive ? "is-active" : ""}`}
                                 onClick={() => openDetails(p, i)}
-                                aria-label={`Open details for ${p.title} on ${dateStr} at ${p.venue}, ${p.city}`}
                                 aria-expanded={!!isActive}
-                                aria-controls="past-events-line"
+                                aria-controls="past-events-drawer"
                             >
                                 <span className="event-part event-part--date">{dateStr}</span>
                                 <span className="event-part event-part--place">{p.city} {p.venue} ·</span>
@@ -602,91 +625,105 @@ function PastEvents() {
                 })}
             </motion.div>
 
-            {/* Bottom “line” inside section (like DJs) */}
+            {/* Bottom drawer anchored to the section (not viewport) */}
             <div
-                id="past-events-line"
-                className={["past-events-line", activeEvent ? "open" : ""].join(" ")}
+                ref={drawerRef}
+                id="past-events-drawer"
+                className={`past-events-drawer ${activeEvent ? "open" : ""}`}
                 aria-hidden={!activeEvent}
+                aria-live="polite"
             >
                 {activeEvent && (
-                    <div className="line-inner" role="dialog" aria-label={`${activeEvent.title} details`}>
-                        {/* Left: poster (click to open fixed-size modal) */}
-                        <div className="line-left">
-                            <button
-                                type="button"
-                                className="line-poster-btn"
-                                onClick={() => openPoster(activeEvent.poster)}
-                                aria-label="Open poster"
-                                title="Open poster"
-                            >
-                                <div className="line-poster">
-                                    <img src={activeEvent.poster} alt={activeEvent.title}/>
+                    <div className="drawer-inner" role="dialog" aria-label={`${activeEvent.title} details`}>
+                        <div className="drawer-head">
+                            <h3 className="drawer-title">{activeEvent.title}</h3>
+                            <div className="drawer-controls" role="group" aria-label="Past event navigation">
+                                <button className="icon-btn" onClick={prevEvent} type="button">‹ prev</button>
+                                <button className="icon-btn" onClick={nextEvent} type="button">next ›</button>
+                                <button className="icon-btn close" onClick={closeLine} type="button" title="Close">×</button>
+                            </div>
+                        </div>
+
+                        {/* 2-col main area */}
+                        <div className="drawer-body">
+                            {/* LEFT — INFO */}
+                            <div className="drawer-col">
+                                <div className="event-facts">
+                                    <div className="facts-row">
+                                        <span className="facts-label">When</span>
+                                        <span className="facts-val">{fmtDate(activeEvent.date)}</span>
+                                    </div>
+                                    <div className="facts-row">
+                                        <span className="facts-label">Where</span>
+                                        <span className="facts-val">
+                      {activeEvent.city}{activeEvent.venue ? ` · ${activeEvent.venue}` : ""}
+                    </span>
+                                    </div>
                                 </div>
-                            </button>
-                        </div>
 
-                        {/* Middle: info (title, place, date) */}
-                        <div className="line-meta">
-                            <div className="line-title truncate">{activeEvent.title}</div>
-                            <div className="line-sub">
-                                <span>{activeEvent.city}</span>
-                                {activeEvent.venue ? <><span
-                                    className="dot">•</span><span>{activeEvent.venue}</span></> : null}
-                                <span className="dot">•</span>
-                                <span>{fmtDate(activeEvent.date)}</span>
+                                {activeEvent?.lineup?.length ? (
+                                    <div className="lineup-block">
+                                        <div className="lineup-label">LINEUP</div>
+                                        <ul className="lineup-list">
+                                            {activeEvent.lineup.map((dj, i) => (
+                                                <li key={i} className="drawer-dj lineup-name">{dj}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                ) : null}
+
+                                {activeEvent?.recap && <p className="drawer-desc">{activeEvent.recap}</p>}
+
+                                {images.length > 0 && (
+                                    <div className="drawer-actions">
+                                        <button type="button" className="line-btn" onClick={() => setIsGalleryOpen(true)}>
+                                            Open full gallery
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* RIGHT — POSTER */}
+                            <div className="drawer-col media">
+                                <div className="media-hero">
+                                    {activeEvent.poster && (
+                                        <button
+                                            type="button"
+                                            className="line-poster-btn"
+                                            onClick={() => openPoster(activeEvent.poster)}
+                                            aria-label="Open poster"
+                                            title="Open poster"
+                                        >
+                                            <img src={activeEvent.poster} alt={activeEvent.title} />
+                                        </button>
+                                    )}
+                                </div>
                             </div>
                         </div>
 
-                        {/* Right: actions */}
-                        <div className="line-right">
-                            {activeEvent.gallery?.length > 0 && (
-                                <button
-                                    type="button"
-                                    className="line-btn"
-                                    onClick={() => openGallery(activeEvent.gallery)}
-                                >
-                                    View gallery
-                                </button>
+                        {/* FULL-WIDTH BOTTOM — MINI GALLERY */}
+                        <div className="drawer-bottom">
+                            {images.length ? (
+                                <div className="mini-gallery">
+                                    <button className="mini-nav prev" onClick={prevImg} aria-label="Previous image" type="button">‹</button>
+                                    <div className="mini-frame">
+                                        <img
+                                            src={images[mainIndex]}
+                                            alt={`Photo ${mainIndex + 1} of ${images.length}`}
+                                            loading="lazy"
+                                        />
+                                    </div>
+                                    <button className="mini-nav next" onClick={nextImg} aria-label="Next image" type="button">›</button>
+                                </div>
+                            ) : (
+                                <div className="mini-empty">No photos for this event.</div>
                             )}
-
-                            <div className="line-nav">
-                                <button
-                                    type="button"
-                                    className="line-iconbtn"
-                                    onClick={prevEvent}
-                                    aria-label="Previous event"
-                                    disabled={pastEvents.length <= 1}
-                                    title="Previous"
-                                >
-                                    ‹
-                                </button>
-                                <button
-                                    type="button"
-                                    className="line-iconbtn"
-                                    onClick={nextEvent}
-                                    aria-label="Next event"
-                                    disabled={pastEvents.length <= 1}
-                                    title="Next"
-                                >
-                                    ›
-                                </button>
-                            </div>
-
-                            <button
-                                type="button"
-                                className="line-close"
-                                aria-label="Close"
-                                onClick={closeLine}
-                                title="Close"
-                            >
-                                ×
-                            </button>
                         </div>
                     </div>
                 )}
             </div>
 
-            {/* Poster modal (fixed-size window) */}
+            {/* Poster modal */}
             <Modal
                 isOpen={isPosterOpen}
                 onRequestClose={() => setIsPosterOpen(false)}
@@ -694,26 +731,24 @@ function PastEvents() {
                 overlayClassName="gallery-overlay"
                 contentLabel="Event poster"
             >
-                {posterSrc && <img className="poster-modal__img" src={posterSrc} alt="Event poster"/>}
-                <button
-                    className="close-btn"
-                    onClick={() => setIsPosterOpen(false)}
-                    aria-label="Close"
-                    title="Close"
-                >
-                    ×
-                </button>
+                {posterSrc && <img className="poster-modal__img" src={posterSrc} alt="Event poster" />}
+                <button className="close-btn" onClick={() => setIsPosterOpen(false)} aria-label="Close" title="Close">×</button>
             </Modal>
 
-            {/* Gallery modal */}
+            {/* Full gallery modal */}
             <PopupGallery
                 isOpen={isGalleryOpen}
                 onClose={() => setIsGalleryOpen(false)}
                 images={galleryImages}
+                startIndex={mainIndex}
             />
         </section>
     );
 }
+
+
+
+
 
 
 function Contact() {
