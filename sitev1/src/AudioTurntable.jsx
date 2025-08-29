@@ -3,8 +3,9 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 /**
  * AudioTurntable
  * - Starts from the beginning (no random seek)
- * - Adds a scrubber/selector below the disk to jump to any point in the set
- * - Keeps styling aligned with the page via CSS variables
+ * - Scrubber appears only while playing
+ * - Clicking the disk toggles play/pause and shows/hides the bar
+ * - Styling aligned with page tokens
  *
  * Props:
  *  - src: string (audio url)
@@ -89,7 +90,6 @@ export default function AudioTurntable({ src, diskPng, size = 200, label = "Play
                 await el.play();
                 setIsPlaying(true);
             } catch (e) {
-                // Autoplay blocked or other error; remain paused
                 console.warn("Audio play failed:", e);
             }
         }
@@ -138,6 +138,7 @@ export default function AudioTurntable({ src, diskPng, size = 200, label = "Play
             display: "grid",
             placeItems: "center",
             overflow: "hidden",
+            cursor: isReady ? "pointer" : "not-allowed",
         },
         disk: {
             width: size - 14,
@@ -168,6 +169,7 @@ export default function AudioTurntable({ src, diskPng, size = 200, label = "Play
             WebkitBackdropFilter: "blur(6px)",
             padding: "0.75rem 0.9rem",
             boxShadow: "0 20px 60px rgba(0,0,0,.08)",
+            transition: "opacity .2s ease, transform .2s ease",
         },
         row: {
             display: "grid",
@@ -191,12 +193,20 @@ export default function AudioTurntable({ src, diskPng, size = 200, label = "Play
             {/* Hidden audio element */}
             <audio ref={audioRef} preload="metadata" />
 
-            {/* Disk */}
-            <div style={S.diskWrap} aria-live="polite">
+            {/* Disk (click to play/pause & show/hide bar) */}
+            <div
+                style={S.diskWrap}
+                aria-live="polite"
+                role="button"
+                tabIndex={0}
+                onClick={toggle}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } }}
+                aria-label={isPlaying ? 'Pause set and hide scrubber' : 'Play set and show scrubber'}
+            >
                 <div style={S.disk} />
             </div>
 
-            {/* Play/Pause */}
+            {/* (Optional) Play/Pause button remains for accessibility/mouse users */}
             <button
                 type="button"
                 style={S.playBtn}
@@ -207,27 +217,29 @@ export default function AudioTurntable({ src, diskPng, size = 200, label = "Play
                 {isPlaying ? "Pause" : label}
             </button>
 
-            {/* Scrubber / Selector */}
-            <div className="turntable__scrubber card" style={S.scrubberCard}>
-                <div style={S.row}>
-                    <span style={S.time}>{timeToMMSS(current)}</span>
-                    <input
-                        type="range"
-                        min={0}
-                        max={Math.max(1, Math.floor(duration))}
-                        step={1}
-                        value={Math.floor(current)}
-                        onMouseDown={handleScrubStart}
-                        onTouchStart={handleScrubStart}
-                        onChange={handleScrubChange}
-                        onMouseUp={handleScrubEnd}
-                        onTouchEnd={handleScrubEnd}
-                        aria-label="Select position in the set"
-                        style={S.range}
-                    />
-                    <span style={S.time}>{timeToMMSS(duration)}</span>
+            {/* Scrubber / Selector (visible while playing) */}
+            {isPlaying && (
+                <div className="turntable__scrubber card" style={S.scrubberCard}>
+                    <div style={S.row}>
+                        <span style={S.time}>{timeToMMSS(current)}</span>
+                        <input
+                            type="range"
+                            min={0}
+                            max={Math.max(1, Math.floor(duration))}
+                            step={1}
+                            value={Math.floor(current)}
+                            onMouseDown={handleScrubStart}
+                            onTouchStart={handleScrubStart}
+                            onChange={handleScrubChange}
+                            onMouseUp={handleScrubEnd}
+                            onTouchEnd={handleScrubEnd}
+                            aria-label="Select position in the set"
+                            style={S.range}
+                        />
+                        <span style={S.time}>{timeToMMSS(duration)}</span>
+                    </div>
                 </div>
-            </div>
+            )}
 
             {/* Keyframes for spin */}
             <style>{`
