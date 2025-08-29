@@ -47,7 +47,7 @@ import lonedImage from './assets/miro-18-04-2025/img1.jpg';
 import davidePiras from './assets/artists/davidePiras.jpg';
 import mattiaLorenzi from './assets/artists/mattiaLorenzi.jpg';
 import AudioTurntable from "./AudioTurntable.jsx";
-import disk from "./assets/audioTrack/disk6.png.png";
+import disk from "./assets/audioTrack/disk6.png";
 import setMp3 from "./assets/audioTrack/takeone_set.mp3";
 import event1Poster from './assets/miro-15-11-2024/img1.jpg';
 import event2Poster from './assets/zoona-03-05-2025/img4.jpg';
