@@ -1115,3 +1115,5 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
 .lightbox__inner { display: grid; gap: 1rem; max-height: 80vh; overflow: auto; }
 .lightbox__inner img { max-width: 80vw; height: auto; display: block; border-radius: 12px; }
 .lightbox__close { position: fixed; top: 1rem; right: 1rem; background: rgba(255,255,255,.9); border: 1px solid var(--line); border-radius: 999px; width: 36px; height: 36px; font-weight: 900; }
+
+

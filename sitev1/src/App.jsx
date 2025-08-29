@@ -48,7 +48,7 @@ import davidePiras from './assets/artists/davidePiras.jpg';
 import mattiaLorenzi from './assets/artists/mattiaLorenzi.jpg';
 import AudioTurntable from "./AudioTurntable.jsx";
 import disk from "./assets/audioTrack/disk.png";
-import setMp3 from "./assets/audioTrack/takeone_set2.mp3";
+import setMp3 from "./assets/audioTrack/takeone_set.mp3";
 import event1Poster from './assets/miro-15-11-2024/img1.jpg';
 import event2Poster from './assets/zoona-03-05-2025/img4.jpg';
 
@@ -56,10 +56,10 @@ import event2Poster from './assets/zoona-03-05-2025/img4.jpg';
 // Content Model
 // ---------------------------
 const event = {
-    name: "TakeOne — Late Summer Session",
+    name: "TakeOne — Miro Club - R-Room",
     start: "2025-09-12T19:00:00+02:00",
     end: "2025-09-12T03:00:00+02:00",
-    city: "Bolzano, IT",
+    city: "Bozen, IT",
     venue: "Miro Club - R-Room",
     address: " Piazza Domenicani, 3b, 39100 Bolzano BZ",
     heroImage:
@@ -143,10 +143,10 @@ const lineupAutumn = lineup2;
 const upcomingEvents = [
     { ...event, lineup, images: [event.heroImage] },
     {
-        name: "TakeOne — Autumn Session",
-        start: "2025-09-12T19:00:00+02:00",
-        end:   "2025-09-12T19:00:00+02:00",
-        city:  "Bolzano, IT",
+        name: "TakeOne — Zoona",
+        start: "2025-09-19T22:00:00+02:00",
+        end:   "2025-09-19T01:00:00+02:00",
+        city:  "Bozen, IT",
         venue: "Zoona",
         address: "Via Vincenzo Lancia, 1, 39100 Bolzano BZ",
         heroImage: event2Poster,
