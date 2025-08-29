@@ -49,6 +49,8 @@ import mattiaLorenzi from './assets/artists/mattiaLorenzi.jpg';
 import AudioTurntable from "./AudioTurntable.jsx";
 import disk from "./assets/audioTrack/disk.png";
 import setMp3 from "./assets/audioTrack/takeone_set2.mp3";
+import event1Poster from './assets/miro-15-11-2024/img1.jpg';
+import event2Poster from './assets/zoona-03-05-2025/img4.jpg';
 
 // ---------------------------
 // Content Model
@@ -61,11 +63,8 @@ const event = {
     venue: "Miro Club - R-Room",
     address: " Piazza Domenicani, 3b, 39100 Bolzano BZ",
     heroImage:
-        "https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=1600&q=80",
-    trailerUrl: "https://www.youtube.com/embed/ScMzIvxBSi4",
-    mapUrl:
-        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3001.153762303145!2d11.334562576423357!3d46.4846976647741!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47829d002823f305%3A0xff0eca8c3ab8535c!2sZoona!5e1!3m2!1sit!2sit!4v1754982232360!5m2!1sit!2sit",
-    ticketsUrl: "#tickets"
+        event1Poster,
+
 };
 
 const lineup = [
@@ -75,16 +74,16 @@ const lineup = [
         genre: "",
         image:
             davidePiras,
-        links: { instagram: "https://www.instagram.com/davidepirasmusic/" },
+        links: { instagram: "https://www.instagram.com/alan_la_rocc/" },
         bio:"Well-known DJ in the region, delivering high-energy sets that move between house and techno. As producer under the alter ego DJ Chupacapra, he has become a true local legend of the South Tyrolean underground scene"
     },
     {
-        name: "Young",
+        name: "Young XTO",
         tier: "",
         genre: "",
         image:
            mattiaLorenzi,
-        links: { instagram: "https://www.instagram.com/mattialrnz/" },
+        links: { instagram: "https://instagram.com/perestrojka__" },
         bio:"With versatility at the core of his mixing, Mattia Lorenzi connects genres across the spectrum to craft energetic, immersive experiences. His digger’s spirit shines through in sets marked by distinctive and carefully curated selections"
     },
     {
@@ -95,15 +94,6 @@ const lineup = [
             lonedImage,
         links: { instagram: "https://www.instagram.com/lonednotloned/" },
         bio:"His sets never disappoint those in search of high-impact energy. Characterized by bouncy beats and refined mixing skills, Loned delivers powerful, dynamic experiences that flow seamlessly between techno and electro"
-    },
-    {
-        name: "XTO",
-        tier: "",
-        genre: "",
-        image:
-            "https://images.unsplash.com/photo-1521335629791-ce4aec67dd53?auto=format&fit=crop&w=900&q=80",
-        links: { instagram: "https://instagram.com/" },
-        bio:"His sets carry a distinct house spirit, blending deep grooves with breakbeat energy. With acid-tinged rhythms and carefully selected vocals, he crafts warm, high-energy journeys where vintage house nostalgia merges seamlessly with modern rhythms"
     }
 ];
 
@@ -136,61 +126,51 @@ const lineup2 = [
         bio:"His sets never disappoint those in search of high-impact energy. Characterized by bouncy beats and refined mixing skills, Loned delivers powerful, dynamic experiences that flow seamlessly between techno and electro"
     },
     {
-        name: "XTO",
+        name: "Young XTO",
         tier: "",
         genre: "",
         image:
             "https://images.unsplash.com/photo-1521335629791-ce4aec67dd53?auto=format&fit=crop&w=900&q=80",
-        links: { instagram: "https://instagram.com/" },
+        links: { instagram: "https://instagram.com/perestrojka__" },
         bio:"His sets carry a distinct house spirit, blending deep grooves with breakbeat energy. With acid-tinged rhythms and carefully selected vocals, he crafts warm, high-energy journeys where vintage house nostalgia merges seamlessly with modern rhythms"
     }
 ];
 
-// Optional: a second lineup (replace with your real artists)
-const lineupAutumn = lineup2; // TODO: replace with the actual second lineup
+// Example second lineup (replace with real one if different)
+const lineupAutumn = lineup2;
 
-// Put your upcoming events here. First one reuses your existing `event`.
+// Multiple incoming events (first reuses your existing event + lineup)
 const upcomingEvents = [
-    { ...event, lineup }, // your current Late Summer Session + its lineup
+    { ...event, lineup, images: [event.heroImage] },
     {
-        name: "TakeOne — Late Summer Session",
-        start: "2025-09-19T19:00:00+02:00",
-        end: "2025-09-19T03:00:00+02:00",
-        city: "Bolzano, IT",
+        name: "TakeOne — Autumn Session",
+        start: "2025-09-12T19:00:00+02:00",
+        end:   "2025-09-12T19:00:00+02:00",
+        city:  "Bolzano, IT",
         venue: "Zoona",
         address: "Via Vincenzo Lancia, 1, 39100 Bolzano BZ",
-        heroImage:
-            "https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=1600&q=80",
-        trailerUrl: "https://www.youtube.com/embed/ScMzIvxBSi4",
-        mapUrl:
-            "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3001.153762303145!2d11.334562576423357!3d46.4846976647741!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47829d002823f305%3A0xff0eca8c3ab8535c!2sZoona!5e1!3m2!1sit!2sit!4v1754982232360!5m2!1sit!2sit",
-        ticketsUrl: "#tickets",
-        lineup: lineupAutumn, // replace with your real second lineup
+        heroImage: event2Poster,
+        trailerUrl: null,
+        mapUrl: null,
+        lineup: lineupAutumn,
+
     },
 ];
 
-// Helpers
 const fmt = new Intl.DateTimeFormat("it-IT", {
-    weekday: "short",
-    day: "2-digit",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
+    weekday: "short", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit"
 });
-
 function dateLabelFor(ev) {
-    const s = new Date(ev.start);
-    const e = new Date(ev.end);
+    const s = new Date(ev.start), e = new Date(ev.end);
     const sameDay = s.toDateString() === e.toDateString();
     if (sameDay) {
-        // es: "ven 19 set, 19:00–03:00"
-        const d = fmt.format(s);
-        const endHm = new Intl.DateTimeFormat("it-IT", { hour: "2-digit", minute: "2-digit" }).format(e);
-        return `${d.replace(",", "")}, ${new Intl.DateTimeFormat("it-IT", { hour: "2-digit", minute: "2-digit" }).format(s)}–${endHm}`;
+        const day = fmt.format(s).replace(",", "");
+        const hm  = new Intl.DateTimeFormat("it-IT",{hour:"2-digit",minute:"2-digit"});
+        return `${day}, ${hm.format(s)}–${hm.format(e)}`;
     }
-    // Cross-day
     return `${fmt.format(s).replace(",", "")} → ${fmt.format(e).replace(",", "")}`;
 }
+
 
 
 
@@ -208,7 +188,7 @@ const pastEvents = [
         title: "TAKEONEXMIROCLUB",
         date: "2025-04-18",
         city: "Bozen",
-        venue: "Mirò Club",
+        venue: "Miro Club",
         poster: miroPoster,
         recap: "Gonfio",
         gallery: miroImages
@@ -236,7 +216,7 @@ const pastEvents = [
         title: "TAKEONEXLAMPELE",
         date: "2024-11-15",
         city: "Bozen",
-        venue: "Mirò Club",
+        venue: "Miro Club",
         poster: lampelePoster,
         recap: "Gonfio",
         gallery: miro2Images
@@ -319,7 +299,7 @@ function StickyNav({ sections }) {
                     <a href="#home" onClick={go("home")} className="nav__brand">
                         <picture>
                             <source srcSet={`${BASE}img/logo1.webm`} type="video/webm" />
-                            <img src={`${BASE}img/logo.apng`} alt="TakeOne Logo" style={{ height: "50px", width: "auto" }} />
+                            <img src={`${BASE}img/logo.apng`} alt="TakeOne Logo" style={{ height: "60px", width: "auto" }} />
                         </picture>
                     </a>
 
@@ -367,7 +347,7 @@ function Section({ id, title, children, subdued=false }) {
 }
 
 // Simple typewriter that types the last word, deletes it, and loops
-function Typewriter({ prefix = "TakeOne is ", words = [], typeMs = 80, deleteMs = 45, holdMs = 1200 }) {
+function Typewriter({ prefix = "TAKEONE IS ", words = [], typeMs = 80, deleteMs = 45, holdMs = 1200 }) {
     const [i, setI] = React.useState(0);          // which word
     const [len, setLen] = React.useState(0);      // letters revealed
     const [phase, setPhase] = React.useState("typing"); // typing | holding | deleting
@@ -464,10 +444,10 @@ function HomeSection() {
 
                 {/* Quote with deleting keyboard effect */}
                 <div className="typewriter-line">
-                    <span className="accent tw-brand">TakeOne</span>
+                    <span className="accent tw-brand">TAKEONE</span>
                     <Typewriter
-                        prefix=" is "
-                        words={["a concept", "a Tribute", "People"]}
+                        prefix=" IS "
+                        words={["A CONCEPT", "A TRIBUTE", "PEOPLE"]}
                         typeMs={80}
                         deleteMs={45}
                         holdMs={1100}
@@ -725,7 +705,7 @@ function Contact() {
 
     // Update these if needed
     const EMAIL_TO = "take.one@outlook.it";
-    const INSTA_URL = "https://www.instagram.com/takeonebozen/";
+    const INSTA_URL = "https://www.instagram.com/takeone.collective/";
     // WhatsApp in international format, no +, no spaces. Example: 393331234567
     const WHATSAPP_NUMBER = "https://chat.whatsapp.com/EWLF6rVxFi06d57XVu6B9s?fbclid=PAZXh0bgNhZW0CMTEAAadNkLzlh9muiCvk-XaaweiOC2lk566POsMmTrFFbd5c7q5vvpGWcaAVXCGgYw_aem_5RWcNYQMO_Cz6G_Hngmvxg";
 
@@ -802,12 +782,12 @@ function Contact() {
                                 href={INSTA_URL}
                                 target="_blank"
                                 rel="noreferrer"
-                                aria-label="Open Instagram profile @takeonebozen"
+                                aria-label="Open Instagram profile @takeone.collective"
                             >
                                 <svg className="contact-social__icon" viewBox="0 0 24 24" aria-hidden="true">
                                     <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 5a5 5 0 1 0 .001 10.001A5 5 0 0 0 12 7zm0 2.2a2.8 2.8 0 1 1 0 5.6 2.8 2.8 0 0 1 0-5.6ZM18 5.6a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4Z"/>
                                 </svg>
-                                <span>@takeonebozen</span>
+                                <span>@takeone.collective</span>
                             </a>
 
                             <a
@@ -916,176 +896,195 @@ export default function App() {
             {/* 1 — Home */}
             <HomeSection />
 
-            {/* 2 — Next Events (gallery) */}
-            <Section id="event" title="Next Events" subdued>
-                {/** State for the gallery + lineup */}
+            {/* 2 — Incoming Events (list + bottom drawer) */}
+            <Section id="event" title="Incoming Events" subdued>
                 {(() => {
-                    const [eventIdx, setEventIdx] = React.useState(0);
-                    const [activeIndex, setActiveIndex] = React.useState(null); // dj index for the current event
-                    const dockRef = React.useRef(null);
+                    const [openIdx, setOpenIdx] = React.useState(null);      // which event is opened in the drawer
+                    const [activeDJ, setActiveDJ] = React.useState(null);    // selected DJ object
+                    const [isGalleryOpen, setIsGalleryOpen] = React.useState(false);
+                    const [galleryImages, setGalleryImages] = React.useState([]);
 
-                    // Reset selected DJ when switching event
-                    React.useEffect(() => { setActiveIndex(null); }, [eventIdx]);
+                    const sectionRef = React.useRef(null);
+                    const drawerRef  = React.useRef(null);
+                    const [drawerH, setDrawerH] = React.useState(0);
 
-                    const current = upcomingEvents[eventIdx];
-                    const currentLineup = (current?.lineup && current.lineup.length) ? current.lineup : lineup;
-                    const activeDJ = (activeIndex != null) ? currentLineup[activeIndex] : null;
+                    const current = openIdx != null ? upcomingEvents[openIdx] : null;
+                    const currentLineup = current?.lineup?.length ? current.lineup : lineup;
 
-                    const prevEvent = React.useCallback(() => {
-                        setEventIdx(i => (i - 1 + upcomingEvents.length) % upcomingEvents.length);
-                    }, []);
-                    const nextEvent = React.useCallback(() => {
-                        setEventIdx(i => (i + 1) % upcomingEvents.length);
-                    }, []);
+                    const prevEvent = () =>
+                        setOpenIdx(i => (i == null ? 0 : (i - 1 + upcomingEvents.length) % upcomingEvents.length));
+                    const nextEvent = () =>
+                        setOpenIdx(i => (i == null ? 0 : (i + 1) % upcomingEvents.length));
 
-                    // Simple swipe support
-                    const startX = React.useRef(null);
-                    const onPointerDown = (e) => { startX.current = e.clientX ?? e.touches?.[0]?.clientX ?? 0; };
-                    const onPointerUp = (e) => {
-                        const endX = e.clientX ?? e.changedTouches?.[0]?.clientX ?? 0;
-                        const dx = endX - (startX.current ?? 0);
-                        if (Math.abs(dx) > 40) dx < 0 ? nextEvent() : prevEvent();
-                        startX.current = null;
+                    // Reset selected DJ when switching/closing
+                    React.useEffect(() => { setActiveDJ(null); }, [openIdx]);
+
+                    // Measure drawer height and reserve space in the section while open
+                    React.useEffect(() => {
+                        const node = drawerRef.current;
+                        if (!node || openIdx == null) { setDrawerH(0); return; }
+                        const ro = new ResizeObserver(() => setDrawerH(node.offsetHeight || 0));
+                        ro.observe(node);
+                        // initial measure
+                        setDrawerH(node.offsetHeight || 0);
+                        return () => ro.disconnect();
+                    }, [openIdx]);
+
+                    const openGallery = (imgs) => {
+                        const arr = (imgs && imgs.length) ? imgs.slice() : (current?.images || []);
+                        if ((!arr || !arr.length) && current?.heroImage) arr.push(current.heroImage);
+                        setGalleryImages(arr || []);
+                        setIsGalleryOpen(true);
                     };
 
                     return (
-                        <div className="next-event-gallery" role="region" aria-roledescription="carousel" aria-label="Upcoming events">
-                            {/* Slides */}
-                            <div
-                                className="event-slides"
-                                style={{ ['--idx']: eventIdx, ['--count']: upcomingEvents.length }}
-                                onMouseDown={onPointerDown}
-                                onMouseUp={onPointerUp}
-                                onTouchStart={onPointerDown}
-                                onTouchEnd={onPointerUp}
-                            >
+                        <div
+                            className={`incoming-events ${openIdx != null ? "has-drawer-open" : ""}`}
+                            ref={sectionRef}
+                            style={{ "--drawer-h": `${drawerH}px` }}
+                        >
+                            {/* List of incoming events */}
+                            <ul className="incoming-list" role="list">
                                 {upcomingEvents.map((ev, i) => (
-                                    <article
-                                        key={`${ev.name}-${ev.start}`}
-                                        className={`event-slide ${i === eventIdx ? "is-active" : ""}`}
-                                        aria-roledescription="slide"
-                                        aria-label={`${i + 1} of ${upcomingEvents.length}`}
-                                    >
-                                        {/* Background image */}
-                                        <img className="event-hero" src={ev.heroImage} alt="" loading="lazy" />
-                                        <div className="event-hero__overlay" />
+                                    <li key={`${ev.name}-${ev.start}`} className="incoming-list__item">
+                                        <button
+                                            type="button"
+                                            className={`incoming-item ${openIdx === i ? "is-active" : ""}`}
+                                            onClick={() => setOpenIdx(i)}
+                                            aria-expanded={openIdx === i}
+                                            aria-controls={`drawer-${i}`}
+                                        >
+                                            <span className="incoming-item__name">{ev.name}</span>
+                                            <span className="incoming-item__meta">
+                  {dateLabelFor(ev)} • {ev.city} · {ev.venue}
+                </span>
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
 
-                                        {/* Text card */}
-                                        <div className="event-card card">
-                                            <div className="card__body">
-                                                <div className="event-text-block">
-                                                    <div className="event-text-row">
-                                                        <span className="event-series">TAKEONE</span>
-                                                        <span className="event-date">{dateLabelFor(ev)}</span>
+                            {/* Bottom drawer anchored to the section (not viewport) */}
+                            <div
+                                ref={drawerRef}
+                                id={`drawer-${openIdx ?? "none"}`}
+                                className={`incoming-drawer ${current ? "open" : ""}`}
+                                aria-live="polite"
+                            >
+                                {current ? (
+                                    <div className="drawer-inner">
+                                        <div className="drawer-head">
+                                            <h3 className="drawer-title">{current.name}</h3>
+                                            <div className="drawer-controls" role="group" aria-label="Event navigation">
+                                                <button className="icon-btn" onClick={prevEvent} type="button">‹ prev</button>
+                                                <button className="icon-btn" onClick={nextEvent} type="button">next ›</button>
+                                                <button className="icon-btn close" onClick={() => setOpenIdx(null)} type="button" title="Close">×</button>
+                                            </div>
+                                        </div>
+
+                                        <div className="drawer-body">
+                                            {/* Left: event facts + lineup */}
+                                            <div className="drawer-col">
+                                                <div className="event-facts">
+                                                    <div className="facts-row">
+                                                        <span className="facts-label">When</span>
+                                                        <span className="facts-val">{dateLabelFor(current)}</span>
                                                     </div>
-
-                                                    <div className="event-text-row">
-                                                        <span className="event-venue">{ev.city} · {ev.venue}</span>
+                                                    <div className="facts-row">
+                                                        <span className="facts-label">Where</span>
+                                                        <span className="facts-val">{current.city} · {current.venue}</span>
                                                     </div>
+                                                    {current.address && (
+                                                        <div className="facts-row">
+                                                            <span className="facts-label">Address</span>
+                                                            <span className="facts-val">{current.address}</span>
+                                                        </div>
+                                                    )}
+                                                </div>
 
-                                                    <div className="event-text-row">
-                                                        <span className="event-lineup-label">LINEUP:</span>
+                                                <div className="lineup-block">
+                                                    <div className="lineup-label">LINEUP</div>
+                                                    <div className="lineup-list">
                                                         {currentLineup.map((a, idx) => (
                                                             <button
                                                                 key={`${a.name}-${idx}`}
-                                                                className={`event-name ${activeDJ?.name === a.name ? "is-active" : ""}`}
+                                                                className={`lineup-name ${activeDJ?.name === a.name ? "is-active" : ""}`}
                                                                 type="button"
-                                                                onClick={() => setActiveIndex(idx)}
+                                                                onClick={() => setActiveDJ(a)}
+                                                                title={`Read about ${a.name}`}
                                                             >
-                                                                {a.name.toUpperCase()}{idx < currentLineup.length - 1 ? "," : ""}
+                                                                {a.name}
                                                             </button>
                                                         ))}
                                                     </div>
+
+                                                    {/* Selected DJ info */}
+                                                    <div className={`dj-dock ${activeDJ ? "open" : ""}`}>
+                                                        {activeDJ ? (
+                                                            <>
+                                                                <div className="dj-row">
+                                                                    <h4 className="dj-name">{activeDJ.name}</h4>
+                                                                    {activeDJ.links?.instagram && (
+                                                                        <a className="dj-ig" href={activeDJ.links.instagram} target="_blank" rel="noreferrer">
+                                                                            @ Instagram
+                                                                        </a>
+                                                                    )}
+                                                                </div>
+                                                                {(activeDJ.bio || activeDJ.description) && (
+                                                                    <p className="dj-desc">{activeDJ.bio || activeDJ.description}</p>
+                                                                )}
+                                                            </>
+                                                        ) : (
+                                                            <div className="dj-placeholder">Select an artist to see info.</div>
+                                                        )}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </article>
-                                ))}
-                            </div>
 
-                            {/* Nav arrows */}
-                            <div className="event-gallery-nav" role="group" aria-label="Event navigation">
-                                <button className="icon-btn" onClick={prevEvent} aria-label="Previous event">‹ Prev</button>
-                                <button className="icon-btn" onClick={nextEvent} aria-label="Next event">Next ›</button>
-                            </div>
+                                            {/* Right: media (hero + mini gallery) */}
+                                            <div className="drawer-col media">
+                                                <div className="media-hero">
+                                                    {current.heroImage && <img src={current.heroImage} alt="" />}
+                                                    <div className="media-actions">
+                                                        <button className="icon-btn" type="button" onClick={() => openGallery(current.images)}>
+                                                            Open Gallery
+                                                        </button>
+                                                        {current.mapUrl && (
+                                                            <a className="icon-btn" href={current.mapUrl} target="_blank" rel="noreferrer">Map</a>
+                                                        )}
+                                                        {current.trailerUrl && (
+                                                            <a className="icon-btn" href={current.trailerUrl} target="_blank" rel="noreferrer">Trailer</a>
+                                                        )}
+                                                    </div>
+                                                </div>
 
-                            {/* Dots */}
-                            <div className="event-dots" role="tablist" aria-label="Select event">
-                                {upcomingEvents.map((_, i) => (
-                                    <button
-                                        key={`dot-${i}`}
-                                        role="tab"
-                                        aria-selected={i === eventIdx}
-                                        aria-controls={`event-slide-${i}`}
-                                        className={`dot ${i === eventIdx ? "is-active" : ""}`}
-                                        onClick={() => setEventIdx(i)}
-                                        title={`Go to event ${i + 1}`}
-                                        type="button"
-                                    />
-                                ))}
-                            </div>
-
-                            {/* Info dock (reuses your existing behavior) */}
-                            <div ref={dockRef} className={`dj-info-dock ${activeDJ ? "open" : ""}`} aria-live="polite">
-                                {activeDJ ? (
-                                    <div className="dj-info-inner">
-                                        <div className="dj-info-row">
-                                            <h3 className="dj-info-name">{activeDJ.name}</h3>
-
-                                            {activeDJ.links?.instagram && (
-                                                <a
-                                                    className="dj-info-ig"
-                                                    href={igHref(activeDJ.links.instagram)}
-                                                    target="_blank"
-                                                    rel="noreferrer"
-                                                >
-                                                    {igLabel(activeDJ.links.instagram)}
-                                                </a>
-                                            )}
-
-                                            <div className="dock-controls" role="group" aria-label="Lineup navigation">
-                                                <button
-                                                    className="icon-btn"
-                                                    onClick={() => setActiveIndex(i => (i - 1 + currentLineup.length) % currentLineup.length)}
-                                                    aria-label="Previous artist"
-                                                    type="button"
-                                                >
-                                                    ‹ Prev
-                                                </button>
-                                                <button
-                                                    className="icon-btn"
-                                                    onClick={() => setActiveIndex(i => (i + 1) % currentLineup.length)}
-                                                    aria-label="Next artist"
-                                                    type="button"
-                                                >
-                                                    Next ›
-                                                </button>
-                                                <button
-                                                    className="icon-btn close"
-                                                    onClick={() => setActiveIndex(null)}
-                                                    aria-label="Close"
-                                                    type="button"
-                                                    title="Close"
-                                                >
-                                                    ×
-                                                </button>
+                                                {current.images?.length > 1 && (
+                                                    <div className="media-thumbs">
+                                                        {current.images.slice(0, 6).map((src, i) => (
+                                                            <button key={`thumb-${i}`} className="thumb" onClick={() => openGallery(current.images)} type="button" title="Open gallery">
+                                                                <img src={src} alt="" loading="lazy" />
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
-
-                                        {(activeDJ.bio || activeDJ.description) && (
-                                            <p className="dj-info-desc">
-                                                {activeDJ.bio || activeDJ.description}
-                                            </p>
-                                        )}
                                     </div>
-                                ) : (
-                                    <div className="dj-info-placeholder">Select an artist to see info.</div>
-                                )}
+                                ) : null
+                                }
                             </div>
+
+                            {/* Simple built-in lightbox (replace with your PopupGallery if you prefer) */}
+                            <PopupGallery
+                                images={galleryImages}
+                                isOpen={isGalleryOpen}
+                                onClose={() => setIsGalleryOpen(false)}
+                            />
                         </div>
                     );
                 })()}
             </Section>
+
+
 
 
             {/* 3 — About */}
