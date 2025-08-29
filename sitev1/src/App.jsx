@@ -84,7 +84,7 @@ const lineup = [
         image:
            mattiaLorenzi,
         links: { instagram: "https://instagram.com/perestrojka__" },
-        bio:"With versatility at the core of his mixing, Mattia Lorenzi connects genres across the spectrum to craft energetic, immersive experiences. His digger’s spirit shines through in sets marked by distinctive and carefully curated selections"
+        bio:"His sets carry a distinct house spirit, blending deep grooves with breakbeat energy. With acid-tinged rhythms and carefully selected vocals, he crafts warm, high-energy journeys where vintage house nostalgia merges seamlessly with modern rhythms"
     },
     {
         name: "Loned",
