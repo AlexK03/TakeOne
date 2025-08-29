@@ -1145,6 +1145,7 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
 }
 
 .latest-event-label {
+    font-family: "MyFont", sans-serif; /* use your custom font */
     font-weight: 700;
     text-transform: uppercase;
     color:  #7FFF00;
@@ -1153,6 +1154,7 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
 }
 
 .latest-event-title {
+    font-family: "MyFont", sans-serif; /* use your custom font */
     font-weight: 900;
     color: #7FFF00; /* amber */
     text-transform: uppercase;
@@ -1161,6 +1163,7 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
 
 
 .latest-event-meta {
+    font-family: "MyFont", sans-serif; /* use your custom font */
     opacity: 0.85;
     font-weight: 500;
     color: #7FFF00;
