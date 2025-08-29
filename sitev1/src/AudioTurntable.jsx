@@ -5,13 +5,13 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
  * - Starts from the beginning (no random seek)
  * - Scrubber appears only while playing
  * - Clicking the disk toggles play/pause and shows/hides the bar
- * - Styling aligned with page tokens
+ * - No halo: transparent wrapper, no shadow/border, disk fills wrapper
  *
  * Props:
  *  - src: string (audio url)
  *  - diskPng: string (image url)
  *  - size: number (px, diameter of the disk)
- *  - label: string (aria label & button label)
+ *  - label: string (aria label)
  */
 export default function AudioTurntable({ src, diskPng, size = 200, label = "Play" }) {
     const audioRef = useRef(null);
@@ -132,33 +132,23 @@ export default function AudioTurntable({ src, diskPng, size = 200, label = "Play
             width: size,
             height: size,
             borderRadius: "50%",
-            boxShadow: "0 12px 40px rgba(0,0,0,.12)",
-            background: "var(--bg)",
-            border: "1px solid var(--line)",
+            background: "transparent",  // no frosted panel
+            border: "none",
+            boxShadow: "none",
             display: "grid",
             placeItems: "center",
             overflow: "hidden",
             cursor: isReady ? "pointer" : "not-allowed",
         },
         disk: {
-            width: size - 14,
-            height: size - 14,
+            width: size,   // fill wrapper to avoid any ring/halo
+            height: size,
             backgroundImage: `url(${diskPng})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
             borderRadius: "50%",
-            filter: "drop-shadow(0 6px 16px rgba(0,0,0,.18))",
+            filter: "none", // remove drop shadow halo
             animation: isPlaying ? "turntable-spin 2.7s linear infinite" : "none",
-        },
-        playBtn: {
-            fontWeight: 700,
-            padding: ".6rem 1rem",
-            borderRadius: "999px",
-            border: "1px solid var(--line)",
-            background: "var(--bg)",
-            cursor: isReady ? "pointer" : "not-allowed",
-            opacity: isReady ? 1 : 0.6,
-            userSelect: "none",
         },
         scrubberCard: {
             width: "min(560px, 92vw)",
@@ -168,7 +158,7 @@ export default function AudioTurntable({ src, diskPng, size = 200, label = "Play
             backdropFilter: "blur(6px)",
             WebkitBackdropFilter: "blur(6px)",
             padding: "0.75rem 0.9rem",
-            boxShadow: "0 20px 60px rgba(0,0,0,.08)",
+            boxShadow: "0 20px 60px rgba(0, 0, 0, .08)",
             transition: "opacity .2s ease, transform .2s ease",
         },
         row: {
@@ -205,17 +195,6 @@ export default function AudioTurntable({ src, diskPng, size = 200, label = "Play
             >
                 <div style={S.disk} />
             </div>
-
-            {/* (Optional) Play/Pause button remains for accessibility/mouse users */}
-            <button
-                type="button"
-                style={S.playBtn}
-                onClick={toggle}
-                aria-pressed={isPlaying}
-                aria-label={label}
-            >
-                {isPlaying ? "Pause" : label}
-            </button>
 
             {/* Scrubber / Selector (visible while playing) */}
             {isPlaying && (

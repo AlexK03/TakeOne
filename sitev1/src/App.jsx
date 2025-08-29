@@ -478,7 +478,7 @@ function HomeSection() {
                     <AudioTurntable
                         src={setMp3}
                         diskPng={disk}
-                        size={160}
+                        size={220}
                         label="Play DJ set"
                     />
                     {/*
