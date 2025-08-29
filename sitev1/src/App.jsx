@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import React, {useEffect, useMemo, useRef, useState} from "react";
+import {motion} from "framer-motion";
 
 import PopupGallery from "./PopupGallery.jsx";
 // place near PopupGallery import
@@ -15,29 +15,28 @@ import Modal from "react-modal";
 const BASE = import.meta.env.BASE_URL; // used for public assets (e.g., /public/img/*)
 
 const zoonaImages = Object.values(
-    import.meta.glob('./assets/zoona-03-05-2025/*.{jpg,png}', { eager: true, as: 'url' })
+    import.meta.glob('./assets/zoona-03-05-2025/*.{jpg,png}', {eager: true, as: 'url'})
 );
 const miroImages = Object.values(
-    import.meta.glob('./assets/miro-18-04-2025/*.{jpg,png}', { eager: true, as: 'url' })
+    import.meta.glob('./assets/miro-18-04-2025/*.{jpg,png}', {eager: true, as: 'url'})
 );
 const roncoloImages = Object.values(
-    import.meta.glob('./assets/roncolo-22-03-2025/*.{jpg,png}', { eager: true, as: 'url' })
+    import.meta.glob('./assets/roncolo-22-03-2025/*.{jpg,png}', {eager: true, as: 'url'})
 );
 
 const miro2Images = Object.values(
-    import.meta.glob('./assets/miro-15-11-2024/*.{jpg,png}', { eager: true, as: 'url' })
+    import.meta.glob('./assets/miro-15-11-2024/*.{jpg,png}', {eager: true, as: 'url'})
 );
 
 const goetheImages = Object.values(
-    import.meta.glob('./assets/goetheHaus-15-05-2024/*.{jpg,png}', { eager: true, as: 'url' })
+    import.meta.glob('./assets/goetheHaus-15-05-2024/*.{jpg,png}', {eager: true, as: 'url'})
 );
 
 
-
 import zoonaPoster from './assets/logos/posterZoona.png';
-import miroPoster  from './assets/logos/posterMiro.png';
-import ronPoster   from './assets/logos/posterRoncolo.png';
-import lampelePoster   from './assets/logos/posterLampele.png';
+import miroPoster from './assets/logos/posterMiro.png';
+import ronPoster from './assets/logos/posterRoncolo.png';
+import lampelePoster from './assets/logos/posterLampele.png';
 import zoonaPoster2 from './assets/logos/posterZoona2.jpeg';
 import goethePoster from './assets/logos/posterGoethe.jpeg';
 import astraPoster from './assets/logos/posterAstra.jpg';
@@ -63,7 +62,7 @@ const event = {
     venue: "Miro Club - R-Room",
     address: " Piazza Domenicani, 3b, 39100 Bolzano BZ",
     heroImage:
-        event1Poster,
+    event1Poster,
 
 };
 
@@ -73,27 +72,27 @@ const lineup = [
         tier: "",
         genre: "",
         image:
-            davidePiras,
-        links: { instagram: "https://www.instagram.com/alan_la_rocc/" },
-        bio:"Well-known DJ in the region, delivering high-energy sets that move between house and techno. As producer under the alter ego DJ Chupacapra, he has become a true local legend of the South Tyrolean underground scene"
+        davidePiras,
+        links: {instagram: "https://www.instagram.com/alan_la_rocc/"},
+        bio: "Well-known DJ in the region, delivering high-energy sets that move between house and techno. As producer under the alter ego DJ Chupacapra, he has become a true local legend of the South Tyrolean underground scene"
     },
     {
         name: "Young XTO",
         tier: "",
         genre: "",
         image:
-           mattiaLorenzi,
-        links: { instagram: "https://instagram.com/perestrojka__" },
-        bio:"His sets carry a distinct house spirit, blending deep grooves with breakbeat energy. With acid-tinged rhythms and carefully selected vocals, he crafts warm, high-energy journeys where vintage house nostalgia merges seamlessly with modern rhythms"
+        mattiaLorenzi,
+        links: {instagram: "https://instagram.com/perestrojka__"},
+        bio: "His sets carry a distinct house spirit, blending deep grooves with breakbeat energy. With acid-tinged rhythms and carefully selected vocals, he crafts warm, high-energy journeys where vintage house nostalgia merges seamlessly with modern rhythms"
     },
     {
         name: "Loned",
         tier: "",
         genre: "",
         image:
-            lonedImage,
-        links: { instagram: "https://www.instagram.com/lonednotloned/" },
-        bio:"His sets never disappoint those in search of high-impact energy. Characterized by bouncy beats and refined mixing skills, Loned delivers powerful, dynamic experiences that flow seamlessly between techno and electro"
+        lonedImage,
+        links: {instagram: "https://www.instagram.com/lonednotloned/"},
+        bio: "His sets never disappoint those in search of high-impact energy. Characterized by bouncy beats and refined mixing skills, Loned delivers powerful, dynamic experiences that flow seamlessly between techno and electro"
     }
 ];
 
@@ -104,8 +103,8 @@ const lineup2 = [
         genre: "",
         image:
         davidePiras,
-        links: { instagram: "https://www.instagram.com/davidepirasmusic/" },
-        bio:"Well-known DJ in the region, delivering high-energy sets that move between house and techno. As producer under the alter ego DJ Chupacapra, he has become a true local legend of the South Tyrolean underground scene"
+        links: {instagram: "https://www.instagram.com/davidepirasmusic/"},
+        bio: "Well-known DJ in the region, delivering high-energy sets that move between house and techno. As producer under the alter ego DJ Chupacapra, he has become a true local legend of the South Tyrolean underground scene"
     },
     {
         name: "Mattia Lorenzi",
@@ -113,8 +112,8 @@ const lineup2 = [
         genre: "",
         image:
         mattiaLorenzi,
-        links: { instagram: "https://www.instagram.com/mattialrnz/" },
-        bio:"With versatility at the core of his mixing, Mattia Lorenzi connects genres across the spectrum to craft energetic, immersive experiences. His digger’s spirit shines through in sets marked by distinctive and carefully curated selections"
+        links: {instagram: "https://www.instagram.com/mattialrnz/"},
+        bio: "With versatility at the core of his mixing, Mattia Lorenzi connects genres across the spectrum to craft energetic, immersive experiences. His digger’s spirit shines through in sets marked by distinctive and carefully curated selections"
     },
     {
         name: "Loned",
@@ -122,8 +121,8 @@ const lineup2 = [
         genre: "",
         image:
         lonedImage,
-        links: { instagram: "https://www.instagram.com/lonednotloned/" },
-        bio:"His sets never disappoint those in search of high-impact energy. Characterized by bouncy beats and refined mixing skills, Loned delivers powerful, dynamic experiences that flow seamlessly between techno and electro"
+        links: {instagram: "https://www.instagram.com/lonednotloned/"},
+        bio: "His sets never disappoint those in search of high-impact energy. Characterized by bouncy beats and refined mixing skills, Loned delivers powerful, dynamic experiences that flow seamlessly between techno and electro"
     },
     {
         name: "Young XTO",
@@ -131,8 +130,8 @@ const lineup2 = [
         genre: "",
         image:
             "https://images.unsplash.com/photo-1521335629791-ce4aec67dd53?auto=format&fit=crop&w=900&q=80",
-        links: { instagram: "https://instagram.com/perestrojka__" },
-        bio:"His sets carry a distinct house spirit, blending deep grooves with breakbeat energy. With acid-tinged rhythms and carefully selected vocals, he crafts warm, high-energy journeys where vintage house nostalgia merges seamlessly with modern rhythms"
+        links: {instagram: "https://instagram.com/perestrojka__"},
+        bio: "His sets carry a distinct house spirit, blending deep grooves with breakbeat energy. With acid-tinged rhythms and carefully selected vocals, he crafts warm, high-energy journeys where vintage house nostalgia merges seamlessly with modern rhythms"
     }
 ];
 
@@ -141,12 +140,12 @@ const lineupAutumn = lineup2;
 
 // Multiple incoming events (first reuses your existing event + lineup)
 const upcomingEvents = [
-    { ...event, lineup, images: [event.heroImage] },
+    {...event, lineup, images: [event.heroImage]},
     {
         name: "TakeOne — Zoona",
         start: "2025-09-19T22:00:00+02:00",
-        end:   "2025-09-19T01:00:00+02:00",
-        city:  "Bozen, IT",
+        end: "2025-09-19T01:00:00+02:00",
+        city: "Bozen, IT",
         venue: "Zoona",
         address: "Via Vincenzo Lancia, 1, 39100 Bolzano BZ",
         heroImage: event2Poster,
@@ -160,18 +159,17 @@ const upcomingEvents = [
 const fmt = new Intl.DateTimeFormat("it-IT", {
     weekday: "short", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit"
 });
+
 function dateLabelFor(ev) {
     const s = new Date(ev.start), e = new Date(ev.end);
     const sameDay = s.toDateString() === e.toDateString();
     if (sameDay) {
         const day = fmt.format(s).replace(",", "");
-        const hm  = new Intl.DateTimeFormat("it-IT",{hour:"2-digit",minute:"2-digit"});
+        const hm = new Intl.DateTimeFormat("it-IT", {hour: "2-digit", minute: "2-digit"});
         return `${day}, ${hm.format(s)}–${hm.format(e)}`;
     }
     return `${fmt.format(s).replace(",", "")} → ${fmt.format(e).replace(",", "")}`;
 }
-
-
 
 
 const pastEvents = [
@@ -242,10 +240,10 @@ const pastEvents = [
 ];
 
 const faq = [
-    { q: "What time do doors open?", a: "Doors open at 19:00. Music starts 19:30." },
-    { q: "Is there an age restriction?", a: "18+. Please bring a valid photo ID." },
-    { q: "Refund policy?", a: "Tickets are non-refundable unless the event is canceled." },
-    { q: "Accessibility", a: "Ground-level access with accessible restrooms." }
+    {q: "What time do doors open?", a: "Doors open at 19:00. Music starts 19:30."},
+    {q: "Is there an age restriction?", a: "18+. Please bring a valid photo ID."},
+    {q: "Refund policy?", a: "Tickets are non-refundable unless the event is canceled."},
+    {q: "Accessibility", a: "Ground-level access with accessible restrooms."}
 ];
 
 // ---------------------------
@@ -255,21 +253,21 @@ const cx = (...xs) => xs.filter(Boolean).join(" ");
 const formatDateRange = (startISO, endISO) => {
     const s = new Date(startISO);
     const e = new Date(endISO);
-    const fmt = new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short" });
+    const fmt = new Intl.DateTimeFormat("en-GB", {day: "2-digit", month: "short"});
     const a = fmt.format(s), b = fmt.format(e);
     return a === b ? a : `${a} – ${b}`;
 };
 
 const fadeUp = {
-    hidden: { opacity: 0, y: 18 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+    hidden: {opacity: 0, y: 18},
+    show: {opacity: 1, y: 0, transition: {duration: 0.6, ease: "easeOut"}}
 };
-const stagger = { show: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } } };
+const stagger = {show: {transition: {staggerChildren: 0.08, delayChildren: 0.1}}};
 
 // ---------------------------
 // Components
 // ---------------------------
-function StickyNav({ sections }) {
+function StickyNav({sections}) {
     const [active, setActive] = useState(sections[0]?.id ?? "home");
     const obs = useRef(null);
 
@@ -281,14 +279,14 @@ function StickyNav({ sections }) {
                 .filter(e => e.isIntersecting)
                 .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
             if (v) setActive(v.target.id);
-        }, { rootMargin: "-40% 0px -55% 0px", threshold: [0, .25, .5, .75, 1] });
+        }, {rootMargin: "-40% 0px -55% 0px", threshold: [0, .25, .5, .75, 1]});
         els.forEach(el => obs.current.observe(el));
         return () => obs.current?.disconnect();
     }, [sections]);
 
     const go = (id) => (e) => {
         e.preventDefault();
-        document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+        document.getElementById(id)?.scrollIntoView({behavior: "smooth"});
     };
 
     return (
@@ -298,11 +296,11 @@ function StickyNav({ sections }) {
                     {/* Left: Brand */}
                     <a href="#home" onClick={go("home")} className="nav__brand">
                         <picture>
-                            <source srcSet={`${BASE}img/logo1.webm`} type="video/webm" />
-                            <img src={`${BASE}img/logo.apng`} alt="TakeOne Logo" style={{ height: "60px", width: "auto" }} />
+                            <source srcSet={`${BASE}img/logo1.webm`} type="video/webm"/>
+                            <img src={`${BASE}img/logo.apng`} alt="TakeOne Logo"
+                                 style={{height: "60px", width: "auto"}}/>
                         </picture>
                     </a>
-
 
 
                     {/* Center: Links */}
@@ -320,7 +318,7 @@ function StickyNav({ sections }) {
                     </nav>
 
                     {/* Right: empty spacer to keep the center truly centered */}
-                    <div aria-hidden="true" />
+                    <div aria-hidden="true"/>
                 </div>
             </div>
         </div>
@@ -329,16 +327,17 @@ function StickyNav({ sections }) {
 }
 
 
-function Section({ id, title, children, subdued=false }) {
+function Section({id, title, children, subdued = false}) {
     return (
         <section id={id} className={cx("section", subdued && "section--subdued")}>
             <div className="container">
                 {title && (
-                    <motion.h2 className="section__title accent" variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once:true }}>
+                    <motion.h2 className="section__title accent" variants={fadeUp} initial="hidden" whileInView="show"
+                               viewport={{once: true}}>
                         {title}
                     </motion.h2>
                 )}
-                <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once:true }}>
+                <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{once: true}}>
                     {children}
                 </motion.div>
             </div>
@@ -347,7 +346,7 @@ function Section({ id, title, children, subdued=false }) {
 }
 
 // Simple typewriter that types the last word, deletes it, and loops
-function Typewriter({ prefix = "TAKEONE IS ", words = [], typeMs = 80, deleteMs = 45, holdMs = 1200 }) {
+function Typewriter({prefix = "TAKEONE IS ", words = [], typeMs = 80, deleteMs = 45, holdMs = 1200}) {
     const [i, setI] = React.useState(0);          // which word
     const [len, setLen] = React.useState(0);      // letters revealed
     const [phase, setPhase] = React.useState("typing"); // typing | holding | deleting
@@ -380,7 +379,7 @@ function Typewriter({ prefix = "TAKEONE IS ", words = [], typeMs = 80, deleteMs 
         <div className="typewriter" aria-live="polite" aria-atomic="true">
             <span className="typewriter__static">{prefix}</span>
             <span className="typewriter__word">{word.slice(0, len)}</span>
-            <span className="typewriter__cursor" aria-hidden="true" />
+            <span className="typewriter__cursor" aria-hidden="true"/>
         </div>
     );
 }
@@ -390,16 +389,18 @@ function HomeSection() {
     const BASE = import.meta.env.BASE_URL;
     const audioRef = React.useRef(null);
     const [isPlaying, setIsPlaying] = React.useState(false);
+    const latestEvent = upcomingEvents[0]; // always take first upcoming event
+    const dateStr = latestEvent ? dateLabelFor(latestEvent) : "";
 
     const items = [
-        { id: "event", label: "Next Event", img: logo },
-        { id: "about", label: "About", img: logo },
-        { id: "past",  label: "Archive", img: logo }
+        {id: "event", label: "Next Event", img: logo},
+        {id: "about", label: "About", img: logo},
+        {id: "past", label: "Archive", img: logo}
     ];
 
     const goTo = (id) => (e) => {
         e.preventDefault();
-        document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+        document.getElementById(id)?.scrollIntoView({behavior: "smooth"});
     };
 
     const toggleAudio = () => {
@@ -437,10 +438,23 @@ function HomeSection() {
                 style={{ objectFit: "cover" }}
             />*/}
 
-            <div className="hero__halo" />
-            <div className="hero__overlay" />
+            <div className="hero__halo"/>
+            <div className="hero__overlay"/>
 
             <div className="container hero__content">
+
+                {/* NEW: Latest incoming event band */}
+                {latestEvent && (
+                    <div className="latest-event-band">
+                        <div className="latest-event-scroll">
+                            <span className="latest-event-label">Latest Incoming Event:</span>
+                            <span className="latest-event-title">{latestEvent.name}</span>
+                            <span className="latest-event-meta">
+        {dateStr} • {latestEvent.city} · {latestEvent.venue}
+      </span>
+                        </div>
+                    </div>
+                )}
 
                 {/* Quote with deleting keyboard effect */}
                 <div className="typewriter-line">
@@ -464,7 +478,7 @@ function HomeSection() {
                             className="logo-tile"
                             aria-label={it.label}
                         >
-                            <img src={it.img} alt="" className="logo-tile__img" />
+                            <img src={it.img} alt="" className="logo-tile__img"/>
                             <span className="logo-tile__label">{it.label}</span>
                         </a>
                     ))}
@@ -472,9 +486,8 @@ function HomeSection() {
                 </div>
 
 
-
                 {/* Audio control */}
-                <div className="hero__actions" style={{ justifyContent: "center" }}>
+                <div className="hero__actions" style={{justifyContent: "center"}}>
                     <AudioTurntable
                         src={setMp3}
                         diskPng={disk}
@@ -511,7 +524,10 @@ function PastEvents() {
     // Poster modal (uniform size)
     const [isPosterOpen, setIsPosterOpen] = useState(false);
     const [posterSrc, setPosterSrc] = useState(null);
-    const openPoster = (src) => { setPosterSrc(src); setIsPosterOpen(true); };
+    const openPoster = (src) => {
+        setPosterSrc(src);
+        setIsPosterOpen(true);
+    };
 
     const sectionRef = useRef(null);
 
@@ -552,7 +568,7 @@ function PastEvents() {
     };
 
     const fmtDate = (d) =>
-        new Date(d).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+        new Date(d).toLocaleDateString("en-GB", {day: "2-digit", month: "short", year: "numeric"});
 
     return (
         <section ref={sectionRef} className="past-events-section">
@@ -562,7 +578,7 @@ function PastEvents() {
                 variants={stagger}
                 initial="hidden"
                 whileInView="show"
-                viewport={{ once: true }}
+                viewport={{once: true}}
             >
                 {pastEvents.map((p, i) => {
                     const dateStr = fmtDate(p.date);
@@ -604,7 +620,7 @@ function PastEvents() {
                                 title="Open poster"
                             >
                                 <div className="line-poster">
-                                    <img src={activeEvent.poster} alt={activeEvent.title} />
+                                    <img src={activeEvent.poster} alt={activeEvent.title}/>
                                 </div>
                             </button>
                         </div>
@@ -614,7 +630,8 @@ function PastEvents() {
                             <div className="line-title truncate">{activeEvent.title}</div>
                             <div className="line-sub">
                                 <span>{activeEvent.city}</span>
-                                {activeEvent.venue ? <><span className="dot">•</span><span>{activeEvent.venue}</span></> : null}
+                                {activeEvent.venue ? <><span
+                                    className="dot">•</span><span>{activeEvent.venue}</span></> : null}
                                 <span className="dot">•</span>
                                 <span>{fmtDate(activeEvent.date)}</span>
                             </div>
@@ -677,7 +694,7 @@ function PastEvents() {
                 overlayClassName="gallery-overlay"
                 contentLabel="Event poster"
             >
-                {posterSrc && <img className="poster-modal__img" src={posterSrc} alt="Event poster" />}
+                {posterSrc && <img className="poster-modal__img" src={posterSrc} alt="Event poster"/>}
                 <button
                     className="close-btn"
                     onClick={() => setIsPosterOpen(false)}
@@ -699,7 +716,6 @@ function PastEvents() {
 }
 
 
-
 function Contact() {
     const [status, setStatus] = useState("idle");
 
@@ -715,7 +731,7 @@ function Contact() {
 
         const form = e.currentTarget;
         const data = Object.fromEntries(new FormData(form).entries());
-        const { name, email, message } = data;
+        const {name, email, message} = data;
 
         // Mailto fallback: opens the visitor’s email client with prefilled message
         const subject = encodeURIComponent(`Website contact from ${name || "Guest"}`);
@@ -740,15 +756,15 @@ function Contact() {
                 <div className="card__body stack-4">
                     <div>
                         <label className="label" htmlFor="c-name">Name</label>
-                        <input id="c-name" name="name" className="input" required />
+                        <input id="c-name" name="name" className="input" required/>
                     </div>
                     <div>
                         <label className="label" htmlFor="c-email">Email</label>
-                        <input id="c-email" type="email" name="email" className="input" required />
+                        <input id="c-email" type="email" name="email" className="input" required/>
                     </div>
                     <div>
                         <label className="label" htmlFor="c-msg">Message</label>
-                        <textarea id="c-msg" name="message" rows="5" className="textarea" required />
+                        <textarea id="c-msg" name="message" rows="5" className="textarea" required/>
                     </div>
 
                     <button
@@ -772,7 +788,7 @@ function Contact() {
 
             {/* Right: Socials */}
             <div>
-                <div className="card" style={{ overflow: "hidden" }}>
+                <div className="card" style={{overflow: "hidden"}}>
                     <div className="card__body">
                         <h3 className="h3">Reach us directly</h3>
 
@@ -785,7 +801,8 @@ function Contact() {
                                 aria-label="Open Instagram profile @takeone.collective"
                             >
                                 <svg className="contact-social__icon" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 5a5 5 0 1 0 .001 10.001A5 5 0 0 0 12 7zm0 2.2a2.8 2.8 0 1 1 0 5.6 2.8 2.8 0 0 1 0-5.6ZM18 5.6a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4Z"/>
+                                    <path
+                                        d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 5a5 5 0 1 0 .001 10.001A5 5 0 0 0 12 7zm0 2.2a2.8 2.8 0 1 1 0 5.6 2.8 2.8 0 0 1 0-5.6ZM18 5.6a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4Z"/>
                                 </svg>
                                 <span>@takeone.collective</span>
                             </a>
@@ -798,7 +815,8 @@ function Contact() {
                                 aria-label="Start a WhatsApp chat"
                             >
                                 <svg className="contact-social__icon" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M20.5 3.5A11 11 0 0 0 3.2 18.3L2 22l3.8-1.2A11 11 0 1 0 20.5 3.5Zm-8.5 18a9.4 9.4 0 0 1-4.8-1.3l-.3-.2-2.9.9.9-2.8-.2-.3A9.5 9.5 0 1 1 12 21.5Zm5-7.3c-.3-.2-1.7-.9-2-.9-.2 0-.4-.1-.6.2-.2.3-.7.9-.9 1-.2.2-.3.2-.6.1s-1.2-.5-2.3-1.5c-.8-.8-1.3-1.7-1.5-2-.2-.3 0-.4.1-.6l.5-.6c.2-.2.2-.3.3-.5 0-.2 0-.4 0-.5 0-.2-.6-1.5-.8-2s-.4-.5-.6-.5h-.5c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.1 3c.1.2 2 3.1 4.8 4.3.7.3 1.3.5 1.7.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.3.2-.6.2-1.1.1-1.3 0-.1-.2-.2-.4-.3Z"/>
+                                    <path
+                                        d="M20.5 3.5A11 11 0 0 0 3.2 18.3L2 22l3.8-1.2A11 11 0 1 0 20.5 3.5Zm-8.5 18a9.4 9.4 0 0 1-4.8-1.3l-.3-.2-2.9.9.9-2.8-.2-.3A9.5 9.5 0 1 1 12 21.5Zm5-7.3c-.3-.2-1.7-.9-2-.9-.2 0-.4-.1-.6.2-.2.3-.7.9-.9 1-.2.2-.3.2-.6.1s-1.2-.5-2.3-1.5c-.8-.8-1.3-1.7-1.5-2-.2-.3 0-.4.1-.6l.5-.6c.2-.2.2-.3.3-.5 0-.2 0-.4 0-.5 0-.2-.6-1.5-.8-2s-.4-.5-.6-.5h-.5c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.1 3c.1.2 2 3.1 4.8 4.3.7.3 1.3.5 1.7.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.3.2-.6.2-1.1.1-1.3 0-.1-.2-.2-.4-.3Z"/>
                                 </svg>
                                 <span>WhatsApp</span>
                             </a>
@@ -814,7 +832,6 @@ function Contact() {
         </div>
     );
 }
-
 
 
 function Footer() {
@@ -835,15 +852,17 @@ function Footer() {
 export default function App() {
     useEffect(() => {
         document.documentElement.style.scrollBehavior = "smooth";
-        return () => { document.documentElement.style.scrollBehavior = "auto"; };
+        return () => {
+            document.documentElement.style.scrollBehavior = "auto";
+        };
     }, []);
 
     const sections = [
-        { id: "home",   label: "Home" },
-        { id: "event",  label: "Next Event" },
-        { id: "about",  label: "About" },
-        { id: "past",   label: "Archive" },
-        { id: "contact",label: "Contact" }
+        {id: "home", label: "Home"},
+        {id: "event", label: "Next Event"},
+        {id: "about", label: "About"},
+        {id: "past", label: "Archive"},
+        {id: "contact", label: "Contact"}
     ];
 
     // NEW: use index so Prev/Next is trivial
@@ -853,7 +872,7 @@ export default function App() {
     const dockRef = useRef(null);
     useEffect(() => {
         if (activeDJ && dockRef.current) {
-            dockRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            dockRef.current.scrollIntoView({behavior: "smooth", block: "nearest"});
         }
     }, [activeDJ]);
 
@@ -888,13 +907,13 @@ export default function App() {
             <div
                 className="bg-fixed"
                 aria-hidden="true"
-                style={{ backgroundImage: `url(${BASE}video/bg6.png)` }}
+                style={{backgroundImage: `url(${BASE}video/bg6.png)`}}
             />
 
-            <StickyNav sections={sections} />
+            <StickyNav sections={sections}/>
 
             {/* 1 — Home */}
-            <HomeSection />
+            <HomeSection/>
 
             {/* 2 — Incoming Events (list + bottom drawer) */}
             <Section id="event" title="Incoming Events" subdued>
@@ -905,7 +924,7 @@ export default function App() {
                     const [galleryImages, setGalleryImages] = React.useState([]);
 
                     const sectionRef = React.useRef(null);
-                    const drawerRef  = React.useRef(null);
+                    const drawerRef = React.useRef(null);
                     const [drawerH, setDrawerH] = React.useState(0);
 
                     const current = openIdx != null ? upcomingEvents[openIdx] : null;
@@ -917,12 +936,17 @@ export default function App() {
                         setOpenIdx(i => (i == null ? 0 : (i + 1) % upcomingEvents.length));
 
                     // Reset selected DJ when switching/closing
-                    React.useEffect(() => { setActiveDJ(null); }, [openIdx]);
+                    React.useEffect(() => {
+                        setActiveDJ(null);
+                    }, [openIdx]);
 
                     // Measure drawer height and reserve space in the section while open
                     React.useEffect(() => {
                         const node = drawerRef.current;
-                        if (!node || openIdx == null) { setDrawerH(0); return; }
+                        if (!node || openIdx == null) {
+                            setDrawerH(0);
+                            return;
+                        }
                         const ro = new ResizeObserver(() => setDrawerH(node.offsetHeight || 0));
                         ro.observe(node);
                         // initial measure
@@ -941,7 +965,7 @@ export default function App() {
                         <div
                             className={`incoming-events ${openIdx != null ? "has-drawer-open" : ""}`}
                             ref={sectionRef}
-                            style={{ "--drawer-h": `${drawerH}px` }}
+                            style={{"--drawer-h": `${drawerH}px`}}
                         >
                             {/* List of incoming events */}
                             <ul className="incoming-list" role="list">
@@ -975,9 +999,13 @@ export default function App() {
                                         <div className="drawer-head">
                                             <h3 className="drawer-title">{current.name}</h3>
                                             <div className="drawer-controls" role="group" aria-label="Event navigation">
-                                                <button className="icon-btn" onClick={prevEvent} type="button">‹ prev</button>
-                                                <button className="icon-btn" onClick={nextEvent} type="button">next ›</button>
-                                                <button className="icon-btn close" onClick={() => setOpenIdx(null)} type="button" title="Close">×</button>
+                                                <button className="icon-btn" onClick={prevEvent} type="button">‹ prev
+                                                </button>
+                                                <button className="icon-btn" onClick={nextEvent} type="button">next ›
+                                                </button>
+                                                <button className="icon-btn close" onClick={() => setOpenIdx(null)}
+                                                        type="button" title="Close">×
+                                                </button>
                                             </div>
                                         </div>
 
@@ -991,7 +1019,8 @@ export default function App() {
                                                     </div>
                                                     <div className="facts-row">
                                                         <span className="facts-label">Where</span>
-                                                        <span className="facts-val">{current.city} · {current.venue}</span>
+                                                        <span
+                                                            className="facts-val">{current.city} · {current.venue}</span>
                                                     </div>
                                                     {current.address && (
                                                         <div className="facts-row">
@@ -1024,7 +1053,9 @@ export default function App() {
                                                                 <div className="dj-row">
                                                                     <h4 className="dj-name">{activeDJ.name}</h4>
                                                                     {activeDJ.links?.instagram && (
-                                                                        <a className="dj-ig" href={activeDJ.links.instagram} target="_blank" rel="noreferrer">
+                                                                        <a className="dj-ig"
+                                                                           href={activeDJ.links.instagram}
+                                                                           target="_blank" rel="noreferrer">
                                                                             @ Instagram
                                                                         </a>
                                                                     )}
@@ -1034,7 +1065,8 @@ export default function App() {
                                                                 )}
                                                             </>
                                                         ) : (
-                                                            <div className="dj-placeholder">Select an artist to see info.</div>
+                                                            <div className="dj-placeholder">Select an artist to see
+                                                                info.</div>
                                                         )}
                                                     </div>
                                                 </div>
@@ -1043,16 +1075,19 @@ export default function App() {
                                             {/* Right: media (hero + mini gallery) */}
                                             <div className="drawer-col media">
                                                 <div className="media-hero">
-                                                    {current.heroImage && <img src={current.heroImage} alt="" />}
+                                                    {current.heroImage && <img src={current.heroImage} alt=""/>}
                                                     <div className="media-actions">
-                                                        <button className="icon-btn" type="button" onClick={() => openGallery(current.images)}>
+                                                        <button className="icon-btn" type="button"
+                                                                onClick={() => openGallery(current.images)}>
                                                             Open Gallery
                                                         </button>
                                                         {current.mapUrl && (
-                                                            <a className="icon-btn" href={current.mapUrl} target="_blank" rel="noreferrer">Map</a>
+                                                            <a className="icon-btn" href={current.mapUrl}
+                                                               target="_blank" rel="noreferrer">Map</a>
                                                         )}
                                                         {current.trailerUrl && (
-                                                            <a className="icon-btn" href={current.trailerUrl} target="_blank" rel="noreferrer">Trailer</a>
+                                                            <a className="icon-btn" href={current.trailerUrl}
+                                                               target="_blank" rel="noreferrer">Trailer</a>
                                                         )}
                                                     </div>
                                                 </div>
@@ -1060,8 +1095,10 @@ export default function App() {
                                                 {current.images?.length > 1 && (
                                                     <div className="media-thumbs">
                                                         {current.images.slice(0, 6).map((src, i) => (
-                                                            <button key={`thumb-${i}`} className="thumb" onClick={() => openGallery(current.images)} type="button" title="Open gallery">
-                                                                <img src={src} alt="" loading="lazy" />
+                                                            <button key={`thumb-${i}`} className="thumb"
+                                                                    onClick={() => openGallery(current.images)}
+                                                                    type="button" title="Open gallery">
+                                                                <img src={src} alt="" loading="lazy"/>
                                                             </button>
                                                         ))}
                                                     </div>
@@ -1085,18 +1122,17 @@ export default function App() {
             </Section>
 
 
-
-
             {/* 3 — About */}
             <Section id="about" title="About TakeOne">
                 <div className="about__logo-wrap">
-                    <img src={`${BASE}img/TakeOne.jpg`} alt="TakeOne logo" />
+                    <img src={`${BASE}img/TakeOne.jpg`} alt="TakeOne logo"/>
                 </div>
                 <div className="about__text">
                     <p><strong>TakeOne</strong>, a symbiosis. MUSIC | ART | PERFORMANCE</p>
                     <p>
                         A space of possibilities unfolds. Here to stay.
-                        Through the many facets of electronic music, lose yourself between dance, installation, and being.
+                        Through the many facets of electronic music, lose yourself between dance, installation, and
+                        being.
                         Imagine the future—and everything is good.
                         TakeOne—what are we waiting for
                     </p>
@@ -1105,15 +1141,15 @@ export default function App() {
 
             {/* 4 — Archive */}
             <Section id="past" title="Archive">
-                <PastEvents />
+                <PastEvents/>
             </Section>
 
             {/* 5 — Contact */}
             <Section id="contact" title="Contact / Press" subdued>
-                <Contact />
+                <Contact/>
             </Section>
 
-            <Footer />
+            <Footer/>
         </main>
     );
 }
