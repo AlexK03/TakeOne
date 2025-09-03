@@ -725,25 +725,33 @@ function PastEvents() {
                 whileInView="show"
                 viewport={{ once: true }}
             >
-                {pastEvents.map((p, i) => {
-                    const dateStr = fmtDate(p.date);
-                    const isActive = i === safeIndex && selected;
-                    return (
-                        <motion.div key={`${p.title}-${p.date}`} className="event-text-row" variants={fadeUp}>
-                            <button
-                                type="button"
-                                className={`event-row-link ${isActive ? "is-active" : ""}`}
-                                onClick={() => openDetails(p, i)}
-                                aria-expanded={!!isActive}
-                                aria-controls="past-events-drawer"
-                            >
-                                <span className="event-part event-part--date">{dateStr}</span>
-                                <span className="event-part event-part--place">{p.city} {p.venue} ·</span>
-                                <span className="event-part event-part--title">{p.title.toUpperCase()}</span>
-                            </button>
-                        </motion.div>
-                    );
-                })}
+                <motion.div className="event-text-row" variants={fadeUp}>
+                    <span className="event-text-flow">
+                        {pastEvents.map((p, i) => {
+                            const dateStr = fmtDate(p.date);
+                            const isActive = i === safeIndex && selected;
+                            return (
+                                <span
+                                    key={`${p.title}-${p.date}`}
+                                    className={`event-row-link ${isActive ? "is-active" : ""}`}
+                                    onClick={() => openDetails(p, i)}
+                                    role="button"
+                                    tabIndex={0}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' || e.key === ' ') {
+                                            e.preventDefault();
+                                            openDetails(p, i);
+                                        }
+                                    }}
+                                    aria-expanded={!!isActive}
+                                    aria-controls="past-events-drawer"
+                                >
+                                    {dateStr} {p.city} {p.venue} · {p.title.toUpperCase()}
+                                </span>
+                            );
+                        })}
+                    </span>
+                </motion.div>
             </motion.div>
 
             {/* Bottom drawer anchored to the section (not viewport) */}
