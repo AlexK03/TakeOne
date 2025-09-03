@@ -46,7 +46,7 @@ import lonedImage from './assets/miro-18-04-2025/img1.jpg';
 import davidePiras from './assets/artists/davidePiras.jpg';
 import mattiaLorenzi from './assets/artists/mattiaLorenzi.jpg';
 import AudioTurntable from "./AudioTurntable.jsx";
-import disk from "./assets/audioTrack/disk6.png";
+import disk from "./assets/audioTrack/disk.png";
 import setMp3 from "./assets/audioTrack/takeone_set.mp3";
 import event1Poster from './assets/miro-15-11-2024/img1.jpg';
 import event2Poster from './assets/zoona-03-05-2025/img4.jpg';
@@ -408,6 +408,18 @@ function HomeSection() {
         document.getElementById(id)?.scrollIntoView({behavior: "smooth"});
     };
 
+    const openLatestEvent = () => {
+        // Scroll to the incoming events section
+        document.getElementById("event")?.scrollIntoView({behavior: "smooth"});
+        // After a short delay, trigger the first event to open
+        setTimeout(() => {
+            const firstEventButton = document.querySelector('.incoming-item');
+            if (firstEventButton) {
+                firstEventButton.click();
+            }
+        }, 1000);
+    };
+
     const toggleAudio = () => {
         const el = audioRef.current;
         if (!el) return;
@@ -446,20 +458,105 @@ function HomeSection() {
             <div className="hero__halo"/>
             <div className="hero__overlay"/>
 
-            <div className="container hero__content">
-
-                {/* NEW: Latest incoming event band */}
-                {latestEvent && (
-                    <div className="latest-event-band">
-                        <div className="latest-event-scroll">
-                            <span className="latest-event-label">Latest Incoming Event:</span>
-                            <span className="latest-event-title">{latestEvent.name}</span>
-                            <span className="latest-event-meta">
-        {dateStr} • {latestEvent.city} · {latestEvent.venue}
-      </span>
-                        </div>
+            {/* NEW: Latest incoming event band - Full width */}
+            {latestEvent && (
+                <div className="latest-event-band" onClick={openLatestEvent} style={{cursor: 'pointer'}}>
+                    <div className="latest-event-scroll">
+                        <span className="latest-event-title">{latestEvent.name}</span>
+                        <span className="latest-event-meta">
+                            {latestEvent.start ? new Date(latestEvent.start).toLocaleDateString("it-IT", {
+                                weekday: "short", 
+                                day: "2-digit",
+                                month: "short"
+                            }) : ""}
+                        </span>
+                        <span className="latest-event-separator">•</span>
+                        <span className="latest-event-title">{latestEvent.name}</span>
+                        <span className="latest-event-meta">
+                            {latestEvent.start ? new Date(latestEvent.start).toLocaleDateString("it-IT", {
+                                weekday: "short", 
+                                day: "2-digit",
+                                month: "short"
+                            }) : ""}
+                        </span>
+                        <span className="latest-event-separator">•</span>
+                        <span className="latest-event-title">{latestEvent.name}</span>
+                        <span className="latest-event-meta">
+                            {latestEvent.start ? new Date(latestEvent.start).toLocaleDateString("it-IT", {
+                                weekday: "short", 
+                                day: "2-digit",
+                                month: "short"
+                            }) : ""}
+                        </span>
+                        <span className="latest-event-separator">•</span>
+                        <span className="latest-event-title">{latestEvent.name}</span>
+                        <span className="latest-event-meta">
+                            {latestEvent.start ? new Date(latestEvent.start).toLocaleDateString("it-IT", {
+                                weekday: "short", 
+                                day: "2-digit",
+                                month: "short"
+                            }) : ""}
+                        </span>
+                        <span className="latest-event-separator">•</span>
+                        <span className="latest-event-title">{latestEvent.name}</span>
+                        <span className="latest-event-meta">
+                            {latestEvent.start ? new Date(latestEvent.start).toLocaleDateString("it-IT", {
+                                weekday: "short", 
+                                day: "2-digit",
+                                month: "short"
+                            }) : ""}
+                        </span>
+                        <span className="latest-event-separator">•</span>
+                        <span className="latest-event-title">{latestEvent.name}</span>
+                        <span className="latest-event-meta">
+                            {latestEvent.start ? new Date(latestEvent.start).toLocaleDateString("it-IT", {
+                                weekday: "short", 
+                                day: "2-digit",
+                                month: "short"
+                            }) : ""}
+                        </span>
+                        <span className="latest-event-separator">•</span>
+                        <span className="latest-event-title">{latestEvent.name}</span>
+                        <span className="latest-event-meta">
+                            {latestEvent.start ? new Date(latestEvent.start).toLocaleDateString("it-IT", {
+                                weekday: "short", 
+                                day: "2-digit",
+                                month: "short"
+                            }) : ""}
+                        </span>
+                        <span className="latest-event-separator">•</span>
+                        <span className="latest-event-title">{latestEvent.name}</span>
+                        <span className="latest-event-meta">
+                            {latestEvent.start ? new Date(latestEvent.start).toLocaleDateString("it-IT", {
+                                weekday: "short", 
+                                day: "2-digit",
+                                month: "short"
+                            }) : ""}
+                        </span>
+                        <span className="latest-event-separator">•</span>
+                        <span className="latest-event-title">{latestEvent.name}</span>
+                        <span className="latest-event-meta">
+                            {latestEvent.start ? new Date(latestEvent.start).toLocaleDateString("it-IT", {
+                                weekday: "short", 
+                                day: "2-digit",
+                                month: "short"
+                            }) : ""}
+                        </span>
+                        <span className="latest-event-separator">•</span>
+                        <span className="latest-event-title">{latestEvent.name}</span>
+                        <span className="latest-event-meta">
+                            {latestEvent.start ? new Date(latestEvent.start).toLocaleDateString("it-IT", {
+                                weekday: "short", 
+                                day: "2-digit",
+                                month: "short"
+                            }) : ""}
+                        </span>
+                        <span className="latest-event-separator">•</span>
                     </div>
-                )}
+                </div>
+            )}
+
+            <div className="container hero__content">
 
                 {/* Quote with deleting keyboard effect */}
                 <div className="typewriter-line">
