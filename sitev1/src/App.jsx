@@ -566,9 +566,28 @@ function PastEvents() {
 
     // mini-gallery
     const [mainIndex, setMainIndex] = useState(0);
+    const [isTransitioning, setIsTransitioning] = useState(false);
     useEffect(() => setMainIndex(0), [activeEvent]);
-    const prevImg = () => images.length && setMainIndex(i => (i - 1 + images.length) % images.length);
-    const nextImg = () => images.length && setMainIndex(i => (i + 1) % images.length);
+    
+    const prevImg = () => {
+        if (images.length && !isTransitioning) {
+            setIsTransitioning(true);
+            setTimeout(() => {
+                setMainIndex(i => (i - 1 + images.length) % images.length);
+                setIsTransitioning(false);
+            }, 150);
+        }
+    };
+    
+    const nextImg = () => {
+        if (images.length && !isTransitioning) {
+            setIsTransitioning(true);
+            setTimeout(() => {
+                setMainIndex(i => (i + 1) % images.length);
+                setIsTransitioning(false);
+            }, 150);
+        }
+    };
 
     // keyboard
     useEffect(() => {
@@ -704,15 +723,17 @@ function PastEvents() {
                                     <div className="mini-gallery">
                                         <button className="mini-nav prev" onClick={prevImg} aria-label="Previous image" type="button">‹</button>
                                         <div className="mini-frame">
-                                            <div className="gallery-wrapper">
+                                            <div className="gallery-preview-container">
                                                 {/* Previous image preview */}
                                                 <div className="gallery-preview gallery-preview-prev">
                                                     <img
                                                         src={images[(mainIndex - 1 + images.length) % images.length]}
                                                         alt="Previous"
                                                         loading="lazy"
+                                                        className="gallery-preview-image"
                                                     />
                                                 </div>
+                                                
                                                 {/* Current image */}
                                                 <div className="gallery-main">
                                                     <img
@@ -720,19 +741,38 @@ function PastEvents() {
                                                         alt={`Photo ${mainIndex + 1} of ${images.length}`}
                                                         loading="lazy"
                                                         className="gallery-main-image"
+                                                        style={{ 
+                                                            opacity: isTransitioning ? 0.5 : 1,
+                                                            transition: 'opacity 0.3s ease-in-out'
+                                                        }}
                                                     />
                                                 </div>
+                                                
                                                 {/* Next image preview */}
                                                 <div className="gallery-preview gallery-preview-next">
                                                     <img
                                                         src={images[(mainIndex + 1) % images.length]}
                                                         alt="Next"
                                                         loading="lazy"
+                                                        className="gallery-preview-image"
                                                     />
                                                 </div>
                                             </div>
                                         </div>
                                         <button className="mini-nav next" onClick={nextImg} aria-label="Next image" type="button">›</button>
+                                        
+                                        {/* Dot indicators */}
+                                        <div className="gallery-dots">
+                                            {images.map((_, index) => (
+                                                <button
+                                                    key={index}
+                                                    className={`gallery-dot ${index === mainIndex ? 'active' : ''}`}
+                                                    onClick={() => setMainIndex(index)}
+                                                    aria-label={`Go to image ${index + 1}`}
+                                                    type="button"
+                                                />
+                                            ))}
+                                        </div>
                                     </div>
                                 ) : (
                                     <div className="mini-empty">No photos for this event. (Debug: {activeEvent?.title} has {images.length} images)</div>
