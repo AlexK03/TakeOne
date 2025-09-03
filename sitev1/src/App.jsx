@@ -164,9 +164,14 @@ function dateLabelFor(ev) {
     const s = new Date(ev.start), e = new Date(ev.end);
     const sameDay = s.toDateString() === e.toDateString();
     if (sameDay) {
-        const day = fmt.format(s).replace(",", "");
-        const hm = new Intl.DateTimeFormat("it-IT", {hour: "2-digit", minute: "2-digit"});
-        return `${day}, ${hm.format(s)}–${hm.format(e)}`;
+        // Format without the day number to avoid redundancy
+        const day = new Intl.DateTimeFormat("it-IT", {
+            weekday: "short", 
+            month: "short"
+        }).format(s);
+        const startTime = new Intl.DateTimeFormat("it-IT", {hour: "2-digit", minute: "2-digit"}).format(s);
+        const endTime = new Intl.DateTimeFormat("it-IT", {hour: "2-digit", minute: "2-digit"}).format(e);
+        return `${day} ${startTime}–${endTime}`;
     }
     return `${fmt.format(s).replace(",", "")} → ${fmt.format(e).replace(",", "")}`;
 }
@@ -644,7 +649,7 @@ function PastEvents() {
                             </div>
                         </div>
 
-                        {/* 2-col main area */}
+                        {/* Main content area */}
                         <div className="drawer-body">
                             {/* LEFT — INFO */}
                             <div className="drawer-col">
@@ -673,51 +678,66 @@ function PastEvents() {
                                 ) : null}
 
                                 {activeEvent?.recap && <p className="drawer-desc">{activeEvent.recap}</p>}
-
-                                {images.length > 0 && (
-                                    <div className="drawer-actions">
-                                        <button type="button" className="line-btn" onClick={() => setIsGalleryOpen(true)}>
-                                            Open full gallery
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* RIGHT — POSTER */}
-                            <div className="drawer-col media">
-                                <div className="media-hero">
-                                    {activeEvent.poster && (
-                                        <button
-                                            type="button"
-                                            className="line-poster-btn"
-                                            onClick={() => openPoster(activeEvent.poster)}
-                                            aria-label="Open poster"
-                                            title="Open poster"
-                                        >
-                                            <img src={activeEvent.poster} alt={activeEvent.title} />
-                                        </button>
-                                    )}
-                                </div>
                             </div>
                         </div>
 
-                        {/* FULL-WIDTH BOTTOM — MINI GALLERY */}
-                        <div className="drawer-bottom">
-                            {images.length ? (
-                                <div className="mini-gallery">
-                                    <button className="mini-nav prev" onClick={prevImg} aria-label="Previous image" type="button">‹</button>
-                                    <div className="mini-frame">
-                                        <img
-                                            src={images[mainIndex]}
-                                            alt={`Photo ${mainIndex + 1} of ${images.length}`}
-                                            loading="lazy"
-                                        />
+                        {/* POSTER + GALLERY ROW (below information) */}
+                        <div className="drawer-media-row">
+                            {/* POSTER - Centered */}
+                            <div className="drawer-poster">
+                                {activeEvent.poster && (
+                                    <button
+                                        type="button"
+                                        className="line-poster-btn"
+                                        onClick={() => openPoster(activeEvent.poster)}
+                                        aria-label="Open poster"
+                                        title="Open poster"
+                                    >
+                                        <img src={activeEvent.poster} alt={activeEvent.title} />
+                                    </button>
+                                )}
+                            </div>
+
+                            {/* MINI GALLERY - Below poster */}
+                            <div className="drawer-gallery">
+                                {images.length ? (
+                                    <div className="mini-gallery">
+                                        <button className="mini-nav prev" onClick={prevImg} aria-label="Previous image" type="button">‹</button>
+                                        <div className="mini-frame">
+                                            <div className="gallery-wrapper">
+                                                {/* Previous image preview */}
+                                                <div className="gallery-preview gallery-preview-prev">
+                                                    <img
+                                                        src={images[(mainIndex - 1 + images.length) % images.length]}
+                                                        alt="Previous"
+                                                        loading="lazy"
+                                                    />
+                                                </div>
+                                                {/* Current image */}
+                                                <div className="gallery-main">
+                                                    <img
+                                                        src={images[mainIndex]}
+                                                        alt={`Photo ${mainIndex + 1} of ${images.length}`}
+                                                        loading="lazy"
+                                                        className="gallery-main-image"
+                                                    />
+                                                </div>
+                                                {/* Next image preview */}
+                                                <div className="gallery-preview gallery-preview-next">
+                                                    <img
+                                                        src={images[(mainIndex + 1) % images.length]}
+                                                        alt="Next"
+                                                        loading="lazy"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button className="mini-nav next" onClick={nextImg} aria-label="Next image" type="button">›</button>
                                     </div>
-                                    <button className="mini-nav next" onClick={nextImg} aria-label="Next image" type="button">›</button>
-                                </div>
-                            ) : (
-                                <div className="mini-empty">No photos for this event.</div>
-                            )}
+                                ) : (
+                                    <div className="mini-empty">No photos for this event. (Debug: {activeEvent?.title} has {images.length} images)</div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 )}
@@ -1034,10 +1054,6 @@ export default function App() {
                                         <div className="drawer-head">
                                             <h3 className="drawer-title">{current.name}</h3>
                                             <div className="drawer-controls" role="group" aria-label="Event navigation">
-                                                <button className="icon-btn" onClick={prevEvent} type="button">‹ prev
-                                                </button>
-                                                <button className="icon-btn" onClick={nextEvent} type="button">next ›
-                                                </button>
                                                 <button className="icon-btn close" onClick={() => setOpenIdx(null)}
                                                         type="button" title="Close">×
                                                 </button>
@@ -1112,10 +1128,6 @@ export default function App() {
                                                 <div className="media-hero">
                                                     {current.heroImage && <img src={current.heroImage} alt=""/>}
                                                     <div className="media-actions">
-                                                        <button className="icon-btn" type="button"
-                                                                onClick={() => openGallery(current.images)}>
-                                                            Open Gallery
-                                                        </button>
                                                         {current.mapUrl && (
                                                             <a className="icon-btn" href={current.mapUrl}
                                                                target="_blank" rel="noreferrer">Map</a>
