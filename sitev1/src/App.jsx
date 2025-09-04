@@ -1,9 +1,19 @@
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import {motion} from "framer-motion";
 
+// main.jsx or App.jsx
+import './styles.css';
+
 import PopupGallery from "./PopupGallery.jsx";
 // place near PopupGallery import
 import Modal from "react-modal";
+
+console.log(
+    'DEV BUILD ID:',
+    new Date().toISOString(),
+    'from file:',
+    new URL(import.meta.url).pathname
+  );
 
 /**
  * Standard HTML + CSS + React (no Tailwind)
@@ -56,8 +66,8 @@ import event2Poster from './assets/zoona-03-05-2025/img4.jpg';
 // ---------------------------
 const event = {
     name: "TakeOne — Miro Club - R-Room",
-    start: "2025-09-12T19:00:00+02:00",
-    end: "2025-09-12T03:00:00+02:00",
+    start: "2025-09-12T24:00:00+02:00",
+    end: "2025-09-12T04:00:00+02:00",
     city: "Bozen, IT",
     venue: "Miro Club - R-Room",
     address: " Piazza Domenicani, 3b, 39100 Bolzano BZ",
@@ -164,9 +174,10 @@ function dateLabelFor(ev) {
     const s = new Date(ev.start), e = new Date(ev.end);
     const sameDay = s.toDateString() === e.toDateString();
     if (sameDay) {
-        // Format without the day number to avoid redundancy
+        // Format with the day number
         const day = new Intl.DateTimeFormat("it-IT", {
             weekday: "short", 
+            day: "2-digit",
             month: "short"
         }).format(s);
         const startTime = new Intl.DateTimeFormat("it-IT", {hour: "2-digit", minute: "2-digit"}).format(s);
@@ -174,6 +185,13 @@ function dateLabelFor(ev) {
         return `${day} ${startTime}–${endTime}`;
     }
     return `${fmt.format(s).replace(",", "")} → ${fmt.format(e).replace(",", "")}`;
+}
+
+function timePeriodFor(ev) {
+    const s = new Date(ev.start), e = new Date(ev.end);
+    const startTime = new Intl.DateTimeFormat("it-IT", {hour: "2-digit", minute: "2-digit"}).format(s);
+    const endTime = new Intl.DateTimeFormat("it-IT", {hour: "2-digit", minute: "2-digit"}).format(e);
+    return `${startTime} - ${endTime}`;
 }
 
 
@@ -470,6 +488,7 @@ function HomeSection() {
                                 month: "short"
                             }) : ""}
                         </span>
+                        <span className="latest-event-time">{timePeriodFor(latestEvent)}</span>
                         <span className="latest-event-separator">•</span>
                         <span className="latest-event-title">{latestEvent.name}</span>
                         <span className="latest-event-meta">
@@ -479,6 +498,7 @@ function HomeSection() {
                                 month: "short"
                             }) : ""}
                         </span>
+                        <span className="latest-event-time">{timePeriodFor(latestEvent)}</span>
                         <span className="latest-event-separator">•</span>
                         <span className="latest-event-title">{latestEvent.name}</span>
                         <span className="latest-event-meta">
@@ -488,6 +508,7 @@ function HomeSection() {
                                 month: "short"
                             }) : ""}
                         </span>
+                        <span className="latest-event-time">{timePeriodFor(latestEvent)}</span>
                         <span className="latest-event-separator">•</span>
                         <span className="latest-event-title">{latestEvent.name}</span>
                         <span className="latest-event-meta">
@@ -497,6 +518,7 @@ function HomeSection() {
                                 month: "short"
                             }) : ""}
                         </span>
+                        <span className="latest-event-time">{timePeriodFor(latestEvent)}</span>
                         <span className="latest-event-separator">•</span>
                         <span className="latest-event-title">{latestEvent.name}</span>
                         <span className="latest-event-meta">
@@ -506,6 +528,7 @@ function HomeSection() {
                                 month: "short"
                             }) : ""}
                         </span>
+                        <span className="latest-event-time">{timePeriodFor(latestEvent)}</span>
                         <span className="latest-event-separator">•</span>
                         <span className="latest-event-title">{latestEvent.name}</span>
                         <span className="latest-event-meta">
@@ -515,6 +538,7 @@ function HomeSection() {
                                 month: "short"
                             }) : ""}
                         </span>
+                        <span className="latest-event-time">{timePeriodFor(latestEvent)}</span>
                         <span className="latest-event-separator">•</span>
                         <span className="latest-event-title">{latestEvent.name}</span>
                         <span className="latest-event-meta">
@@ -524,6 +548,7 @@ function HomeSection() {
                                 month: "short"
                             }) : ""}
                         </span>
+                        <span className="latest-event-time">{timePeriodFor(latestEvent)}</span>
                         <span className="latest-event-separator">•</span>
                         <span className="latest-event-title">{latestEvent.name}</span>
                         <span className="latest-event-meta">
@@ -533,6 +558,7 @@ function HomeSection() {
                                 month: "short"
                             }) : ""}
                         </span>
+                        <span className="latest-event-time">{timePeriodFor(latestEvent)}</span>
                         <span className="latest-event-separator">•</span>
                         <span className="latest-event-title">{latestEvent.name}</span>
                         <span className="latest-event-meta">
@@ -542,6 +568,7 @@ function HomeSection() {
                                 month: "short"
                             }) : ""}
                         </span>
+                        <span className="latest-event-time">{timePeriodFor(latestEvent)}</span>
                         <span className="latest-event-separator">•</span>
                         <span className="latest-event-title">{latestEvent.name}</span>
                         <span className="latest-event-meta">
@@ -551,6 +578,7 @@ function HomeSection() {
                                 month: "short"
                             }) : ""}
                         </span>
+                        <span className="latest-event-time">{timePeriodFor(latestEvent)}</span>
                         <span className="latest-event-separator">•</span>
                     </div>
                 </div>
@@ -1332,7 +1360,8 @@ export default function App() {
             </Section>
 
             {/* 4 — Archive */}
-            <Section id="past" title="Archive">
+            <Section id="past" title="Archive
+            ">
                 <PastEvents/>
             </Section>
 
