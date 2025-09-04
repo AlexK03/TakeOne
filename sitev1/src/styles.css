@@ -391,11 +391,11 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
 
 /* Specific hover effects for past events */
 .past-events-block .event-text-row .event-row-link:hover {
-    color: #7FFF00 !important;
-    text-shadow: 0 0 10px rgba(127, 255, 0, 0.5), 0 0 20px rgba(127, 255, 0, 0.3) !important;
+    color: #00BFFF !important;
+    text-shadow: 0 0 10px rgba(0, 191, 255, 0.5), 0 0 20px rgba(0, 191, 255, 0.3) !important;
     transform: scale(1.02) !important;
     filter: brightness(1.2) !important;
-    background: rgba(127, 255, 0, 0.1) !important;
+    background: rgba(0, 191, 255, 0.1) !important;
 }
 
 /* --------- Past events list rows --------- */
@@ -422,11 +422,11 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
 }
 
 .event-row-link:hover {
-    color: #7FFF00 !important; /* Bright neon green on hover */
-    text-shadow: 0 0 10px rgba(127, 255, 0, 0.5), 0 0 20px rgba(127, 255, 0, 0.3) !important; /* Glow effect */
+    color: #00BFFF !important; /* Electric blue on hover */
+    text-shadow: 0 0 10px rgba(0, 191, 255, 0.5), 0 0 20px rgba(0, 191, 255, 0.3) !important; /* Blue glow effect */
     transform: scale(1.02) !important; /* Slight scale up */
     filter: brightness(1.2) !important; /* Brighten the text */
-    background: rgba(127, 255, 0, 0.1) !important; /* Subtle background glow */
+    background: rgba(0, 191, 255, 0.1) !important; /* Subtle blue background glow */
 }
 
 .event-row-link.is-active {
