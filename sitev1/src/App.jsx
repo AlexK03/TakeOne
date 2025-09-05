@@ -58,7 +58,7 @@ import mattiaLorenzi from './assets/artists/mattiaLorenzi.jpg';
 import AudioTurntable from "./AudioTurntable.jsx";
 import disk from "./assets/audioTrack/disk.png";
 import setMp3 from "./assets/audioTrack/takeone_set.mp3";
-import event1Poster from './assets/miro-15-11-2024/img1.jpg';
+import event1Poster from './assets/incomingEvents/posterMiro12-09-2025.jpg';
 import event2Poster from './assets/zoona-03-05-2025/img4.jpg';
 
 // ---------------------------
@@ -84,7 +84,7 @@ const lineup = [
         image:
         davidePiras,
         links: {instagram: "https://www.instagram.com/alan_la_rocc/"},
-        bio: "Well-known DJ in the region, delivering high-energy sets that move between house and techno. As producer under the alter ego DJ Chupacapra, he has become a true local legend of the South Tyrolean underground scene"
+        bio: "Alan LaRocc is a DJ from South Tyrol and a producer under Rauh Nacht Records label. Renowned for his outstanding energy behind the decks, he knows how to ignite the crowd and, as closing time approaches, never fails to deliver an intense, physical dancefloor experience."
     },
     {
         name: "Young XTO",
@@ -211,7 +211,7 @@ const pastEvents = [
         city: "Bozen",
         venue: "Miro Club",
         poster: miroPoster,
-        recap: "Gonfio",
+        recap: "",
         gallery: miroImages
     },
     {
@@ -220,7 +220,7 @@ const pastEvents = [
         city: "Bozen",
         venue: "Castel Roncolo",
         poster: ronPoster,
-        recap: "Gonfio",
+        recap: "",
         gallery: roncoloImages
     },
 
@@ -230,7 +230,7 @@ const pastEvents = [
         city: "Brixen",
         venue: "Astra",
         poster: astraPoster,
-        recap: "Gonfio",
+        recap: "",
         gallery: []
     },
     {
@@ -239,7 +239,7 @@ const pastEvents = [
         city: "Bozen",
         venue: "Miro Club",
         poster: lampelePoster,
-        recap: "Gonfio",
+        recap: "",
         gallery: miro2Images
     },
     {
@@ -248,7 +248,7 @@ const pastEvents = [
         city: "Bozen",
         venue: "Zoona",
         poster: zoonaPoster2,
-        recap: "Gonfio",
+        recap: "",
         gallery: []
     },
     {
@@ -257,7 +257,7 @@ const pastEvents = [
         city: "Bozen",
         venue: "Goethe Haus",
         poster: goethePoster,
-        recap: "Gonfio",
+        recap: "",
         gallery: goetheImages
     }
 ];
@@ -816,18 +816,18 @@ function PastEvents() {
                       {activeEvent.city}{activeEvent.venue ? ` · ${activeEvent.venue}` : ""}
                     </span>
                                     </div>
-                                </div>
 
-                                {activeEvent?.lineup?.length ? (
-                                    <div className="lineup-block">
-                                        <div className="lineup-label">LINEUP</div>
-                                        <ul className="lineup-list">
-                                            {activeEvent.lineup.map((dj, i) => (
-                                                <li key={i} className="drawer-dj lineup-name">{dj}</li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                ) : null}
+                                    {activeEvent?.lineup?.length ? (
+                                        <div className="lineup-block">
+                                            <div className="lineup-label">LINEUP</div>
+                                            <ul className="lineup-list">
+                                                {activeEvent.lineup.map((dj, i) => (
+                                                    <li key={i} className="drawer-dj lineup-name">{dj}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    ) : null}
+                                </div>
 
                                 {activeEvent?.recap && <p className="drawer-desc">{activeEvent.recap}</p>}
                             </div>
@@ -908,7 +908,7 @@ function PastEvents() {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="mini-empty">No photos for this event. (Debug: {activeEvent?.title} has {images.length} images)</div>
+                                    <div className="mini-empty">No photos for this event.</div>
                                 )}
                             </div>
                         </div>
@@ -1254,45 +1254,45 @@ export default function App() {
                                                     )}
                                                 </div>
 
-                                                <div className="lineup-block">
-                                                    <div className="lineup-label">LINEUP</div>
-                                                    <div className="lineup-list">
-                                                        {currentLineup.map((a, idx) => (
-                                                            <button
-                                                                key={`${a.name}-${idx}`}
-                                                                className={`lineup-name ${activeDJ?.name === a.name ? "is-active" : ""}`}
-                                                                type="button"
-                                                                onClick={() => setActiveDJ(a)}
-                                                                title={`Read about ${a.name}`}
-                                                            >
-                                                                {a.name}
-                                                            </button>
-                                                        ))}
+                                                <div className={`dj-dock ${activeDJ ? "open" : ""}`}>
+                                                    <div className="lineup-block">
+                                                        <div className="lineup-label">LINEUP</div>
+                                                        <div className="lineup-list">
+                                                            {currentLineup.map((a, idx) => (
+                                                                <button
+                                                                    key={`${a.name}-${idx}`}
+                                                                    className={`lineup-name ${activeDJ?.name === a.name ? "is-active" : ""}`}
+                                                                    type="button"
+                                                                    onClick={() => setActiveDJ(a)}
+                                                                    title={`Read about ${a.name}`}
+                                                                >
+                                                                    {a.name}
+                                                                </button>
+                                                            ))}
+                                                        </div>
                                                     </div>
 
                                                     {/* Selected DJ info */}
-                                                    <div className={`dj-dock ${activeDJ ? "open" : ""}`}>
-                                                        {activeDJ ? (
-                                                            <>
-                                                                <div className="dj-row">
-                                                                    <h4 className="dj-name">{activeDJ.name}</h4>
-                                                                    {activeDJ.links?.instagram && (
-                                                                        <a className="dj-ig"
-                                                                           href={activeDJ.links.instagram}
-                                                                           target="_blank" rel="noreferrer">
-                                                                            @ Instagram
-                                                                        </a>
-                                                                    )}
-                                                                </div>
-                                                                {(activeDJ.bio || activeDJ.description) && (
-                                                                    <p className="dj-desc">{activeDJ.bio || activeDJ.description}</p>
+                                                    {activeDJ ? (
+                                                        <>
+                                                            <div className="dj-row">
+                                                                <h4 className="dj-name">{activeDJ.name}</h4>
+                                                                {activeDJ.links?.instagram && (
+                                                                    <a className="dj-ig"
+                                                                       href={activeDJ.links.instagram}
+                                                                       target="_blank" rel="noreferrer">
+                                                                        @ Instagram
+                                                                    </a>
                                                                 )}
-                                                            </>
-                                                        ) : (
-                                                            <div className="dj-placeholder">Select an artist to see
-                                                                info.</div>
-                                                        )}
-                                                    </div>
+                                                            </div>
+                                                            {(activeDJ.bio || activeDJ.description) && (
+                                                                <p className="dj-desc">{activeDJ.bio || activeDJ.description}</p>
+                                                            )}
+                                                        </>
+                                                    ) : (
+                                                        <div className="dj-placeholder">Select an artist to see
+                                                            info.</div>
+                                                    )}
                                                 </div>
                                             </div>
 
