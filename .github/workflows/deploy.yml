@@ -30,7 +30,7 @@ jobs:
         with:
           node-version: 20
           cache: npm
-          cache-dependency-path: sitev1/package-lock.json   # <— add this
+          cache-dependency-path: sitev1/package-lock.json
 
       - name: Install deps
         run: npm ci
@@ -38,14 +38,18 @@ jobs:
       - name: Build
         run: npm run build
 
+      # SPA fallback so client routing (if any) works on refresh
       - name: Add 404 fallback
         run: cp dist/index.html dist/404.html
+
+      # Ensure the custom domain is actually deployed
+      - name: Add CNAME
+        run: echo "takeone-collective.it" > dist/CNAME
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: sitev1/dist
-
 
   deploy:
     needs: build
