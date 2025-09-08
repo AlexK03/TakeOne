@@ -66,7 +66,7 @@ import event2Poster from './assets/zoona-03-05-2025/img4.jpg';
 // ---------------------------
 const event = {
     name: "TakeOne — Miro Club - R-Room",
-    start: "2025-09-12T24:00:00+02:00",
+    start: "2025-09-11T24:00:00+02:00",
     end: "2025-09-12T04:00:00+02:00",
     city: "Bozen, IT",
     venue: "Miro Club - R-Room",
