@@ -84,7 +84,7 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
 }
 .section__title::after{
     content:""; display:block; width:60px; height:4px; margin:.75rem auto 0;
-    background: linear-gradient(90deg, var(--violet), var(--green), var(--cyan));
+    background: #00BFFF;
     opacity:.9; border-radius:2px;
 }
 
@@ -100,7 +100,7 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
 .nav__links { display:none; gap:1.25rem; text-transform:uppercase; letter-spacing:.12em; font-size:.75rem; }
 .nav__link { opacity:.75; text-decoration:none; padding:.9rem 0; border-bottom:2px solid transparent; }
 .nav__link:hover { opacity:1; }
-.nav__link--active { opacity:1; border-image: linear-gradient(90deg, var(--violet), var(--green), var(--cyan)) 1; }
+.nav__link--active { opacity:1; border-bottom: 2px solid #00BFFF; }
 @media (min-width:768px){ .nav__links{ display:flex; } }
 
 /* Centered variant */
@@ -391,7 +391,7 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
 
 /* Specific hover effects for past events */
 .past-events-block .event-text-row .event-row-link:hover {
-    color: #0066CC !important;
+    color: #00BFFF !important;
     transform: scale(1.01) !important;
     filter: brightness(1.1) !important;
 }
@@ -420,13 +420,13 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
 }
 
 .event-row-link:hover {
-    color: #0066CC !important; /* Darker blue on hover */
+    color: #00BFFF !important; /* Electric blue on hover */
     transform: scale(1.01) !important; /* Reduced scale up */
     filter: brightness(1.1) !important; /* Reduced brightness */
 }
 
 .event-row-link.is-active {
-    color: #0891b2 !important; /* Cyan for active state */
+    color: #00BFFF !important; /* Electric blue for active state */
     font-weight: bold !important;
 }
 
@@ -465,11 +465,11 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
 
 @media (hover:hover){
     .event-row-link:hover{ 
-        color: #0891b2; 
+        color: #00BFFF; 
     }
     .event-row-link:hover .event-part--title{ 
-        color: #0891b2; 
-        text-decoration-color: rgba(8, 145, 178, 0.6);
+        color: #00BFFF; 
+        text-decoration-color: rgba(0, 191, 255, 0.6);
     }
 }
 
@@ -557,6 +557,15 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
     display:inline-flex; align-items:baseline; gap:.25rem;
     font-weight:900; letter-spacing:.01em; font-size:clamp(1.1rem, 1.2vw + .9rem, 2rem);
     margin:.25rem 0 1rem;
+    font-family: "MyFont", sans-serif;
+}
+
+.typewriter-line {
+    padding: .3rem .6rem;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 }
 .typewriter__static{ color:var(--ink); opacity:.9; }
 .typewriter__word {
@@ -844,6 +853,25 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
 /* Ensure list doesn't slide under the line */
 .past-events-block {
     padding-bottom: 50px;      /* Reduced from 300px to minimize empty space */
+    
+    /* Glass effect matching About section */
+    background: linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0.35) 0%,   /* soft translucent top */
+            rgba(255, 255, 255, 0.20) 50%,  /* lighter middle */
+            rgba(255, 255, 255, 0.10) 100%  /* almost invisible bottom */
+    );
+    
+    color: #111;  /* dark text for contrast */
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+    line-height: 1.65;
+    
+    /* Soft frosted-glass effect */
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 }
 
 
