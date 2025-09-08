@@ -961,10 +961,10 @@ function Contact() {
         const data = Object.fromEntries(new FormData(form).entries());
         const {name, email, message} = data;
 
-        // Mailto fallback: opens the visitor’s email client with prefilled message
+        // Mailto fallback: opens the visitor's email client with prefilled message
         const subject = encodeURIComponent(`Website contact from ${name || "Guest"}`);
         const body = encodeURIComponent(
-            `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
+            `${message}`
         );
         const mailto = `mailto:${EMAIL_TO}?subject=${subject}&body=${body}`;
 
