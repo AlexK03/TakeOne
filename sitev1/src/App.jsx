@@ -678,6 +678,19 @@ function PastEvents() {
     };
 
     const closeLine = () => { setSelected(null); setActiveIndex(null); };
+    
+    // Prevent body scroll when drawer is open on mobile
+    useEffect(() => {
+        if (activeEvent && window.innerWidth <= 768) {
+            document.body.classList.add('drawer-open');
+        } else {
+            document.body.classList.remove('drawer-open');
+        }
+        
+        return () => {
+            document.body.classList.remove('drawer-open');
+        };
+    }, [activeEvent]);
     const prevEvent = () => {
         if (safeIndex == null || !pastEvents?.length) return;
         const idx = (safeIndex - 1 + pastEvents.length) % pastEvents.length;
@@ -1166,6 +1179,19 @@ export default function App() {
                     // Reset selected DJ when switching/closing
                     React.useEffect(() => {
                         setActiveDJ(null);
+                    }, [openIdx]);
+                    
+                    // Prevent body scroll when drawer is open on mobile
+                    React.useEffect(() => {
+                        if (openIdx != null && window.innerWidth <= 768) {
+                            document.body.classList.add('drawer-open');
+                        } else {
+                            document.body.classList.remove('drawer-open');
+                        }
+                        
+                        return () => {
+                            document.body.classList.remove('drawer-open');
+                        };
                     }, [openIdx]);
 
                     // Measure drawer height and reserve space in the section while open
