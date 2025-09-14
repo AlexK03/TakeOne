@@ -194,6 +194,15 @@ function timePeriodFor(ev) {
 
 const pastEvents = [
     {
+        title: "TAKEONEXR-ROOM",
+        date: "2025-09-12",
+        city: "Bozen",
+        venue: "Miro Club",
+        poster: miro3Poster,
+        recap: "",
+        gallery: miro3Images
+    },
+    {
         title: "TAKEONEXZOONA",
         date: "2025-05-03",
         city: "Bozen",
@@ -256,15 +265,6 @@ const pastEvents = [
         poster: goethePoster,
         recap: "",
         gallery: goetheImages
-    },
-    {
-        title: "TAKEONEXR-ROOM",
-        date: "2025-09-12",
-        city: "Bozen",
-        venue: "Miro Club",
-        poster: miro3Poster,
-        recap: "",
-        gallery: miro3Images
     }
 ];
 
