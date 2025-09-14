@@ -70,7 +70,7 @@ import event2Poster from './assets/zoona-03-05-2025/img4.jpg';
 // Content Model
 // ---------------------------
 const event = {
-    name: "TakeOne — Zoona",
+    name: "TakeOne — Zoona Unstructured",
     start: "2025-09-19T19:30:00+02:00",
     end: "2025-09-19T01:00:00+02:00",
     city: "Bozen, IT",
