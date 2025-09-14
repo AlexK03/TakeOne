@@ -42,6 +42,10 @@ const goetheImages = Object.values(
     import.meta.glob('./assets/goetheHaus-15-05-2024/*.{jpg,png}', {eager: true, as: 'url'})
 );
 
+const miro3Images = Object.values(
+    import.meta.glob('./assets/miro-12-09-2025/*.{jpg,png}', {eager: true, as: 'url'})
+);
+
 
 import zoonaPoster from './assets/logos/posterZoona.png';
 import miroPoster from './assets/logos/posterMiro.png';
@@ -50,6 +54,7 @@ import lampelePoster from './assets/logos/posterLampele.png';
 import zoonaPoster2 from './assets/logos/posterZoona2.jpeg';
 import goethePoster from './assets/logos/posterGoethe.jpeg';
 import astraPoster from './assets/logos/posterAstra.jpg';
+import miro3Poster from './assets/logos/posterMiro12-09-2025.jpg';
 
 import logo from './assets/logos/logo2.png';
 import lonedImage from './assets/miro-18-04-2025/img1.jpg';
@@ -65,12 +70,12 @@ import event2Poster from './assets/zoona-03-05-2025/img4.jpg';
 // Content Model
 // ---------------------------
 const event = {
-    name: "TakeOne — Miro Club - R-Room",
-    start: "2025-09-11T24:00:00+02:00",
-    end: "2025-09-12T04:00:00+02:00",
+    name: "TakeOne — Zoona",
+    start: "2025-09-19T22:00:00+02:00",
+    end: "2025-09-19T01:00:00+02:00",
     city: "Bozen, IT",
-    venue: "Miro Club - R-Room",
-    address: " Piazza Domenicani, 3b, 39100 Bolzano BZ",
+    venue: "Zonna",
+    address: "Via Vincenzo Lancia, 1, 39100 Bolzano BZ",
     heroImage:
     event1Poster,
 
@@ -150,20 +155,12 @@ const lineupAutumn = lineup2;
 
 // Multiple incoming events (first reuses your existing event + lineup)
 const upcomingEvents = [
-    {...event, lineup, images: [event.heroImage]},
     {
-        name: "TakeOne — Zoona",
-        start: "2025-09-19T22:00:00+02:00",
-        end: "2025-09-19T01:00:00+02:00",
-        city: "Bozen, IT",
-        venue: "Zoona",
-        address: "Via Vincenzo Lancia, 1, 39100 Bolzano BZ",
-        heroImage: event2Poster,
-        trailerUrl: null,
-        mapUrl: null,
-        lineup: lineupAutumn,
-
+        ...event,
+        lineup: lineup2,
+        images: [event.heroImage]
     },
+    // Second event removed - information moved to first event
 ];
 
 const fmt = new Intl.DateTimeFormat("it-IT", {
@@ -259,6 +256,15 @@ const pastEvents = [
         poster: goethePoster,
         recap: "",
         gallery: goetheImages
+    },
+    {
+        title: "TAKEONEXR-ROOM",
+        date: "2025-09-12",
+        city: "Bozen",
+        venue: "Miro Club",
+        poster: miro3Poster,
+        recap: "",
+        gallery: miro3Images
     }
 ];
 
