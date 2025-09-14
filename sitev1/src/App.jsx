@@ -63,7 +63,7 @@ import mattiaLorenzi from './assets/artists/mattiaLorenzi.jpg';
 import AudioTurntable from "./AudioTurntable.jsx";
 import disk from "./assets/audioTrack/disk.png";
 import setMp3 from "./assets/audioTrack/takeone_set.mp3";
-import event1Poster from './assets/incomingEvents/posterMiro12-09-2025.jpg';
+import event1Poster from './assets/incomingEvents/posterZoona-19-09-2025.mp4';
 import event2Poster from './assets/zoona-03-05-2025/img4.jpg';
 
 // ---------------------------
@@ -71,10 +71,10 @@ import event2Poster from './assets/zoona-03-05-2025/img4.jpg';
 // ---------------------------
 const event = {
     name: "TakeOne — Zoona",
-    start: "2025-09-19T22:00:00+02:00",
+    start: "2025-09-19T19:30:00+02:00",
     end: "2025-09-19T01:00:00+02:00",
     city: "Bozen, IT",
-    venue: "Zonna",
+    venue: "Zoona",
     address: "Via Vincenzo Lancia, 1, 39100 Bolzano BZ",
     heroImage:
     event1Poster,
