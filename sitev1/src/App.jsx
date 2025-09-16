@@ -50,16 +50,16 @@ const miro3Images = Object.values(
 
 
 
-import zoonaPoster from './assets/logos/posterZoona.png';
-import miroPoster from './assets/logos/posterMiro.png';
-import ronPoster from './assets/logos/posterRoncolo.png';
-import lampelePoster from './assets/logos/posterLampele.png';
-import zoonaPoster2 from './assets/logos/posterZoona2.jpeg';
-import goethePoster from './assets/logos/posterGoethe.jpeg';
-import astraPoster from './assets/logos/posterAstra.jpg';
-import miro3Poster from './assets/logos/posterMiro12-09-2025.jpg';
+import zoonaPoster from './assets/logos/posterZoona.webp';
+import miroPoster from './assets/logos/posterMiro.webp';
+import ronPoster from './assets/logos/posterRoncolo.webp';
+import lampelePoster from './assets/logos/posterLampele.webp';
+import zoonaPoster2 from './assets/logos/posterZoona2.webp';
+import goethePoster from './assets/logos/posterGoethe.webp';
+import astraPoster from './assets/logos/posterAstra.webp';
+import miro3Poster from './assets/logos/posterMiro12-09-2025.webp';
 
-import logo from './assets/logos/logo2.png';
+import logo from './assets/logos/logo2.webp';
 import lonedImage from './assets/miro-18-04-2025/img1.jpg';
 import davidePiras from './assets/artists/davidePiras.jpg';
 import mattiaLorenzi from './assets/artists/mattiaLorenzi.jpg';
