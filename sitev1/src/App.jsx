@@ -60,14 +60,13 @@ import astraPoster from './assets/logos/posterAstra.webp';
 import miro3Poster from './assets/logos/posterMiro12-09-2025.webp';
 
 import logo from './assets/logos/logo2.webp';
-import lonedImage from './assets/miro-18-04-2025/img1.jpg';
 import davidePiras from './assets/artists/davidePiras.jpg';
 import mattiaLorenzi from './assets/artists/mattiaLorenzi.jpg';
 import AudioTurntable from "./AudioTurntable.jsx";
 import disk from "./assets/audioTrack/disk.png";
 import setMp3 from "./assets/audioTrack/takeone_set.mp3";
 import event1Poster from './assets/incomingEvents/posterZoona-19-09-2025.mp4';
-import event2Poster from './assets/zoona-03-05-2025/img4.jpg';
+import event2Poster from './assets/zoona-03-05-2025/img4.webp';
 
 // ---------------------------
 // Content Model
@@ -108,7 +107,7 @@ const lineup = [
         tier: "",
         genre: "",
         image:
-        lonedImage,
+        mattiaLorenzi,
         links: {instagram: "https://www.instagram.com/lonednotloned/"},
         bio: "His sets never disappoint those in search of high-impact energy. Characterized by bouncy beats and refined mixing skills, Loned delivers powerful, dynamic experiences that flow seamlessly between techno and electro"
     }
@@ -138,7 +137,7 @@ const lineup2 = [
         tier: "",
         genre: "",
         image:
-        lonedImage,
+        mattiaLorenzi,
         links: {instagram: "https://www.instagram.com/lonednotloned/"},
         bio: "His sets never disappoint those in search of high-impact energy. Characterized by bouncy beats and refined mixing skills, Loned delivers powerful, dynamic experiences that flow seamlessly between techno and electro"
     },
