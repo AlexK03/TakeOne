@@ -24,27 +24,30 @@ console.log(
 // App.jsx
 const BASE = import.meta.env.BASE_URL; // used for public assets (e.g., /public/img/*)
 
+// Import WebP images using glob
 const zoonaImages = Object.values(
-    import.meta.glob('./assets/zoona-03-05-2025/*.{jpg,png}', {eager: true, as: 'url'})
+    import.meta.glob('./assets/zoona-03-05-2025/*.webp', {eager: true, query: '?url', import: 'default'})
 );
 const miroImages = Object.values(
-    import.meta.glob('./assets/miro-18-04-2025/*.{jpg,png}', {eager: true, as: 'url'})
+    import.meta.glob('./assets/miro-18-04-2025/*.webp', {eager: true, query: '?url', import: 'default'})
 );
 const roncoloImages = Object.values(
-    import.meta.glob('./assets/roncolo-22-03-2025/*.{jpg,png}', {eager: true, as: 'url'})
+    import.meta.glob('./assets/roncolo-22-03-2025/*.webp', {eager: true, query: '?url', import: 'default'})
 );
 
 const miro2Images = Object.values(
-    import.meta.glob('./assets/miro-15-11-2024/*.{jpg,png}', {eager: true, as: 'url'})
+    import.meta.glob('./assets/miro-15-11-2024/*.webp', {eager: true, query: '?url', import: 'default'})
 );
 
 const goetheImages = Object.values(
-    import.meta.glob('./assets/goetheHaus-15-05-2024/*.{jpg,png}', {eager: true, as: 'url'})
+    import.meta.glob('./assets/goetheHaus-15-05-2024/*.webp', {eager: true, query: '?url', import: 'default'})
 );
 
 const miro3Images = Object.values(
-    import.meta.glob('./assets/miro-12-09-2025/*.{jpg,png}', {eager: true, as: 'url'})
+    import.meta.glob('./assets/miro-12-09-2025/*.webp', {eager: true, query: '?url', import: 'default'})
 );
+
+
 
 
 import zoonaPoster from './assets/logos/posterZoona.png';
