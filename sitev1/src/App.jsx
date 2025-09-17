@@ -1156,7 +1156,7 @@ export default function App() {
             <div
                 className="bg-fixed"
                 aria-hidden="true"
-                style={{backgroundImage: `url(${BASE}video/bg6.png)`}}
+                style={{backgroundImage: `url(${BASE}video/bg7.jpeg)`}}
             />
 
             <StickyNav sections={sections}/>
