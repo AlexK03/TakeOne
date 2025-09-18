@@ -54,7 +54,7 @@ a { color: var(--accent-blue); text-decoration: underline; text-underline-offset
 a.link { font-weight: 500; color: var(--accent-blue); }
 
 h1, h2, h3 {
-    font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+    font-family: "MyFont", sans-serif;
     letter-spacing: .01em;
     margin: 0 0 .5rem;
 }
@@ -88,11 +88,13 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
 }
 
 .section__title{
-    font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+    font-family: "MyFont", sans-serif !important;
     font-size: clamp(2rem, 2.5vw + 1.5rem, 3.25rem);
     font-weight: 800; letter-spacing: 0.02em; margin-bottom: 1.25rem;
     text-align: center; color: var(--ink); line-height: 1.15;
-    position: relative; background: none; -webkit-text-stroke: 0.5px rgba(255,255,255,0.6);
+    position: relative; background: none;
+    -webkit-text-stroke: 0 !important;
+    text-shadow: none !important;
 }
 .section__title::after{
     content:""; display:block; width:60px; height:4px; margin:.75rem auto 0;
@@ -196,7 +198,11 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
     color: var(--text-dark); /* dark text on light background */
 }
 .card__body{ padding:1rem; }
-.card__title{ font-size:1.125rem; font-weight:700; }
+.card__title{ 
+    font-family: "MyFont", sans-serif;
+    font-size:1.125rem; 
+    font-weight:700; 
+}
 .card--divide .disclosure + .disclosure{ border-top:1px solid var(--line); }
 
 .eyebrow{
@@ -312,9 +318,9 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
     transform: translateY(-2px); 
     box-shadow: 0 14px 40px rgba(0,0,0,.25); 
     border:none; 
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
 }
 
 .logo-tile__img {
@@ -344,11 +350,11 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
     background-clip: initial;
 }
 
-/* On hover → appear in neon green */
+/* On hover → appear in typewriter color */
 .logo-tile:hover .logo-tile__label {
     transform: scale(1);
     opacity: 1;
-    color: var(--accent-green); /* neon green */
+    color: #5af1cc; /* typewriter effect color */
 
 }
 
@@ -632,8 +638,8 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
 
 /* High-contrast gradient text (enhanced) */
 .accent, .event-series, .typewriter__word{
-    -webkit-text-stroke: .6px rgba(0,0,0,.4);
-    text-shadow: 0 0 8px rgba(255,255,255,.45), 0 1px 2px rgba(0,0,0,.35);
+    -webkit-text-stroke: 0;
+    text-shadow: none;
 }
 
 .typewriter-line .accent,
@@ -651,8 +657,8 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
 
 @media (prefers-contrast:more){
     .accent, .event-series, .typewriter__word{
-        -webkit-text-stroke: 1px rgba(0,0,0,.55);
-        text-shadow: 0 0 10px rgba(255,255,255,.55), 0 1px 2px rgba(0,0,0,.45);
+        -webkit-text-stroke: 0;
+        text-shadow: none;
     }
 }
 
@@ -2207,6 +2213,15 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
 
 .scrolly-step .facts-val {
   font-family: "MyFont", sans-serif;
+}
+
+/* Animated poster video styling */
+.scrolly__poster-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
 }
 
 @media (max-width: 899px) {

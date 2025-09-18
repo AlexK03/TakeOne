@@ -65,7 +65,7 @@ import mattiaLorenzi from './assets/artists/mattiaLorenzi.jpg';
 import AudioTurntable from "./AudioTurntable.jsx";
 import disk from "./assets/audioTrack/disk.webp";
 import setMp3 from "./assets/audioTrack/takeone_set.mp3";
-import event1Poster from './assets/incomingEvents/posterZoona-19-09-2025.mp4';
+import event1Poster from './assets/incomingEvents/posterZoona-19-09-2025.webm';
 import event2Poster from './assets/zoona-03-05-2025/img4.webp';
 
 // ---------------------------
@@ -1142,7 +1142,15 @@ function ScrollyPanels({ items }) {
 
             {mainEvent.poster && (
               <div className="ratio ratio--4x5 scrolly__media">
-                <img src={mainEvent.poster} alt="" />
+                <video 
+                  src={mainEvent.poster} 
+                  autoPlay 
+                  loop 
+                  muted 
+                  playsInline
+                  className="scrolly__poster-video"
+                  aria-label="Animated event poster"
+                />
               </div>
             )}
 
