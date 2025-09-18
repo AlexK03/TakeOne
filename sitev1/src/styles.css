@@ -1364,7 +1364,7 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
 }
 
 /* List styles */
-.incoming-list { display: grid; gap: .75rem; margin: 0 0 1rem 0; padding: 0; list-style: none; }
+.incoming-list { display: grid; gap: .25rem; margin: 0 0 1rem 0; padding: 0; list-style: none; }
 .incoming-list__item { margin: 0; }
 .incoming-item {
     width: 100%;
@@ -2222,6 +2222,23 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
   object-fit: cover;
   border-radius: var(--radius);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+/* Scroll-controlled fade animations */
+.fade-element {
+  opacity: 1; /* Start visible by default */
+  transform: translateY(0); /* Start in natural position */
+  transition: none; /* Remove CSS transitions for scroll control */
+}
+
+.fade-element.fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-element.fade-out {
+  opacity: 0;
+  transform: translateY(-40px);
 }
 
 @media (max-width: 899px) {

@@ -363,7 +363,7 @@ function Section({id, title, children, subdued = false}) {
         <section id={id} className={cx("section", subdued && "section--subdued")}>
             <div className="container">
                 {title && (
-                    <motion.h2 className="section__title accent" variants={fadeUp} initial="hidden" whileInView="show"
+                    <motion.h2 className="section__title accent fade-element" variants={fadeUp} initial="hidden" whileInView="show"
                                viewport={{once: true}}>
                         {title}
                     </motion.h2>
@@ -1125,6 +1125,89 @@ function useActiveIndex(stepClass = ".scrolly-step") {
   return active;
 }
 
+// Hook for scroll-controlled fade animations
+function useScrollFadeAnimation() {
+  React.useEffect(() => {
+    const fadeElements = document.querySelectorAll('.fade-element');
+    
+    const updateAnimations = () => {
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      
+      fadeElements.forEach((element) => {
+        const rect = element.getBoundingClientRect();
+        const elementTop = rect.top + scrollY;
+        const elementHeight = rect.height;
+        
+        // Calculate the element's position relative to viewport
+        const elementCenter = elementTop + elementHeight / 2;
+        const viewportCenter = scrollY + windowHeight / 2;
+        
+        // Distance from viewport center (positive = below center, negative = above center)
+        const distanceFromCenter = elementCenter - viewportCenter;
+        
+        // Animation range (in pixels)
+        const animationRange = windowHeight * 0.8; // 80% of viewport height
+        
+        // Calculate progress (-1 to 1, where 0 is center of viewport)
+        const progress = Math.max(-1, Math.min(1, distanceFromCenter / animationRange));
+        
+        // Calculate opacity and transform based on progress
+        let opacity, translateY;
+        
+        if (progress < -0.3) {
+          // Element is above viewport center - fade out upward
+          const fadeProgress = Math.max(0, (progress + 0.3) / 0.7);
+          opacity = Math.max(0.1, 1 - fadeProgress); // Keep minimum opacity
+          translateY = -40 * fadeProgress;
+        } else if (progress > 0.3) {
+          // Element is below viewport center - fade out downward
+          const fadeProgress = Math.max(0, (progress - 0.3) / 0.7);
+          opacity = Math.max(0.1, 1 - fadeProgress); // Keep minimum opacity
+          translateY = 40 * fadeProgress;
+        } else {
+          // Element is near viewport center - fade in
+          const fadeProgress = Math.max(0, 1 - Math.abs(progress) / 0.3);
+          opacity = Math.max(0.3, fadeProgress); // Ensure minimum visibility
+          translateY = 40 * (1 - fadeProgress);
+        }
+        
+        // Apply the calculated values
+        element.style.opacity = opacity;
+        element.style.transform = `translateY(${translateY}px)`;
+        
+        // Debug: log if opacity is 0 for text elements
+        if (opacity === 0 && element.classList.contains('scrolly-step__text')) {
+          console.log('Text element hidden:', element.textContent?.substring(0, 50), 'opacity:', opacity, 'progress:', progress);
+        }
+      });
+    };
+    
+    // Initial calculation
+    updateAnimations();
+    
+    // Add scroll listener with throttling for performance
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          updateAnimations();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', updateAnimations);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', updateAnimations);
+    };
+  }, []);
+}
+
 function ScrollyPanels({ items }) {
   const active = useActiveIndex();
   const i = Math.max(0, Math.min(active, items.length - 1));
@@ -1170,16 +1253,16 @@ function ScrollyPanels({ items }) {
             {idx === 0 ? (
               // First slide: Event facts structure
               <div className="event-facts">
-                <div className="facts-row">
+                <div className="facts-row fade-element">
                   <span className="facts-label">When</span>
                   <span className="facts-val">{upcomingEvents[0] ? dateLabelFor(upcomingEvents[0]) : ""}</span>
                 </div>
-                <div className="facts-row">
+                <div className="facts-row fade-element">
                   <span className="facts-label">Where</span>
                   <span className="facts-val">{upcomingEvents[0] ? `${upcomingEvents[0].city} · ${upcomingEvents[0].venue}` : ""}</span>
                 </div>
                 {upcomingEvents[0]?.address && (
-                  <div className="facts-row">
+                  <div className="facts-row fade-element">
                     <span className="facts-label">Address</span>
                     <span className="facts-val">{upcomingEvents[0].address}</span>
                   </div>
@@ -1189,10 +1272,10 @@ function ScrollyPanels({ items }) {
               // Other slides: Artist info
               <>
                 <div className="scrolly-step__header">
-                  <h4 className="scrolly-step__title">{it.title}</h4>
+                  <h4 className="scrolly-step__title fade-element">{it.title}</h4>
                   {it.instagram && (
                     <a 
-                      className="scrolly-step__instagram" 
+                      className="scrolly-step__instagram fade-element" 
                       href={it.instagram} 
                       target="_blank" 
                       rel="noreferrer"
@@ -1202,7 +1285,7 @@ function ScrollyPanels({ items }) {
                     </a>
                   )}
                 </div>
-                <p className="scrolly-step__text">{it.body}</p>
+                <p className="scrolly-step__text fade-element">{it.body}</p>
               </>
             )}
           </section>
@@ -1213,6 +1296,9 @@ function ScrollyPanels({ items }) {
 }
 
 export default function App() {
+    // Initialize scroll-controlled fade animations
+    useScrollFadeAnimation();
+
     useEffect(() => {
         document.documentElement.style.scrollBehavior = "smooth";
         return () => {
@@ -1383,8 +1469,8 @@ export default function App() {
                                             aria-expanded={openIdx === i}
                                             aria-controls={`drawer-${i}`}
                                         >
-                                            <span className="incoming-item__name">{ev.name}</span>
-                                            <span className="incoming-item__meta">
+                                            <span className="incoming-item__name fade-element">{ev.name}</span>
+                                            <span className="incoming-item__meta fade-element">
                   {dateLabelFor(ev)} • {ev.city} · {ev.venue}
                 </span>
                                         </button>
