@@ -63,7 +63,7 @@ import logo from './assets/logos/logo2.webp';
 import davidePiras from './assets/artists/davidePiras.jpg';
 import mattiaLorenzi from './assets/artists/mattiaLorenzi.jpg';
 import AudioTurntable from "./AudioTurntable.jsx";
-import disk from "./assets/audioTrack/disk.png";
+import disk from "./assets/audioTrack/disk.webp";
 import setMp3 from "./assets/audioTrack/takeone_set.mp3";
 import event1Poster from './assets/incomingEvents/posterZoona-19-09-2025.mp4';
 import event2Poster from './assets/zoona-03-05-2025/img4.webp';
@@ -1098,6 +1098,112 @@ function Footer() {
     );
 }
 
+// ===== Scrolly helpers =====
+function useActiveIndex(stepClass = ".scrolly-step") {
+  const [active, setActive] = React.useState(0);
+  const obs = React.useRef(null);
+
+  React.useEffect(() => {
+    const steps = Array.from(document.querySelectorAll(stepClass));
+    if (!steps.length) return;
+    obs.current?.disconnect();
+    obs.current = new IntersectionObserver(
+      (entries) => {
+        const vis = entries
+          .filter(e => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (!vis) return;
+        const idx = steps.indexOf(vis.target);
+        if (idx !== -1) setActive(idx);
+      },
+      { root: null, rootMargin: "-35% 0px -35% 0px", threshold: [0, .25, .5, .75, 1] }
+    );
+    steps.forEach(s => obs.current.observe(s));
+    return () => obs.current?.disconnect();
+  }, [stepClass]);
+
+  return active;
+}
+
+function ScrollyPanels({ items }) {
+  const active = useActiveIndex();
+  const i = Math.max(0, Math.min(active, items.length - 1));
+  const current = items[i] || {};
+  const mainEvent = items[0] || {}; // Always show the main event poster
+
+  return (
+    <div className="scrolly">
+      {/* Left: sticky panel with static poster */}
+      <aside className="scrolly__sticky">
+        <div className="scrolly__card card">
+          <div className="card__body">
+            {mainEvent.subtitle && <div className="eyebrow">{mainEvent.subtitle}</div>}
+            <h3 className="card__title" style={{ color: "var(--ink)" }}>{mainEvent.title || "\u00A0"}</h3>
+
+            {mainEvent.poster && (
+              <div className="ratio ratio--4x5 scrolly__media">
+                <img src={mainEvent.poster} alt="" />
+              </div>
+            )}
+
+            <div className="scrolly__dots" role="tablist" aria-label="Scrolly progress">
+              {items.map((_, idx) => (
+                <span key={idx} className={`scrolly__dot ${idx === i ? "is-active" : ""}`} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      {/* Right: scroll steps */}
+      <div className="scrolly__steps">
+        {items.map((it, idx) => (
+          <section key={idx} className="scrolly-step" aria-label={`Step ${idx + 1}: ${it.title}`}>
+            {idx === 0 ? (
+              // First slide: Event facts structure
+              <div className="event-facts">
+                <div className="facts-row">
+                  <span className="facts-label">When</span>
+                  <span className="facts-val">{upcomingEvents[0] ? dateLabelFor(upcomingEvents[0]) : ""}</span>
+                </div>
+                <div className="facts-row">
+                  <span className="facts-label">Where</span>
+                  <span className="facts-val">{upcomingEvents[0] ? `${upcomingEvents[0].city} · ${upcomingEvents[0].venue}` : ""}</span>
+                </div>
+                {upcomingEvents[0]?.address && (
+                  <div className="facts-row">
+                    <span className="facts-label">Address</span>
+                    <span className="facts-val">{upcomingEvents[0].address}</span>
+                  </div>
+                )}
+              </div>
+            ) : (
+              // Other slides: Artist info
+              <>
+                <div className="scrolly-step__header">
+                  <h4 className="scrolly-step__title">{it.title}</h4>
+                  {it.instagram && (
+                    <a 
+                      className="scrolly-step__instagram" 
+                      href={it.instagram} 
+                      target="_blank" 
+                      rel="noreferrer"
+                      aria-label={`Follow ${it.title} on Instagram`}
+                    >
+                      @{it.instagram.replace(/^https?:\/\/(www\.)?instagram\.com\//i, "").replace(/^@/, "")}
+                    </a>
+                  )}
+                </div>
+                <p className="scrolly-step__text">{it.body}</p>
+              </>
+            )}
+          </section>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
     useEffect(() => {
         document.documentElement.style.scrollBehavior = "smooth";
@@ -1164,10 +1270,31 @@ export default function App() {
             {/* 1 — Home */}
             <HomeSection/>
 
+            {/* 1.5 — Scrolly Story */}
+            <Section id="story" title="Next Event" subdued>
+                <ScrollyPanels
+                    items={[
+                        {
+                            title: upcomingEvents[0]?.name || "Upcoming Event",
+                            subtitle: `${upcomingEvents[0]?.city ?? ""} · ${upcomingEvents[0]?.venue ?? ""}`,
+                            poster: upcomingEvents[0]?.heroImage,
+                        },
+                        ...((upcomingEvents[0]?.lineup || []).map(a => ({
+                            title: a.name,
+                            subtitle: "Artist",
+                            img: a.image,
+                            body: a.bio,
+                            instagram: a.links?.instagram,
+                        }))),
+                    ]}
+                />
+            </Section>
+
             {/* 2 — Incoming Events (list + bottom drawer) */}
             <Section id="event" title="Incoming Events" subdued>
                 {(() => {
                     const [openIdx, setOpenIdx] = React.useState(null);      // which event is opened in the drawer
+                    const [isClosing, setIsClosing] = React.useState(false); // closing animation state
                     const [activeDJ, setActiveDJ] = React.useState(null);    // selected DJ object
                     const [isGalleryOpen, setIsGalleryOpen] = React.useState(false);
                     const [galleryImages, setGalleryImages] = React.useState([]);
@@ -1183,6 +1310,14 @@ export default function App() {
                         setOpenIdx(i => (i == null ? 0 : (i - 1 + upcomingEvents.length) % upcomingEvents.length));
                     const nextEvent = () =>
                         setOpenIdx(i => (i == null ? 0 : (i + 1) % upcomingEvents.length));
+
+                    const closeDrawer = () => {
+                        setIsClosing(true);
+                        setTimeout(() => {
+                            setOpenIdx(null);
+                            setIsClosing(false);
+                        }, 500); // Match the CSS transition duration
+                    };
 
                     // Reset selected DJ when switching/closing
                     React.useEffect(() => {
@@ -1253,7 +1388,7 @@ export default function App() {
                             <div
                                 ref={drawerRef}
                                 id={`drawer-${openIdx ?? "none"}`}
-                                className={`incoming-drawer ${current ? "open" : ""}`}
+                                className={`incoming-drawer ${current ? "open" : ""} ${isClosing ? "closing" : ""}`}
                                 aria-live="polite"
                             >
                                 {current ? (
@@ -1261,7 +1396,7 @@ export default function App() {
                                         <div className="drawer-head">
                                             <h3 className="drawer-title">{current.name}</h3>
                                             <div className="drawer-controls" role="group" aria-label="Event navigation">
-                                                <button className="icon-btn close" onClick={() => setOpenIdx(null)}
+                                                <button className="icon-btn close" onClick={closeDrawer}
                                                         type="button" title="Close">×
                                                 </button>
                                             </div>
