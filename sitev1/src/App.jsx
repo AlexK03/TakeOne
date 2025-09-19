@@ -1392,13 +1392,12 @@ export default function App() {
             </Section>
 
             {/* 4 — Archive */}
-            <Section id="past" title="Archive
-            ">
+            <Section id="past" title="Archive" subdued>
                 <PastEvents/>
             </Section>
 
             {/* 5 — Contact */}
-            <Section id="contact" title="Contact / Press" subdued>
+            <Section id="contact" title="Contact / Press">
                 <Contact/>
             </Section>
 
