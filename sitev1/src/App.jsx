@@ -424,7 +424,7 @@ function HomeSection() {
     const dateStr = latestEvent ? dateLabelFor(latestEvent) : "";
 
     const items = [
-        {id: "event", label: "Next Event", img: logo},
+        {id: "story", label: "Next Event", img: logo},
         {id: "about", label: "About", img: logo},
         {id: "past", label: "Archive", img: logo}
     ];
@@ -432,18 +432,6 @@ function HomeSection() {
     const goTo = (id) => (e) => {
         e.preventDefault();
         document.getElementById(id)?.scrollIntoView({behavior: "smooth"});
-    };
-
-    const openLatestEvent = () => {
-        // Scroll to the incoming events section
-        document.getElementById("event")?.scrollIntoView({behavior: "smooth"});
-        // After a short delay, trigger the first event to open
-        setTimeout(() => {
-            const firstEventButton = document.querySelector('.incoming-item');
-            if (firstEventButton) {
-                firstEventButton.click();
-            }
-        }, 1000);
     };
 
     const toggleAudio = () => {
@@ -486,7 +474,7 @@ function HomeSection() {
 
             {/* NEW: Latest incoming event band - Full width */}
             {latestEvent && (
-                <div className="latest-event-band" onClick={openLatestEvent} style={{cursor: 'pointer'}}>
+                <div className="latest-event-band" style={{cursor: 'pointer'}}>
                     <div className="latest-event-scroll">
                         <span className="latest-event-title">{latestEvent.name}</span>
                         <span className="latest-event-meta">
@@ -1253,16 +1241,16 @@ function ScrollyPanels({ items }) {
             {idx === 0 ? (
               // First slide: Event facts structure
               <div className="event-facts">
-                <div className="facts-row fade-element">
+                <div className="facts-row">
                   <span className="facts-label">When</span>
                   <span className="facts-val">{upcomingEvents[0] ? dateLabelFor(upcomingEvents[0]) : ""}</span>
                 </div>
-                <div className="facts-row fade-element">
+                <div className="facts-row">
                   <span className="facts-label">Where</span>
                   <span className="facts-val">{upcomingEvents[0] ? `${upcomingEvents[0].city} · ${upcomingEvents[0].venue}` : ""}</span>
                 </div>
                 {upcomingEvents[0]?.address && (
-                  <div className="facts-row fade-element">
+                  <div className="facts-row">
                     <span className="facts-label">Address</span>
                     <span className="facts-val">{upcomingEvents[0].address}</span>
                   </div>
@@ -1272,10 +1260,10 @@ function ScrollyPanels({ items }) {
               // Other slides: Artist info
               <>
                 <div className="scrolly-step__header">
-                  <h4 className="scrolly-step__title fade-element">{it.title}</h4>
+                  <h4 className="scrolly-step__title">{it.title}</h4>
                   {it.instagram && (
                     <a 
-                      className="scrolly-step__instagram fade-element" 
+                      className="scrolly-step__instagram" 
                       href={it.instagram} 
                       target="_blank" 
                       rel="noreferrer"
@@ -1285,7 +1273,7 @@ function ScrollyPanels({ items }) {
                     </a>
                   )}
                 </div>
-                <p className="scrolly-step__text fade-element">{it.body}</p>
+                <p className="scrolly-step__text">{it.body}</p>
               </>
             )}
           </section>
@@ -1308,7 +1296,7 @@ export default function App() {
 
     const sections = [
         {id: "home", label: "Home"},
-        {id: "event", label: "Next Event"},
+        {id: "story", label: "Next Event"},
         {id: "about", label: "About"},
         {id: "past", label: "Archive"},
         {id: "contact", label: "Contact"}
@@ -1384,225 +1372,6 @@ export default function App() {
                 />
             </Section>
 
-            {/* 2 — Incoming Events (list + bottom drawer) */}
-            <Section id="event" title="Incoming Events" subdued>
-                {(() => {
-                    const [openIdx, setOpenIdx] = React.useState(null);      // which event is opened in the drawer
-                    const [isClosing, setIsClosing] = React.useState(false); // closing animation state
-                    const [activeDJ, setActiveDJ] = React.useState(null);    // selected DJ object
-                    const [isGalleryOpen, setIsGalleryOpen] = React.useState(false);
-                    const [galleryImages, setGalleryImages] = React.useState([]);
-
-                    const sectionRef = React.useRef(null);
-                    const drawerRef = React.useRef(null);
-                    const [drawerH, setDrawerH] = React.useState(0);
-
-                    const current = openIdx != null ? upcomingEvents[openIdx] : null;
-                    const currentLineup = current?.lineup?.length ? current.lineup : lineup;
-
-                    const prevEvent = () =>
-                        setOpenIdx(i => (i == null ? 0 : (i - 1 + upcomingEvents.length) % upcomingEvents.length));
-                    const nextEvent = () =>
-                        setOpenIdx(i => (i == null ? 0 : (i + 1) % upcomingEvents.length));
-
-                    const closeDrawer = () => {
-                        setIsClosing(true);
-                        setTimeout(() => {
-                            setOpenIdx(null);
-                            setIsClosing(false);
-                        }, 500); // Match the CSS transition duration
-                    };
-
-                    // Reset selected DJ when switching/closing
-                    React.useEffect(() => {
-                        setActiveDJ(null);
-                    }, [openIdx]);
-                    
-                    // Prevent body scroll when drawer is open on mobile
-                    React.useEffect(() => {
-                        if (openIdx != null && window.innerWidth <= 768) {
-                            document.body.classList.add('drawer-open');
-                        } else {
-                            document.body.classList.remove('drawer-open');
-                        }
-                        
-                        return () => {
-                            document.body.classList.remove('drawer-open');
-                        };
-                    }, [openIdx]);
-
-                    // Measure drawer height and reserve space in the section while open
-                    React.useEffect(() => {
-                        const node = drawerRef.current;
-                        if (!node || openIdx == null) {
-                            setDrawerH(0);
-                            return;
-                        }
-                        const ro = new ResizeObserver(() => setDrawerH(node.offsetHeight || 0));
-                        ro.observe(node);
-                        // initial measure
-                        setDrawerH(node.offsetHeight || 0);
-                        return () => ro.disconnect();
-                    }, [openIdx]);
-
-                    const openGallery = (imgs) => {
-                        const arr = (imgs && imgs.length) ? imgs.slice() : (current?.images || []);
-                        if ((!arr || !arr.length) && current?.heroImage) arr.push(current.heroImage);
-                        setGalleryImages(arr || []);
-                        setIsGalleryOpen(true);
-                    };
-
-                    return (
-                        <div
-                            className={`incoming-events ${openIdx != null ? "has-drawer-open" : ""}`}
-                            ref={sectionRef}
-                            style={{"--drawer-h": `${drawerH}px`}}
-                        >
-                            {/* List of incoming events */}
-                            <ul className="incoming-list" role="list">
-                                {upcomingEvents.map((ev, i) => (
-                                    <li key={`${ev.name}-${ev.start}`} className="incoming-list__item">
-                                        <button
-                                            type="button"
-                                            className={`incoming-item ${openIdx === i ? "is-active" : ""}`}
-                                            onClick={() => setOpenIdx(i)}
-                                            aria-expanded={openIdx === i}
-                                            aria-controls={`drawer-${i}`}
-                                        >
-                                            <span className="incoming-item__name fade-element">{ev.name}</span>
-                                            <span className="incoming-item__meta fade-element">
-                  {dateLabelFor(ev)} • {ev.city} · {ev.venue}
-                </span>
-                                        </button>
-                                    </li>
-                                ))}
-                            </ul>
-
-                            {/* Bottom drawer anchored to the section (not viewport) */}
-                            <div
-                                ref={drawerRef}
-                                id={`drawer-${openIdx ?? "none"}`}
-                                className={`incoming-drawer ${current ? "open" : ""} ${isClosing ? "closing" : ""}`}
-                                aria-live="polite"
-                            >
-                                {current ? (
-                                    <div className="drawer-inner">
-                                        <div className="drawer-head">
-                                            <h3 className="drawer-title">{current.name}</h3>
-                                            <div className="drawer-controls" role="group" aria-label="Event navigation">
-                                                <button className="icon-btn close" onClick={closeDrawer}
-                                                        type="button" title="Close">×
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                        <div className="drawer-body">
-                                            {/* Left: event facts + lineup */}
-                                            <div className="drawer-col">
-                                                <div className="event-facts">
-                                                    <div className="facts-row">
-                                                        <span className="facts-label">When</span>
-                                                        <span className="facts-val">{dateLabelFor(current)}</span>
-                                                    </div>
-                                                    <div className="facts-row">
-                                                        <span className="facts-label">Where</span>
-                                                        <span
-                                                            className="facts-val">{current.city} · {current.venue}</span>
-                                                    </div>
-                                                    {current.address && (
-                                                        <div className="facts-row">
-                                                            <span className="facts-label">Address</span>
-                                                            <span className="facts-val">{current.address}</span>
-                                                        </div>
-                                                    )}
-                                                </div>
-
-                                                <div className={`dj-dock ${activeDJ ? "open" : ""}`}>
-                                                    <div className="lineup-block">
-                                                        <div className="lineup-label">LINEUP</div>
-                                                        <div className="lineup-list">
-                                                            {currentLineup.map((a, idx) => (
-                                                                <button
-                                                                    key={`${a.name}-${idx}`}
-                                                                    className={`lineup-name ${activeDJ?.name === a.name ? "is-active" : ""}`}
-                                                                    type="button"
-                                                                    onClick={() => setActiveDJ(a)}
-                                                                    title={`Read about ${a.name}`}
-                                                                >
-                                                                    {a.name}
-                                                                </button>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-
-                                                    {/* Selected DJ info */}
-                                                    {activeDJ ? (
-                                                        <>
-                                                            <div className="dj-row">
-                                                                <h4 className="dj-name">{activeDJ.name}</h4>
-                                                                {activeDJ.links?.instagram && (
-                                                                    <a className="dj-ig"
-                                                                       href={activeDJ.links.instagram}
-                                                                       target="_blank" rel="noreferrer">
-                                                                        @ Instagram
-                                                                    </a>
-                                                                )}
-                                                            </div>
-                                                            {(activeDJ.bio || activeDJ.description) && (
-                                                                <p className="dj-desc">{activeDJ.bio || activeDJ.description}</p>
-                                                            )}
-                                                        </>
-                                                    ) : (
-                                                        <div className="dj-placeholder">Select an artist to see
-                                                            info.</div>
-                                                    )}
-                                                </div>
-                                            </div>
-
-                                            {/* Right: media (hero + mini gallery) */}
-                                            <div className="drawer-col media">
-                                                <div className="media-hero">
-                                                    {current.heroImage && <img src={current.heroImage} alt=""/>}
-                                                    <div className="media-actions">
-                                                        {current.mapUrl && (
-                                                            <a className="icon-btn" href={current.mapUrl}
-                                                               target="_blank" rel="noreferrer">Map</a>
-                                                        )}
-                                                        {current.trailerUrl && (
-                                                            <a className="icon-btn" href={current.trailerUrl}
-                                                               target="_blank" rel="noreferrer">Trailer</a>
-                                                        )}
-                                                    </div>
-                                                </div>
-
-                                                {current.images?.length > 1 && (
-                                                    <div className="media-thumbs">
-                                                        {current.images.slice(0, 6).map((src, i) => (
-                                                            <button key={`thumb-${i}`} className="thumb"
-                                                                    onClick={() => openGallery(current.images)}
-                                                                    type="button" title="Open gallery">
-                                                                <img src={src} alt="" loading="lazy"/>
-                                                            </button>
-                                                        ))}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                ) : null
-                                }
-                            </div>
-
-                            {/* Simple built-in lightbox (replace with your PopupGallery if you prefer) */}
-                            <PopupGallery
-                                images={galleryImages}
-                                isOpen={isGalleryOpen}
-                                onClose={() => setIsGalleryOpen(false)}
-                            />
-                        </div>
-                    );
-                })()}
-            </Section>
 
 
             {/* 3 — About */}
