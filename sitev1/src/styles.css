@@ -450,7 +450,7 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
 .event-row-link{
     display: inline;
     background: #F2ECFF;
-    border: none;
+    border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: var(--radius);
     padding: 0.5rem 0.75rem;
     cursor: pointer;
@@ -2059,6 +2059,27 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
 }
 
 /* Gallery dot indicators */
+
+/* Floating poster hover effect */
+.floating-poster {
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.floating-poster img {
+    filter: drop-shadow(0 10px 30px rgba(0,0,0,0.4));
+    transition: all 0.3s ease;
+}
+
+/* Enhanced cursor for event rows */
+.event-row-link {
+    cursor: pointer;
+    position: relative;
+}
+
+.event-row-link:hover {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%235af1cc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7,10 12,15 17,10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>'), auto;
+}
 .gallery-dots {
     display: flex;
     justify-content: center;
@@ -2166,8 +2187,7 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
   font-family: "MyFont", sans-serif;
   font-size: clamp(1.4rem, 1.1vw + 1.2rem, 2rem);
   font-weight: 900; letter-spacing: .02em; margin: 0;
-  color: var(--accent-orange);
-  opacity: 1 !important;
+  color: var(--ink);
 }
 
 .scrolly-step__instagram {
@@ -2177,7 +2197,7 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
   letter-spacing: .02em;
   color: var(--accent-blue);
   text-decoration: none;
-  opacity: 1 !important;
+  opacity: 0.8;
   transition: all 0.2s ease;
 }
 
@@ -2189,8 +2209,8 @@ h1 { font-size: clamp(2.25rem, 2.5vw + 1.5rem, 4rem); line-height: 1.1; }
 }
 .scrolly-step__text { 
   font-family: "MyFont", sans-serif;
-  color: white; 
-  opacity: 1 !important; 
+  color: var(--ink); 
+  opacity: .9; 
   max-width: 60ch; 
 }
 

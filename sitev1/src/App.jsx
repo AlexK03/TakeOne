@@ -596,19 +596,58 @@ function HomeSection() {
 
                 {/* Vertical logo stack */}
                 <div className="home-logos">
-                    {items.map((it) => (
-                        <a
+                    {items.map((it, index) => (
+                        <motion.a
                             key={it.id}
                             href={`#${it.id}`}
                             onClick={goTo(it.id)}
                             className="logo-tile"
                             aria-label={it.label}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ 
+                                duration: 0.6, 
+                                delay: index * 0.2,
+                                ease: "easeOut"
+                            }}
+                            whileHover={{ 
+                                scale: 1.05,
+                                y: -8,
+                                rotateY: 5,
+                                transition: { 
+                                    duration: 0.3,
+                                    ease: "easeOut"
+                                }
+                            }}
+                            whileTap={{ 
+                                scale: 0.95,
+                                transition: { duration: 0.1 }
+                            }}
                         >
-                            <img src={it.img} alt="" className="logo-tile__img"/>
-                            <span className="logo-tile__label">{it.label}</span>
-                        </a>
+                            <motion.img 
+                                src={it.img} 
+                                alt="" 
+                                className="logo-tile__img"
+                                whileHover={{
+                                    rotate: [0, -5, 5, 0],
+                                    transition: { 
+                                        duration: 0.6,
+                                        ease: "easeInOut"
+                                    }
+                                }}
+                            />
+                            <motion.span 
+                                className="logo-tile__label"
+                                whileHover={{
+                                    color: "#5af1cc",
+                                    scale: 1.1,
+                                    transition: { duration: 0.2 }
+                                }}
+                            >
+                                {it.label}
+                            </motion.span>
+                        </motion.a>
                     ))}
-
                 </div>
 
 
@@ -652,6 +691,10 @@ function PastEvents() {
     const [posterSrc, setPosterSrc] = useState(null);
     const openPoster = (src) => { setPosterSrc(src); setIsPosterOpen(true); };
 
+    // New state for cursor hover poster
+    const [hoveredEvent, setHoveredEvent] = useState(null);
+    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
     const sectionRef = useRef(null);
     const drawerRef  = useRef(null);
     const [drawerH, setDrawerH] = useState(0);            // measured drawer height
@@ -674,6 +717,21 @@ function PastEvents() {
     };
 
     const closeLine = () => { setSelected(null); setActiveIndex(null); };
+
+    // Mouse tracking for cursor poster
+    const handleMouseMove = (e) => {
+        setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+
+    const handleEventHover = (event, index) => {
+        console.log('Hovering event:', event.title, 'Poster:', event.poster);
+        setHoveredEvent({ ...event, index });
+    };
+
+    const handleEventLeave = () => {
+        console.log('Leaving event');
+        setHoveredEvent(null);
+    };
     
     // Prevent body scroll when drawer is open on mobile
     useEffect(() => {
@@ -702,6 +760,12 @@ function PastEvents() {
     const [mainIndex, setMainIndex] = useState(0);
     const [isTransitioning, setIsTransitioning] = useState(false);
     useEffect(() => setMainIndex(0), [activeEvent]);
+
+    // Mouse tracking for cursor poster
+    useEffect(() => {
+        window.addEventListener('mousemove', handleMouseMove);
+        return () => window.removeEventListener('mousemove', handleMouseMove);
+    }, []);
     
     const prevImg = () => {
         if (images.length && !isTransitioning) {
@@ -768,10 +832,12 @@ function PastEvents() {
                             const dateStr = fmtDate(p.date);
                             const isActive = i === safeIndex && selected;
                             return (
-                                <span
+                                <motion.span
                                     key={`${p.title}-${p.date}`}
                                     className={`event-row-link ${isActive ? "is-active" : ""}`}
                                     onClick={() => openDetails(p, i)}
+                                    onMouseEnter={() => handleEventHover(p, i)}
+                                    onMouseLeave={handleEventLeave}
                                     role="button"
                                     tabIndex={0}
                                     onKeyDown={(e) => {
@@ -782,9 +848,14 @@ function PastEvents() {
                                     }}
                                     aria-expanded={!!isActive}
                                     aria-controls="past-events-drawer"
+                                    whileHover={{ 
+                                        scale: 1.02,
+                                        transition: { duration: 0.2 }
+                                    }}
+                                    whileTap={{ scale: 0.98 }}
                                 >
                                     {dateStr} {p.city} {p.venue} · {p.title.toUpperCase()}
-                                </span>
+                                </motion.span>
                             );
                         })}
                     </span>
@@ -944,6 +1015,86 @@ function PastEvents() {
                 images={galleryImages}
                 startIndex={mainIndex}
             />
+
+            {/* Floating poster on hover */}
+            {hoveredEvent && hoveredEvent.poster && (
+                <motion.div
+                    className="floating-poster"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ 
+                        opacity: 1, 
+                        scale: 1
+                    }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    transition={{ 
+                        duration: 0.3,
+                        ease: "easeOut"
+                    }}
+                    style={{
+                        position: 'fixed',
+                        left: mousePosition.x + 20,
+                        top: mousePosition.y - 100,
+                        zIndex: 1000,
+                        pointerEvents: 'none',
+                        transform: 'translate(-50%, -50%)'
+                    }}
+                >
+                    <motion.img
+                        src={hoveredEvent.poster}
+                        alt={hoveredEvent.title}
+                        style={{
+                            width: '200px',
+                            height: 'auto',
+                            borderRadius: '12px',
+                            boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+                            border: '2px solid rgba(255,255,255,0.2)'
+                        }}
+                        whileHover={{ 
+                            scale: 1.05,
+                            transition: { duration: 0.2 }
+                        }}
+                    />
+                    <motion.div
+                        style={{
+                            position: 'absolute',
+                            bottom: '-30px',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            background: 'rgba(0,0,0,0.8)',
+                            color: 'white',
+                            padding: '4px 8px',
+                            borderRadius: '4px',
+                            fontSize: '12px',
+                            fontWeight: '600',
+                            whiteSpace: 'nowrap'
+                        }}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1 }}
+                    >
+                        {hoveredEvent.title}
+                    </motion.div>
+                </motion.div>
+            )}
+
+            {/* Debug info */}
+            {hoveredEvent && (
+                <div style={{
+                    position: 'fixed',
+                    top: '10px',
+                    right: '10px',
+                    background: 'rgba(0,0,0,0.8)',
+                    color: 'white',
+                    padding: '10px',
+                    borderRadius: '5px',
+                    zIndex: 2000,
+                    fontSize: '12px'
+                }}>
+                    Hovered: {hoveredEvent.title}<br/>
+                    Poster: {hoveredEvent.poster ? 'Yes' : 'No'}<br/>
+                    Mouse: {mousePosition.x}, {mousePosition.y}
+                </div>
+            )}
         </section>
     );
 }
@@ -1206,13 +1357,44 @@ function ScrollyPanels({ items }) {
     <div className="scrolly">
       {/* Left: sticky panel with static poster */}
       <aside className="scrolly__sticky">
-        <div className="scrolly__card card">
+        <motion.div 
+          className="scrolly__card card"
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
           <div className="card__body">
-            {mainEvent.subtitle && <div className="eyebrow">{mainEvent.subtitle}</div>}
-            <h3 className="card__title" style={{ color: "var(--ink)" }}>{mainEvent.title || "\u00A0"}</h3>
+            {mainEvent.subtitle && (
+              <motion.div 
+                className="eyebrow"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
+                {mainEvent.subtitle}
+              </motion.div>
+            )}
+            <motion.h3 
+              className="card__title" 
+              style={{ color: "var(--ink)" }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.3 }}
+            >
+              {mainEvent.title || "\u00A0"}
+            </motion.h3>
 
             {mainEvent.poster && (
-              <div className="ratio ratio--4x5 scrolly__media">
+              <motion.div 
+                className="ratio ratio--4x5 scrolly__media"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                whileHover={{ 
+                  scale: 1.02,
+                  transition: { duration: 0.3 }
+                }}
+              >
                 <video 
                   src={mainEvent.poster} 
                   autoPlay 
@@ -1222,61 +1404,142 @@ function ScrollyPanels({ items }) {
                   className="scrolly__poster-video"
                   aria-label="Animated event poster"
                 />
-              </div>
+              </motion.div>
             )}
 
-            <div className="scrolly__dots" role="tablist" aria-label="Scrolly progress">
+            <motion.div 
+              className="scrolly__dots" 
+              role="tablist" 
+              aria-label="Scrolly progress"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+            >
               {items.map((_, idx) => (
-                <span key={idx} className={`scrolly__dot ${idx === i ? "is-active" : ""}`} />
+                <motion.span 
+                  key={idx} 
+                  className={`scrolly__dot ${idx === i ? "is-active" : ""}`}
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ 
+                    duration: 0.3, 
+                    delay: 0.7 + (idx * 0.1),
+                    type: "spring",
+                    stiffness: 200
+                  }}
+                  whileHover={{ 
+                    scale: 1.2,
+                    transition: { duration: 0.2 }
+                  }}
+                />
               ))}
-            </div>
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
       </aside>
 
       {/* Right: scroll steps */}
       <div className="scrolly__steps">
         {items.map((it, idx) => (
-          <section key={idx} className="scrolly-step" aria-label={`Step ${idx + 1}: ${it.title}`}>
+          <motion.section 
+            key={idx} 
+            className="scrolly-step" 
+            aria-label={`Step ${idx + 1}: ${it.title}`}
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: idx * 0.1 }}
+            viewport={{ once: true, margin: "-100px" }}
+          >
             {idx === 0 ? (
               // First slide: Event facts structure
               <div className="event-facts">
-                <div className="facts-row">
+                <motion.div 
+                  className="facts-row"
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                  viewport={{ once: true }}
+                >
                   <span className="facts-label">When</span>
                   <span className="facts-val">{upcomingEvents[0] ? dateLabelFor(upcomingEvents[0]) : ""}</span>
-                </div>
-                <div className="facts-row">
+                </motion.div>
+                <motion.div 
+                  className="facts-row"
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  viewport={{ once: true }}
+                >
                   <span className="facts-label">Where</span>
                   <span className="facts-val">{upcomingEvents[0] ? `${upcomingEvents[0].city} · ${upcomingEvents[0].venue}` : ""}</span>
-                </div>
+                </motion.div>
                 {upcomingEvents[0]?.address && (
-                  <div className="facts-row">
+                  <motion.div 
+                    className="facts-row"
+                    initial={{ opacity: 0, x: -30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5, delay: 0.3 }}
+                    viewport={{ once: true }}
+                  >
                     <span className="facts-label">Address</span>
                     <span className="facts-val">{upcomingEvents[0].address}</span>
-                  </div>
+                  </motion.div>
                 )}
               </div>
             ) : (
               // Other slides: Artist info
               <>
-                <div className="scrolly-step__header">
-                  <h4 className="scrolly-step__title">{it.title}</h4>
+                <motion.div 
+                  className="scrolly-step__header"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6 }}
+                  viewport={{ once: true }}
+                >
+                  <motion.h4 
+                    className="scrolly-step__title"
+                    whileHover={{ 
+                      scale: 1.05,
+                      color: "#5af1cc",
+                      transition: { duration: 0.2 }
+                    }}
+                  >
+                    {it.title}
+                  </motion.h4>
                   {it.instagram && (
-                    <a 
+                    <motion.a 
                       className="scrolly-step__instagram" 
                       href={it.instagram} 
                       target="_blank" 
                       rel="noreferrer"
                       aria-label={`Follow ${it.title} on Instagram`}
+                      whileHover={{ 
+                        scale: 1.1,
+                        y: -2,
+                        transition: { duration: 0.2 }
+                      }}
+                      whileTap={{ scale: 0.95 }}
                     >
                       @{it.instagram.replace(/^https?:\/\/(www\.)?instagram\.com\//i, "").replace(/^@/, "")}
-                    </a>
+                    </motion.a>
                   )}
-                </div>
-                <p className="scrolly-step__text">{it.body}</p>
+                </motion.div>
+                <motion.p 
+                  className="scrolly-step__text"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                  viewport={{ once: true }}
+                  whileHover={{ 
+                    scale: 1.02,
+                    transition: { duration: 0.3 }
+                  }}
+                >
+                  {it.body}
+                </motion.p>
               </>
             )}
-          </section>
+          </motion.section>
         ))}
       </div>
     </div>
